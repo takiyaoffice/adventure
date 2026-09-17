@@ -35,9 +35,15 @@ npm run preview
 
 ## デプロイ（GitHub Pages）
 
-`main` ブランチに push すると `.github/workflows/deploy.yml` が自動で GitHub Pages にデプロイします。
+`gh-pages` ブランチにビルド済みファイルを push して公開します。
 
-初回のみ、リポジトリの **Settings → Pages → Build and deployment → Source** を **GitHub Actions** に設定してください。公開URLは `https://<ユーザー名>.github.io/adventure/` になります。
+```bash
+npm run deploy
+```
+
+初回のみ、リポジトリの **Settings → Pages → Build and deployment → Source** を **Deploy from a branch**、ブランチを **gh-pages / (root)** に設定してください。公開URLは `https://<ユーザー名>.github.io/adventure/` になります。
+
+コードを変更したら、都度 `npm run deploy` を実行してください。
 
 ## PWA
 

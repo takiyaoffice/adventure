@@ -1,0 +1,184 @@
+.tabs {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(var(--u) * 9);
+  padding-top: calc(var(--u) * 2);
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--u) * 5);
+  height: calc(var(--u) * 50);
+  border: calc(var(--u) * 2) solid var(--line);
+  background: var(--panel);
+  color: #ffffff;
+}
+
+.tabActive {
+  background: var(--blue);
+  box-shadow: 0 0 calc(var(--u) * 10) rgba(77, 142, 245, 0.4);
+}
+
+.tabName {
+  font-family: var(--font-pixel);
+  font-size: calc(var(--u) * 11);
+  letter-spacing: calc(var(--u) * 1.2);
+  line-height: 1;
+}
+
+.tabDate {
+  font-size: calc(var(--u) * 12);
+  line-height: 1;
+  letter-spacing: calc(var(--u) * 0.5);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.tabActive .tabDate {
+  color: #ffffff;
+}
+
+/* ---------- 日ごとのカード ---------- */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 11);
+  padding-bottom: calc(var(--u) * 4);
+}
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--u) * 10);
+  border: calc(var(--u) * 2) solid var(--line);
+  background: var(--panel);
+  padding: calc(var(--u) * 11) calc(var(--u) * 11) calc(var(--u) * 13);
+  scroll-margin-top: calc(var(--u) * 8);
+}
+
+.cardActive {
+  background: var(--panel-soft);
+  box-shadow: 0 0 calc(var(--u) * 12) rgba(77, 142, 245, 0.3);
+}
+
+.cardMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 9);
+}
+
+.dayChip {
+  font-family: var(--font-pixel);
+  font-size: calc(var(--u) * 10);
+  letter-spacing: calc(var(--u) * 1.2);
+  line-height: 1;
+  padding: calc(var(--u) * 6) calc(var(--u) * 7);
+  background: var(--blue);
+  border: calc(var(--u) * 2) solid var(--line);
+  color: #ffffff;
+}
+
+.cardDate {
+  font-size: calc(var(--u) * 12);
+  letter-spacing: calc(var(--u) * 0.6);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.badge {
+  display: inline-block;
+  margin-top: calc(var(--u) * 9);
+  font-family: var(--font-pixel);
+  font-size: calc(var(--u) * 10);
+  letter-spacing: calc(var(--u) * 1.2);
+  line-height: 1;
+  padding: calc(var(--u) * 6) calc(var(--u) * 8);
+  background: var(--red);
+  color: #ffffff;
+  box-shadow: calc(var(--u) * 2) calc(var(--u) * 2) 0 var(--red-deep);
+}
+
+.cardTitle {
+  margin-top: calc(var(--u) * 9);
+  font-size: calc(var(--u) * 19);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: calc(var(--u) * 0.6);
+  color: #ffffff;
+}
+
+/* ---------- タイムライン ---------- */
+.timeline {
+  position: relative;
+  margin-top: calc(var(--u) * 10);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 7);
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--u) * 4);
+  top: calc(var(--u) * 6);
+  bottom: calc(var(--u) * 6);
+  width: calc(var(--u) * 2);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.entry {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 9);
+}
+
+.dot {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: calc(var(--u) * 10);
+  height: calc(var(--u) * 10);
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 calc(var(--u) * 2) var(--panel);
+}
+
+.cardActive .dot {
+  box-shadow: 0 0 0 calc(var(--u) * 2) var(--panel-soft);
+}
+
+.time {
+  flex: none;
+  width: calc(var(--u) * 46);
+  font-size: calc(var(--u) * 13);
+  line-height: 1.2;
+  letter-spacing: calc(var(--u) * 0.4);
+  color: #ffffff;
+}
+
+.entryTitle {
+  font-size: calc(var(--u) * 13);
+  line-height: 1.2;
+  letter-spacing: calc(var(--u) * 0.4);
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- サムネイル ---------- */
+.thumb {
+  flex: none;
+  width: calc(var(--u) * 72);
+  height: calc(var(--u) * 72);
+  border: calc(var(--u) * 2) solid var(--line);
+  object-fit: cover;
+}

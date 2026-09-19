@@ -1,44 +1,40 @@
-import { useEffect, useState } from 'react'
-import { ProgressProvider, useProgress } from './state/ProgressContext'
-import { TabBar, type TabId } from './components/layout/TabBar'
-import { AdventureBook } from './screens/AdventureBook'
-import { WorldMap } from './screens/WorldMap'
-import { TodayAdventure } from './screens/TodayAdventure'
-import { Missions } from './screens/Missions'
-import { Complete } from './screens/Complete'
+import { useCallback, useState } from 'react'
+import { BottomNav } from './components/layout/BottomNav'
+import { NAV_ITEMS } from './components/layout/BottomNav'
+import { Screen } from './components/layout/Screen'
+import { MissionComplete } from './components/ui/MissionComplete'
+import { HomeScreen } from './screens/HomeScreen'
+import { ScheduleScreen } from './screens/ScheduleScreen'
+import { MapScreen } from './screens/MapScreen'
+import { MissionScreen } from './screens/MissionScreen'
+import { SCHEDULE } from './data/schedule'
+import { ProgressProvider } from './state/ProgressContext'
+import type { Mission, ScreenId } from './types'
+import s from './App.module.css'
 
 function AppShell() {
-  const [tab, setTab] = useState<TabId>('book')
-  const [focusLocationId, setFocusLocationId] = useState<string | null>(null)
-  const [showComplete, setShowComplete] = useState(false)
-  const { justCompletedFinal, clearJustCompletedFinal } = useProgress()
+  const [screen, setScreen] = useState<ScreenId>('home')
+  const [selectedDayId, setSelectedDayId] = useState(SCHEDULE[0].id)
+  const [celebrating, setCelebrating] = useState<Mission | null>(null)
 
-  useEffect(() => {
-    if (justCompletedFinal) {
-      setShowComplete(true)
-      clearJustCompletedFinal()
-    }
-  }, [justCompletedFinal, clearJustCompletedFinal])
+  const openDay = useCallback((dayId: string) => {
+    setSelectedDayId(dayId)
+    setScreen('schedule')
+  }, [])
 
-  const goToMissions = (locationId: string) => {
-    setFocusLocationId(locationId)
-    setTab('missions')
-  }
+  const handleComplete = useCallback((mission: Mission) => setCelebrating(mission), [])
+  const nav = NAV_ITEMS.find((item) => item.id === screen) ?? NAV_ITEMS[0]
 
   return (
-    <div className="h-full flex flex-col bg-wood-950">
-      <div className="flex-1 min-h-0 flex flex-col max-w-md w-full mx-auto sm:my-0">
-        {tab === 'book' && <AdventureBook onStart={() => setTab('map')} onShowComplete={() => setShowComplete(true)} />}
-        {tab === 'map' && <WorldMap onOpenMissions={goToMissions} />}
-        {tab === 'today' && <TodayAdventure onOpenMissions={goToMissions} />}
-        {tab === 'missions' && (
-          <Missions focusLocationId={focusLocationId} onConsumeFocus={() => setFocusLocationId(null)} />
-        )}
-      </div>
-
-      <TabBar active={tab} onChange={setTab} />
-
-      {showComplete && <Complete onClose={() => setShowComplete(false)} />}
+    <div className={s.app}>
+      <Screen title={nav.headerTitle} icon={nav.icon} fixed={screen === 'map'}>
+        {screen === 'home' && <HomeScreen onNavigate={setScreen} onOpenDay={openDay} />}
+        {screen === 'schedule' && <ScheduleScreen selectedDayId={selectedDayId} onSelectDay={setSelectedDayId} />}
+        {screen === 'map' && <MapScreen onComplete={handleComplete} />}
+        {screen === 'mission' && <MissionScreen onComplete={handleComplete} />}
+      </Screen>
+      <BottomNav current={screen} onNavigate={setScreen} />
+      <MissionComplete mission={celebrating} onClose={() => setCelebrating(null)} />
     </div>
   )
 }

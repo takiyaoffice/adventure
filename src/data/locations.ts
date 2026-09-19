@@ -1,134 +1,112 @@
-export type LocationIcon =
-  | 'station'
-  | 'castle'
-  | 'shrine'
-  | 'food'
-  | 'onsen'
-  | 'street'
-  | 'hotel'
-  | 'home'
+import type { MapLocation } from '../types'
+import terrain from '../assets/art/map-terrain.png'
+import iconStation from '../assets/art/loc-station.png'
+import iconZuihoden from '../assets/art/loc-zuihoden.png'
+import iconMatsushima from '../assets/art/loc-matsushima.png'
+import iconGyutan from '../assets/art/loc-gyutan.png'
+import iconLive from '../assets/art/loc-live.png'
+import iconUnknown from '../assets/art/loc-unknown.png'
+import iconUnknownSmall from '../assets/art/loc-unknown-small.png'
 
-export interface LocationMission {
-  /** shown as the main checkbox mission */
-  arriveText: string
-  /** optional secondary "extra" mission, e.g. take a photo */
-  extra?: string
-}
+export const MAP_TERRAIN = terrain
+/** 地形画像のドット数。マーカーの座標計算に使う */
+export const MAP_ART_SIZE = { width: 160, height: 240 }
 
-export interface Location {
-  id: string
-  name: string
-  kana: string
-  icon: LocationIcon
-  /** position on the fantasy world map, in % of the map viewBox */
-  x: number
-  y: number
-  day: 1 | 2
-  blurb: string
-  mission: LocationMission
-  /** true for the final "return home" mission, not drawn on the fantasy map */
-  isFinal?: boolean
-}
-
-export const LOCATIONS: Location[] = [
+/**
+ * マップ上の場所。x / y は地形画像に対する割合（％）。
+ * locked: true の場所は ??? 表示のまま。
+ */
+export const LOCATIONS: MapLocation[] = [
+  {
+    id: 'matsushima',
+    name: '松島',
+    x: 78.1,
+    y: 14.2,
+    icon: iconMatsushima,
+    scale: 1.1,
+    description: '日本三景のひとつ。\n島々に朝日が差しこむ絶景の地。',
+  },
+  {
+    id: 'unknown-1',
+    name: '？？？',
+    x: 25,
+    y: 13.3,
+    icon: iconUnknown,
+    locked: true,
+    description: 'まだ地図に記されていない場所。\n旅のとちゅうで見つかるかも。',
+  },
   {
     id: 'sendai-station',
     name: '仙台駅',
-    kana: 'せんだいえき',
-    icon: 'station',
-    x: 50,
-    y: 82,
-    day: 1,
-    blurb: '冒険の出発点。新幹線でここに降り立つところから、二人の旅がはじまる。',
-    mission: { arriveText: '仙台駅に到着した！' },
-  },
-  {
-    id: 'sendai-castle',
-    name: '仙台城跡',
-    kana: 'せんだいじょうあと',
-    icon: 'castle',
-    x: 26,
-    y: 46,
-    day: 1,
-    blurb: '伊達政宗公が築いた名城の跡。石垣と銅像が、かつての栄華を今に伝える。',
-    mission: {
-      arriveText: '仙台城跡を訪れた！',
-      extra: '写真を撮って家族に送ろう。旅の思い出をシェアしよう。',
-    },
-  },
-  {
-    id: 'gyutan',
-    name: '牛たんのお店',
-    kana: 'ぎゅうたん',
-    icon: 'food',
-    x: 46,
-    y: 63,
-    day: 1,
-    blurb: '仙台名物・牛たん定食で腹ごしらえ。冒険には元気なスタミナが欠かせない。',
-    mission: { arriveText: '牛たんを味わった！' },
-  },
-  {
-    id: 'akiu-onsen',
-    name: '秋保温泉',
-    kana: 'あきうおんせん',
-    icon: 'onsen',
-    x: 15,
-    y: 22,
-    day: 1,
-    blurb: '奥州三名湯のひとつ。旅の疲れをゆっくり癒す、静かな山あいの湯どころ。',
-    mission: {
-      arriveText: '秋保温泉でひと休みした！',
-      extra: '露天風呂からの景色を写真におさめよう。',
-    },
-  },
-  {
-    id: 'hotel',
-    name: '今宵の宿',
-    kana: 'こよいのやど',
-    icon: 'hotel',
-    x: 64,
-    y: 78,
-    day: 1,
-    blurb: '1日目の夜を過ごす宿。ゆっくり休んで、明日の冒険に備えよう。',
-    mission: { arriveText: '宿にチェックインした！' },
+    x: 49.4,
+    y: 27.1,
+    icon: iconStation,
+    scale: 1.15,
+    description: '冒険のはじまりの地。\nここから仙台の旅がはじまる。',
   },
   {
     id: 'zuihoden',
     name: '瑞鳳殿',
-    kana: 'ずいほうでん',
-    icon: 'shrine',
-    x: 73,
-    y: 20,
-    day: 2,
-    blurb: '伊達政宗公を祀る絢爛豪華な廟所。桃山文化の彫刻が杜の中に輝く。',
-    mission: {
-      arriveText: '瑞鳳殿を訪れた！',
-      extra: '極彩色の彫刻を写真に残そう。',
-    },
+    x: 25,
+    y: 38.8,
+    icon: iconZuihoden,
+    description: '伊達政宗公がねむる霊屋。\n杉木立の奥にたたずむ金色の社。',
   },
   {
-    id: 'jozenji',
-    name: '定禅寺通',
-    kana: 'じょうぜんじどおり',
-    icon: 'street',
-    x: 60,
-    y: 48,
-    day: 2,
-    blurb: '欅並木が続く杜の都のシンボルロード。お土産探しに立ち寄ろう。',
-    mission: { arriveText: '定禅寺通を散策した！' },
+    id: 'unknown-2',
+    name: '？？？',
+    x: 78.1,
+    y: 38.8,
+    icon: iconUnknown,
+    locked: true,
+    description: 'まだ地図に記されていない場所。\n旅のとちゅうで見つかるかも。',
   },
   {
-    id: 'home',
-    name: 'おうち',
-    kana: 'かえりみち',
-    icon: 'home',
-    x: 50,
-    y: 82,
-    day: 2,
-    blurb: '二人の旅も、ここでひと区切り。無事におうちに着いたら、冒険は完了だ。',
-    mission: { arriveText: '家に着いた！' },
-    isFinal: true,
+    id: 'unknown-3',
+    name: '？？？',
+    x: 71.3,
+    y: 48.8,
+    icon: iconUnknownSmall,
+    scale: 0.85,
+    locked: true,
+    description: 'まだ地図に記されていない場所。\n旅のとちゅうで見つかるかも。',
+  },
+  {
+    id: 'gyutan',
+    name: '牛たん',
+    x: 27.5,
+    y: 55.8,
+    icon: iconGyutan,
+    description: '炭火で焼きあげる仙台の名物。\n旅人の体力を大きく回復する。',
+  },
+  {
+    id: 'live-venue',
+    name: 'ライブ会場',
+    x: 75,
+    y: 62.1,
+    icon: iconLive,
+    scale: 1.1,
+    description: 'この旅のいちばんの目的地。\n特別な夜がここで待っている。',
+  },
+  {
+    id: 'unknown-4',
+    name: '？？？',
+    x: 25,
+    y: 74.6,
+    icon: iconUnknown,
+    locked: true,
+    description: 'まだ地図に記されていない場所。\n旅のとちゅうで見つかるかも。',
+  },
+  {
+    id: 'unknown-5',
+    name: '？？？',
+    x: 58.1,
+    y: 74.6,
+    icon: iconUnknownSmall,
+    scale: 0.85,
+    locked: true,
+    description: 'まだ地図に記されていない場所。\n旅のとちゅうで見つかるかも。',
   },
 ]
 
-export const getLocation = (id: string) => LOCATIONS.find((l) => l.id === id)
+export const LOCATION_BY_ID = new Map(LOCATIONS.map((l) => [l.id, l]))

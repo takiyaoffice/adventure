@@ -1,0 +1,121 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--u) * 20);
+  background: rgba(3, 6, 15, 0.8);
+  animation: fade 140ms steps(3) both;
+}
+
+.burst {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.spark {
+  position: absolute;
+  color: var(--gold);
+  animation: spark 900ms steps(4) infinite;
+}
+
+.window {
+  position: relative;
+  width: 100%;
+  max-width: calc(var(--u) * 320);
+  text-align: center;
+  border: calc(var(--u) * 2) solid var(--gold);
+  background: linear-gradient(180deg, #16255a 0%, #0a1330 100%);
+  padding: calc(var(--u) * 26) calc(var(--u) * 18) calc(var(--u) * 22);
+  box-shadow:
+    0 0 0 calc(var(--u) * 2) #0a1330,
+    0 0 0 calc(var(--u) * 4) #ffffff,
+    0 0 calc(var(--u) * 26) rgba(245, 200, 78, 0.45);
+  animation: pop 220ms steps(4) both;
+}
+
+.heading {
+  font-family: var(--font-pixel);
+  font-size: calc(var(--u) * 17);
+  line-height: 1.5;
+  letter-spacing: calc(var(--u) * 1.5);
+  color: var(--gold);
+  text-shadow:
+    calc(var(--u) * 2) calc(var(--u) * 2) 0 #6a3d00,
+    0 0 calc(var(--u) * 14) rgba(245, 200, 78, 0.7);
+  animation: flash 460ms steps(2) 3;
+}
+
+.title {
+  margin-top: calc(var(--u) * 18);
+  font-size: calc(var(--u) * 15);
+  line-height: 1.4;
+  color: #ffffff;
+}
+
+.reward {
+  margin-top: calc(var(--u) * 10);
+  font-size: calc(var(--u) * 12);
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.hint {
+  margin-top: calc(var(--u) * 20);
+  font-family: var(--font-pixel);
+  font-size: calc(var(--u) * 9);
+  letter-spacing: calc(var(--u) * 1.2);
+  color: rgba(255, 255, 255, 0.6);
+  animation: fadePulse 1s steps(2) infinite;
+}
+
+.ribbon {
+  position: absolute;
+  top: calc(var(--u) * -12);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: calc(var(--u) * 6);
+  color: var(--gold);
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop {
+  0% { opacity: 0; transform: scale(0.82); }
+  60% { transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes fadePulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.25; }
+}
+
+@keyframes spark {
+  0% { opacity: 0; transform: translateY(calc(var(--u) * 10)) scale(0.6); }
+  40% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(calc(var(--u) * -14)) scale(0.7); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heading,
+  .spark,
+  .hint,
+  .window,
+  .overlay {
+    animation: none;
+  }
+}

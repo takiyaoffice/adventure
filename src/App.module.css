@@ -1,0 +1,12 @@
+.app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: calc(var(--u) * 390);
+  height: 100dvh;
+  background: var(--bg);
+  overflow: hidden;
+  /* 画面外周をわずかに暗くして、ドット絵の額縁のように見せる */
+  box-shadow: 0 0 calc(var(--u) * 40) rgba(0, 0, 0, 0.75);
+}

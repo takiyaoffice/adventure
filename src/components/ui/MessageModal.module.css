@@ -1,0 +1,61 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--u) * 24);
+  background: rgba(3, 6, 15, 0.72);
+  animation: fade 120ms steps(3) both;
+}
+
+.window {
+  width: 100%;
+  max-width: calc(var(--u) * 330);
+  border: calc(var(--u) * 2) solid var(--line);
+  background: var(--panel);
+  box-shadow: 0 0 0 calc(var(--u) * 4) rgba(3, 6, 15, 0.8), 0 calc(var(--u) * 6) calc(var(--u) * 20) rgba(0, 0, 0, 0.6);
+  padding: calc(var(--u) * 16) calc(var(--u) * 16) calc(var(--u) * 14);
+  animation: pop 140ms steps(3) both;
+}
+
+.title {
+  font-family: var(--font-pixel);
+  font-size: calc(var(--u) * 13);
+  letter-spacing: calc(var(--u) * 2);
+  color: var(--gold);
+  margin-bottom: calc(var(--u) * 12);
+}
+
+.line {
+  font-size: calc(var(--u) * 13);
+  line-height: 1.7;
+  color: #ffffff;
+}
+
+.close {
+  display: block;
+  margin: calc(var(--u) * 16) 0 0 auto;
+  padding: calc(var(--u) * 7) calc(var(--u) * 16);
+  border: calc(var(--u) * 2) solid var(--line);
+  background: var(--blue);
+  font-family: var(--font-pixel);
+  font-size: calc(var(--u) * 10);
+  letter-spacing: calc(var(--u) * 1.4);
+  color: #ffffff;
+}
+
+.close:active {
+  background: var(--blue-deep);
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: translateY(calc(var(--u) * 10)); }
+  to { opacity: 1; transform: translateY(0); }
+}

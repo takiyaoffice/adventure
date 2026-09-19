@@ -1,0 +1,36 @@
+import { PixelIcon } from '../ui/PixelIcon'
+import type { GlyphName } from '../ui/pixel-glyphs'
+import type { ScreenId } from '../../types'
+import s from './BottomNav.module.css'
+
+export const NAV_ITEMS: { id: ScreenId; label: string; icon: GlyphName; headerTitle: string }[] = [
+  { id: 'home', label: 'ホーム', icon: 'home', headerTitle: 'HOME' },
+  { id: 'schedule', label: 'スケジュール', icon: 'calendar', headerTitle: 'SCHEDULE' },
+  { id: 'map', label: 'マップ', icon: 'map', headerTitle: 'MAP' },
+  { id: 'mission', label: 'ミッション', icon: 'mission', headerTitle: 'MISSION' },
+]
+
+interface Props {
+  current: ScreenId
+  onNavigate: (id: ScreenId) => void
+}
+
+/** 4画面共通のフッターナビゲーション */
+export function BottomNav({ current, onNavigate }: Props) {
+  return (
+    <nav className={s.nav}>
+      {NAV_ITEMS.map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          className={`${s.item} ${current === item.id ? s.active : ''}`}
+          aria-current={current === item.id ? 'page' : undefined}
+          onClick={() => onNavigate(item.id)}
+        >
+          <PixelIcon name={item.icon} size={22} />
+          <span className={s.label}>{item.label}</span>
+        </button>
+      ))}
+    </nav>
+  )
+}

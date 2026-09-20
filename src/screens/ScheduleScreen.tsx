@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { SCHEDULE } from '../data/schedule'
 import s from './ScheduleScreen.module.css'
 
@@ -9,6 +10,13 @@ interface Props {
 /** 1日ぶんを1ページとして表示し、上部のタブで切り替える */
 export function ScheduleScreen({ selectedDayId, onSelectDay }: Props) {
   const day = SCHEDULE.find((d) => d.id === selectedDayId) ?? SCHEDULE[0]
+  // 同じタブを押し直したときも key が変わるようにして、ページの動きを必ず出す
+  const [tick, setTick] = useState(0)
+
+  const selectDay = (dayId: string) => {
+    onSelectDay(dayId)
+    setTick((n) => n + 1)
+  }
 
   return (
     <>
@@ -19,7 +27,7 @@ export function ScheduleScreen({ selectedDayId, onSelectDay }: Props) {
             type="button"
             className={`${s.tab} ${item.id === day.id ? s.tabActive : ''}`}
             aria-pressed={item.id === day.id}
-            onClick={() => onSelectDay(item.id)}
+            onClick={() => selectDay(item.id)}
           >
             <span className={s.tabName}>{item.dayLabel}</span>
             <span className={s.tabDate}>{item.dateShort}</span>
@@ -27,8 +35,8 @@ export function ScheduleScreen({ selectedDayId, onSelectDay }: Props) {
         ))}
       </div>
 
-      {/* key を変えることで、日を切り替えるたびにページがめくれる演出になる */}
-      <article key={day.id} className={s.card}>
+      {/* key を変えることで、タブを押すたびに必ずページがめくれる演出になる */}
+      <article key={`${day.id}-${tick}`} className={s.card}>
         <div className={s.headRow}>
           <span className={s.dayChip}>{day.dayLabel}</span>
           <span className={s.cardDate}>{day.dateFull}</span>

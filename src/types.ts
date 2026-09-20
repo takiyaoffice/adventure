@@ -1,6 +1,6 @@
 /** アプリ全体で使う型定義 */
 
-export type ScreenId = 'home' | 'schedule' | 'map' | 'mission'
+export type ScreenId = 'home' | 'schedule' | 'map' | 'mission' | 'guide'
 
 /** スケジュール1行分 */
 export interface ScheduleEntry {
@@ -68,4 +68,24 @@ export interface Mission {
   locationId?: LocationId
   /** 達成時の演出に出す一言 */
   reward?: string
+}
+
+/** 冒険ガイドの分類 */
+export type GuideCategory = 'spot' | 'food' | 'cafe' | 'souvenir'
+
+export interface GuideEntry {
+  id: string
+  name: string
+  category: GuideCategory
+  /** カード内の説明文。2〜3行を想定 */
+  description: string
+  /** 「エリア：」のあとに出す地名 */
+  area: string
+  /** カード左の画像 */
+  image: string
+  /**
+   * 実写を入れたときは true にする。
+   * ドット絵はそのまま拡大したいので、既定ではピクセル補間を切っている。
+   */
+  isPhoto?: boolean
 }

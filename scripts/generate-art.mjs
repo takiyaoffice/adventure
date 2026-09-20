@@ -792,6 +792,157 @@ function bannerDay3() {
 }
 
 /* =========================================================
+   5. 冒険ガイドの写真プレースホルダ（48x48）
+   実写に差し替えるまでのあいだ使う
+   ========================================================= */
+const GW = 48
+
+function guideMatsushima() {
+  const c = new Canvas(GW, GW)
+  const r = rng(501)
+  c.vgradient(0, 0, GW, 20, [[0, '#1d5ab4'], [0.6, PAL.skyLow], [1, PAL.skyHorizon]])
+  cloud(c, 1, 2, 16, 6)
+  cloud(c, 30, 4, 16, 5, 0.9)
+  c.vgradient(0, 19, GW, GW - 19, [[0, '#3d8ad8'], [0.45, PAL.sea], [1, PAL.seaDeep]])
+  c.hline(0, 19, GW, PAL.seaFoam)
+  waves(c, 0, 21, GW, GW - 21, 9, 0.1)
+  const isle = (cx, cy, rad, ts) => {
+    c.disc(cx, cy + 1, rad, PAL.forest)
+    c.disc(cx, cy, rad, PAL.grass)
+    c.disc(cx - 1, cy - 1, Math.max(1, rad - 2), PAL.grassLight)
+    c.ring(cx, cy + 1, rad + 1, mix(PAL.seaFoam, PAL.sea, 0.3))
+    if (ts) tree(c, cx - 2, cy - rad - ts + 2, ts, true)
+  }
+  isle(7, 25, 4, 3)
+  isle(41, 24, 5, 3)
+  isle(24, 32, 11, 0)
+  c.rect(14, 32, 21, 5, PAL.grass)
+  tree(c, 15, 22, 3, true)
+  tree(c, 31, 23, 3, false)
+  c.rect(21, 26, 7, 6, '#f0ece0')
+  japaneseRoof(c, 24, 21, 7, 4, PAL.red, PAL.gold)
+  c.rect(23, 28, 3, 4, '#2a1830')
+  // 鳥居
+  c.rect(6, 36, 1, 6, PAL.red)
+  c.rect(11, 36, 1, 6, PAL.red)
+  c.rect(5, 34, 8, 1, PAL.red)
+  c.rect(6, 37, 6, 1, PAL.red)
+  for (let i = 0; i < 12; i++) {
+    c.rect(Math.round(r() * GW), 40 + Math.round(r() * 8), 3, 1, PAL.seaFoam, 0.7)
+  }
+  return save('guide-matsushima', c)
+}
+
+function guideGyutan() {
+  const c = new Canvas(GW, GW)
+  // 木のテーブル
+  c.vgradient(0, 0, GW, GW, [[0, '#6b4a2c'], [1, '#452d19']])
+  for (let y = 0; y < GW; y += 4) c.hline(0, y, GW, '#3a2515', 0.35)
+  // 皿
+  c.disc(24, 28, 19, '#2a1c12')
+  c.disc(24, 27, 18, '#d9d3c2')
+  c.disc(24, 26, 15, '#f2efe4')
+  c.ring(24, 27, 18, '#a89f8a')
+  // 牛たん
+  const slice = (cx, cy, rx, ry) => {
+    for (let y = -ry; y <= ry; y++) {
+      const w = Math.round(rx * Math.sqrt(Math.max(0, 1 - (y * y) / (ry * ry))))
+      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#a34a33')
+    }
+    for (let y = -ry; y <= 0; y++) {
+      const w = Math.round((rx - 1) * Math.sqrt(Math.max(0, 1 - (y * y) / (ry * ry))))
+      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#c26a4c')
+    }
+    c.rect(cx - rx + 1, cy + ry, (rx - 1) * 2 + 1, 1, '#6e2a1c')
+    c.rect(cx - rx + 2, cy - 1, rx * 2 - 3, 1, '#7a3020')
+    c.rect(cx - rx + 2, cy + 1, rx * 2 - 3, 1, '#8c3a26')
+    c.px(cx - 2, cy - ry + 1, '#d98c66')
+  }
+  slice(15, 30, 8, 4)
+  slice(33, 30, 8, 4)
+  slice(24, 20, 9, 4)
+  // レモンと薬味
+  c.disc(38, 17, 4, '#c9a92e')
+  c.disc(38, 17, 3, '#f2d24e')
+  c.disc(38, 17, 2, '#fbe98a')
+  c.disc(10, 18, 3, '#2f7a2e')
+  c.disc(10, 18, 2, '#4f9e46')
+  // 湯気
+  for (const [x, y] of [[18, 10], [19, 6], [17, 3], [30, 11], [31, 7], [29, 4]]) {
+    c.px(x, y, '#ffffff', 0.4)
+  }
+  return save('guide-gyutan', c)
+}
+
+function guideZunda() {
+  const c = new Canvas(GW, GW)
+  // テーブル
+  c.vgradient(0, 0, GW, GW, [[0, '#7a5a38'], [1, '#4a3320']])
+  for (let y = 0; y < GW; y += 5) c.hline(0, y, GW, '#3d2a18', 0.3)
+  // 器（大）
+  c.disc(18, 30, 15, '#20303f')
+  c.disc(18, 29, 14, '#f4f1e6')
+  c.disc(18, 28, 11, '#ffffff')
+  c.ring(18, 29, 14, '#b9b2a0')
+  // ずんだ
+  c.disc(18, 27, 9, '#4f9e46')
+  c.disc(18, 26, 8, '#6fc05a')
+  c.disc(15, 24, 5, '#8fd673')
+  for (let i = 0; i < 26; i++) {
+    const a = (i / 26) * Math.PI * 2
+    c.px(18 + Math.round(Math.cos(a) * 6), 26 + Math.round(Math.sin(a) * 5), '#3f8437')
+  }
+  // 器（小）
+  c.disc(37, 20, 10, '#20303f')
+  c.disc(37, 19, 9, '#f4f1e6')
+  c.disc(37, 18, 7, '#ffffff')
+  c.disc(37, 17, 5, '#6fc05a')
+  c.disc(36, 16, 3, '#8fd673')
+  // 白玉
+  c.disc(13, 24, 3, '#ffffff')
+  c.disc(13, 23, 2, '#fdfdf8')
+  c.disc(23, 25, 3, '#ffffff')
+  c.disc(23, 24, 2, '#fdfdf8')
+  // 木のさじ
+  c.rect(30, 34, 12, 2, '#a07747')
+  c.disc(29, 35, 3, '#b9895a')
+  c.disc(29, 34, 2, '#cfa06e')
+  return save('guide-zunda', c)
+}
+
+function guideSouvenir() {
+  const c = new Canvas(GW, GW)
+  // 棚の背景
+  c.vgradient(0, 0, GW, GW, [[0, '#7a5a38'], [1, '#4a3320']])
+  c.rect(0, 33, GW, 2, '#3d2a18')
+  c.rect(0, 35, GW, GW - 35, '#5c4227')
+  // 箱を描く
+  const box = (x, y, w, h, base, lid, ribbon) => {
+    c.rect(x, y, w, h, base)
+    c.rect(x, y, w, 1, mix(base, '#ffffff', 0.35))
+    c.rect(x, y + h - 1, w, 1, mix(base, '#000000', 0.3))
+    c.rect(x + w - 1, y, 1, h, mix(base, '#000000', 0.25))
+    c.rect(x, y, w, Math.max(2, Math.round(h * 0.3)), lid)
+    c.rect(x, y, w, 1, mix(lid, '#ffffff', 0.4))
+    if (ribbon) {
+      c.rect(x + Math.floor(w / 2) - 1, y, 2, h, ribbon)
+      c.rect(x, y + Math.floor(h / 2) - 1, w, 2, ribbon)
+      c.px(x + Math.floor(w / 2) - 2, y + Math.floor(h / 2) - 2, ribbon)
+      c.px(x + Math.floor(w / 2) + 2, y + Math.floor(h / 2) - 2, ribbon)
+    }
+  }
+  box(3, 14, 19, 19, '#e8e2d2', '#c0392b', PAL.gold)
+  box(25, 20, 20, 14, '#f0ece0', '#2f5fc0', '#e8e2d2')
+  box(10, 34, 17, 12, '#d9c89c', '#8a6a3a', '#5c4227')
+  box(29, 36, 16, 10, '#e8e2d2', '#3f9a57', '#ffffff')
+  // 手前の和菓子
+  c.disc(6, 42, 4, '#c9a06a')
+  c.disc(6, 41, 3, '#e0bb85')
+  c.px(6, 40, '#f2d8a8')
+  return save('guide-souvenir', c)
+}
+
+/* =========================================================
    5. プレビュー（確認用の一覧画像）
    ========================================================= */
 function preview(items) {
@@ -819,5 +970,6 @@ const kv = keyVisual()
 const terrain = mapTerrain()
 const icons = [iconStation(), iconZuihoden(), iconMatsushima(), iconGyutan(), iconLive(), iconUnknown('loc-unknown', 'castle'), iconUnknown('loc-unknown-small', 'shrine')]
 const banners = [bannerDay1(), bannerDay2(), bannerDay3()]
-if (process.env.ART_PREVIEW) preview([kv, terrain, ...banners, ...icons])
+const guides = [guideMatsushima(), guideGyutan(), guideZunda(), guideSouvenir()]
+if (process.env.ART_PREVIEW) preview([kv, terrain, ...banners, ...guides, ...icons])
 console.log('生成した素材:\n  ' + written.join('\n  '))

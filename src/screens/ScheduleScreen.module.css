@@ -49,7 +49,7 @@
   border: calc(var(--u) * 2) solid var(--line);
   background: var(--panel);
   padding: calc(var(--u) * 14);
-  animation: pageIn 200ms steps(3) both;
+  animation: pageIn 260ms steps(4) both;
 }
 
 .headRow {
@@ -178,7 +178,7 @@
 @keyframes pageIn {
   from {
     opacity: 0;
-    transform: translateX(calc(var(--u) * 12));
+    transform: translateX(calc(var(--u) * 20));
   }
   to {
     opacity: 1;

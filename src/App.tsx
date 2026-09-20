@@ -6,6 +6,7 @@ import { HomeScreen } from './screens/HomeScreen'
 import { ScheduleScreen } from './screens/ScheduleScreen'
 import { MapScreen } from './screens/MapScreen'
 import { MissionScreen } from './screens/MissionScreen'
+import { GuideScreen } from './screens/GuideScreen'
 import { SCHEDULE } from './data/schedule'
 import { ProgressProvider } from './state/ProgressContext'
 import type { Mission, ScreenId } from './types'
@@ -26,6 +27,7 @@ function AppShell() {
         {screen === 'schedule' && <ScheduleScreen selectedDayId={selectedDayId} onSelectDay={setSelectedDayId} />}
         {screen === 'map' && <MapScreen onComplete={handleComplete} />}
         {screen === 'mission' && <MissionScreen onComplete={handleComplete} />}
+        {screen === 'guide' && <GuideScreen />}
       </Screen>
       <BottomNav current={screen} onNavigate={setScreen} />
       <MissionComplete mission={celebrating} onClose={() => setCelebrating(null)} />

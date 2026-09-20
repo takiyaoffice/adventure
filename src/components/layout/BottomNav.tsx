@@ -8,6 +8,7 @@ export const NAV_ITEMS: { id: ScreenId; label: string; icon: GlyphName }[] = [
   { id: 'schedule', label: 'スケジュール', icon: 'calendar' },
   { id: 'map', label: 'マップ', icon: 'map' },
   { id: 'mission', label: 'ミッション', icon: 'mission' },
+  { id: 'guide', label: '冒険ガイド', icon: 'book' },
 ]
 
 interface Props {
@@ -27,7 +28,7 @@ export function BottomNav({ current, onNavigate }: Props) {
           aria-current={current === item.id ? 'page' : undefined}
           onClick={() => onNavigate(item.id)}
         >
-          <PixelIcon name={item.icon} size={22} />
+          <PixelIcon name={item.icon} size={20} />
           <span className={s.label}>{item.label}</span>
         </button>
       ))}

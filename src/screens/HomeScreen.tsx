@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import { PixelIcon } from '../components/ui/PixelIcon'
-import { MessageModal } from '../components/ui/MessageModal'
 import { TRIP } from '../data/trip'
 import keyVisual from '../assets/art/keyvisual.png'
 import type { ScreenId } from '../types'
@@ -10,16 +8,14 @@ interface Props {
   onNavigate: (screen: ScreenId) => void
 }
 
-const MENU: { label: string; icon: 'calendar' | 'map' | 'mission' | 'character'; screen?: ScreenId }[] = [
+const MENU: { label: string; icon: 'calendar' | 'map' | 'mission' | 'book'; screen: ScreenId }[] = [
   { label: 'スケジュール', icon: 'calendar', screen: 'schedule' },
   { label: 'マップ', icon: 'map', screen: 'map' },
   { label: 'ミッション', icon: 'mission', screen: 'mission' },
-  { label: 'キャラクター', icon: 'character' },
+  { label: '冒険ガイド', icon: 'book', screen: 'guide' },
 ]
 
 export function HomeScreen({ onNavigate }: Props) {
-  const [lockedOpen, setLockedOpen] = useState(false)
-
   return (
     <>
       <section className={s.keyVisual}>
@@ -53,20 +49,13 @@ export function HomeScreen({ onNavigate }: Props) {
             key={item.label}
             type="button"
             className={s.menuButton}
-            onClick={() => (item.screen ? onNavigate(item.screen) : setLockedOpen(true))}
+            onClick={() => onNavigate(item.screen)}
           >
             <PixelIcon name={item.icon} size={24} />
             <span className={s.menuLabel}>{item.label}</span>
           </button>
         ))}
       </div>
-
-      <MessageModal
-        open={lockedOpen}
-        title="？ ？ ？"
-        lines={['この機能はまだ解放されていない。', '旅の準備が整うまで、もう少し待とう。']}
-        onClose={() => setLockedOpen(false)}
-      />
     </>
   )
 }

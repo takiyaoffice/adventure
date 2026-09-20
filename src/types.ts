@@ -66,8 +66,6 @@ export interface Mission {
   title: string
   /** 達成でマップ上の場所が明るくなる */
   locationId?: LocationId
-  /** チェックボックスの代わりに出す固有アイコン */
-  badge?: string
   /** 達成時の演出に出す一言 */
   reward?: string
 }

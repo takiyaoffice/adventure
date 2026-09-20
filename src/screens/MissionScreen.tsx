@@ -62,14 +62,8 @@ export function MissionScreen({ onComplete }: Props) {
                           if (completed) onComplete(completed)
                         }}
                       >
-                        <span
-                          className={`${s.badge} ${done ? s.badgeDone : ''} ${!done && mission.badge ? s.badgeArt : ''}`}
-                        >
-                          {done ? (
-                            <PixelIcon name="check" size={18} />
-                          ) : mission.badge ? (
-                            <img className={s.badgeImage} src={mission.badge} alt="" />
-                          ) : null}
+                        <span className={`${s.badge} ${done ? s.badgeDone : ''}`}>
+                          {done && <PixelIcon name="check" size={18} />}
                         </span>
                         <span className={s.rowTitle}>{mission.title}</span>
                       </button>

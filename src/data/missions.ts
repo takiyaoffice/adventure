@@ -1,7 +1,4 @@
 import type { Mission, MissionCategory } from '../types'
-import badgeGyutan from '../assets/art/loc-gyutan.png'
-import badgeLive from '../assets/art/loc-live.png'
-import badgeMatsushima from '../assets/art/loc-matsushima.png'
 
 /** カテゴリタブの定義 */
 export const MISSION_TABS: { id: MissionCategory | 'all'; label: string }[] = [
@@ -41,7 +38,6 @@ export const MISSIONS: Mission[] = [
     category: 'place',
     title: '松島を訪れる',
     locationId: 'matsushima',
-    badge: badgeMatsushima,
     reward: '日本三景の絶景を手に入れた！',
   },
   {
@@ -49,7 +45,6 @@ export const MISSIONS: Mission[] = [
     category: 'experience',
     title: '牛たんを食べる',
     locationId: 'gyutan',
-    badge: badgeGyutan,
     reward: '体力が大きく回復した！',
   },
   {
@@ -69,7 +64,6 @@ export const MISSIONS: Mission[] = [
     category: 'special',
     title: '稲葉さんのライブに参加する',
     locationId: 'live-venue',
-    badge: badgeLive,
     reward: '特別な一日がはじまった！',
   },
   {
@@ -77,7 +71,6 @@ export const MISSIONS: Mission[] = [
     category: 'special',
     title: 'ライブを楽しむ',
     locationId: 'live-venue',
-    badge: badgeLive,
     reward: '60年の軌跡に、新しい1ページ！',
   },
 ]

@@ -3,11 +3,11 @@ import type { GlyphName } from '../ui/pixel-glyphs'
 import type { ScreenId } from '../../types'
 import s from './BottomNav.module.css'
 
-export const NAV_ITEMS: { id: ScreenId; label: string; icon: GlyphName; headerTitle: string }[] = [
-  { id: 'home', label: 'ホーム', icon: 'home', headerTitle: 'HOME' },
-  { id: 'schedule', label: 'スケジュール', icon: 'calendar', headerTitle: 'SCHEDULE' },
-  { id: 'map', label: 'マップ', icon: 'map', headerTitle: 'MAP' },
-  { id: 'mission', label: 'ミッション', icon: 'mission', headerTitle: 'MISSION' },
+export const NAV_ITEMS: { id: ScreenId; label: string; icon: GlyphName }[] = [
+  { id: 'home', label: 'ホーム', icon: 'home' },
+  { id: 'schedule', label: 'スケジュール', icon: 'calendar' },
+  { id: 'map', label: 'マップ', icon: 'map' },
+  { id: 'mission', label: 'ミッション', icon: 'mission' },
 ]
 
 interface Props {

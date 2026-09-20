@@ -22,14 +22,14 @@ function save(name, canvas) {
    ========================================================= */
 function keyVisual() {
   const W = 160
-  const H = 170
+  const H = 248
   const c = new Canvas(W, H)
 
-  // 上半分は文字を載せる領域なので、雲や城が入り込まないよう空を広く取る
-  const SKY_END = 98
-  const SEA_TOP = 100
-  const LAND_TOP = 136
-  const CASTLE_BASE = 140
+  // 上部はキャッチコピーを載せる領域なので、雲や城が入り込まないよう空を広く取る
+  const SKY_END = 118
+  const SEA_TOP = 120
+  const LAND_TOP = 160
+  const CASTLE_BASE = 166
 
   // --- 空 ---
   c.vgradient(0, 0, W, SKY_END + 8, [
@@ -38,32 +38,29 @@ function keyVisual() {
     [0.68, PAL.skyLow],
     [1, PAL.skyHorizon],
   ])
-  c.disc(122, 22, 12, '#ffffff', 0.05)
-  c.disc(122, 22, 7, '#fff6d8', 0.22)
-
   // --- 雲（文字にかからないよう上部のみ） ---
-  cloud(c, 2, 6, 40, 12)
-  cloud(c, 106, 4, 48, 13)
-  cloud(c, 52, 26, 30, 8, 0.9)
-  cloud(c, 0, 38, 24, 7, 0.75)
-  cloud(c, 128, 36, 30, 8, 0.8)
+  cloud(c, 2, 6, 42, 12)
+  cloud(c, 106, 4, 50, 13)
+  cloud(c, 54, 28, 32, 9, 0.9)
+  cloud(c, 0, 44, 26, 7, 0.75)
+  cloud(c, 126, 42, 32, 8, 0.8)
 
   // 鳥
   const bird = (x, y) => {
     c.px(x, y, '#20365e'); c.px(x + 1, y - 1, '#20365e'); c.px(x + 2, y, '#20365e')
     c.px(x + 3, y - 1, '#20365e'); c.px(x + 4, y, '#20365e')
   }
-  bird(24, 56); bird(34, 52); bird(42, 58)
+  bird(22, 68); bird(33, 63); bird(42, 70)
 
-  // --- 遠景の山脈（文字の下に収まる高さ） ---
-  mountain(c, 14, 104, 18, 16)
-  mountain(c, 40, 104, 13, 12)
-  mountain(c, 134, 104, 19, 15)
-  mountain(c, 110, 104, 12, 10, mix(PAL.mountain, '#ffffff', 0.12), PAL.mountainLight, PAL.snow)
+  // --- 遠景の山脈 ---
+  mountain(c, 12, 124, 22, 22)
+  mountain(c, 42, 124, 15, 15)
+  mountain(c, 138, 124, 23, 20)
+  mountain(c, 110, 124, 14, 12, mix(PAL.mountain, '#ffffff', 0.12), PAL.mountainLight, PAL.snow)
   c.dither(0, SKY_END, W, 6, PAL.skyHorizon, 2)
 
   // --- 海（仙台湾） ---
-  c.vgradient(0, SEA_TOP, W, LAND_TOP - SEA_TOP + 4, [
+  c.vgradient(0, SEA_TOP, W, LAND_TOP - SEA_TOP + 6, [
     [0, '#2a74c8'],
     [0.5, PAL.sea],
     [1, PAL.seaDeep],
@@ -71,33 +68,33 @@ function keyVisual() {
   c.hline(0, SEA_TOP, W, mix(PAL.seaFoam, PAL.sea, 0.4))
   waves(c, 0, SEA_TOP + 2, W, LAND_TOP - SEA_TOP, 91, 0.055)
   for (let y = SEA_TOP + 4; y < LAND_TOP; y += 3) {
-    const w = 10 + ((y * 7) % 14)
-    c.rect(114 - Math.round((y - SEA_TOP) * 0.6), y, w, 1, PAL.seaFoam, 0.2)
+    const w = 10 + ((y * 7) % 16)
+    c.rect(116 - Math.round((y - SEA_TOP) * 0.6), y, w, 1, PAL.seaFoam, 0.2)
   }
 
   // --- 城の建つ島 ---
-  c.disc(80, CASTLE_BASE + 4, 30, PAL.grassDark)
-  c.disc(80, CASTLE_BASE + 2, 28, PAL.grass)
-  c.disc(74, CASTLE_BASE, 22, PAL.grassLight)
-  c.rect(50, CASTLE_BASE + 2, 60, 8, PAL.grass)
-  for (let x = 48; x < 112; x++) {
-    const d = Math.abs(x - 80) / 32
-    const y = CASTLE_BASE + 2 - Math.round(Math.cos(d * 1.5) * 3)
+  c.disc(80, CASTLE_BASE + 5, 32, PAL.grassDark)
+  c.disc(80, CASTLE_BASE + 3, 30, PAL.grass)
+  c.disc(73, CASTLE_BASE + 1, 23, PAL.grassLight)
+  c.rect(48, CASTLE_BASE + 3, 64, 9, PAL.grass)
+  for (let x = 46; x < 114; x++) {
+    const d = Math.abs(x - 80) / 34
+    const y = CASTLE_BASE + 3 - Math.round(Math.cos(d * 1.5) * 3)
     c.px(x, y, PAL.sand)
     c.px(x, y + 1, mix(PAL.sand, '#000000', 0.2))
   }
 
   // --- 城 ---
-  wallRun(c, 54, CASTLE_BASE - 9, 52, 9)
-  c.rect(76, CASTLE_BASE - 8, 8, 8, mix(PAL.wallShade, '#000000', 0.25))
-  c.rect(77, CASTLE_BASE - 7, 6, 7, PAL.window)
-  c.rect(78, CASTLE_BASE - 8, 4, 1, PAL.gold)
-  tower(c, 59, CASTLE_BASE - 8, 6, 11, 6, { flag: false })
-  tower(c, 101, CASTLE_BASE - 8, 6, 11, 6, { flag: false })
-  tower(c, 67, CASTLE_BASE - 8, 8, 16, 8)
-  tower(c, 93, CASTLE_BASE - 8, 8, 16, 8)
-  tower(c, 80, CASTLE_BASE - 10, 14, 22, 11)
-  c.rect(74, CASTLE_BASE - 34, 13, 1, PAL.gold)
+  wallRun(c, 53, CASTLE_BASE - 10, 54, 10)
+  c.rect(76, CASTLE_BASE - 9, 8, 9, mix(PAL.wallShade, '#000000', 0.25))
+  c.rect(77, CASTLE_BASE - 8, 6, 8, PAL.window)
+  c.rect(78, CASTLE_BASE - 9, 4, 1, PAL.gold)
+  tower(c, 58, CASTLE_BASE - 9, 7, 13, 7, { flag: false })
+  tower(c, 102, CASTLE_BASE - 9, 7, 13, 7, { flag: false })
+  tower(c, 67, CASTLE_BASE - 9, 9, 19, 9)
+  tower(c, 93, CASTLE_BASE - 9, 9, 19, 9)
+  tower(c, 80, CASTLE_BASE - 11, 15, 26, 13)
+  c.rect(74, CASTLE_BASE - 42, 13, 1, PAL.gold)
 
   // --- 手前の陸地（重なり合う丘） ---
   const hill = (cy, amp, freq, phase, col) => {
@@ -108,28 +105,33 @@ function keyVisual() {
   }
   hill(LAND_TOP + 2, 3, 0.09, 0.4, PAL.grass)
   grassTexture(c, 0, LAND_TOP - 2, W, H - LAND_TOP + 2, 12)
+  // 波打ち際
   for (let x = 0; x < W; x++) {
     const y = Math.round(LAND_TOP + 2 + Math.sin(x * 0.09 + 0.4) * 3 + Math.sin(x * 0.207 + 0.4) * 1.05)
     c.px(x, y - 1, PAL.sand)
     c.px(x, y, mix(PAL.sand, '#000000', 0.2))
     c.px(x, y - 2, PAL.seaFoam, 0.6)
   }
-  hill(LAND_TOP + 13, 4, 0.07, 2.1, PAL.grassDark)
-  hill(LAND_TOP + 25, 3, 0.11, 4.2, PAL.forest)
-  grassTexture(c, 0, LAND_TOP + 10, W, H - LAND_TOP - 10, 33)
+  hill(LAND_TOP + 16, 4, 0.07, 2.1, PAL.grassDark)
+  hill(LAND_TOP + 34, 4, 0.11, 4.2, PAL.forest)
+  hill(LAND_TOP + 58, 3, 0.08, 1.2, '#1c4f22')
+  grassTexture(c, 0, LAND_TOP + 12, W, H - LAND_TOP - 12, 33)
 
   // 街道
-  c.path([[82, LAND_TOP + 4], [74, LAND_TOP + 13], [88, LAND_TOP + 22], [70, LAND_TOP + 30], [80, H]], PAL.roadEdge, 5)
-  c.path([[82, LAND_TOP + 4], [74, LAND_TOP + 13], [88, LAND_TOP + 22], [70, LAND_TOP + 30], [80, H]], PAL.road, 3)
+  const road = [[84, LAND_TOP + 4], [74, LAND_TOP + 18], [90, LAND_TOP + 34], [68, LAND_TOP + 52], [82, LAND_TOP + 70], [74, H]]
+  c.path(road, PAL.roadEdge, 6)
+  c.path(road, PAL.road, 4)
 
-  // --- 手前の森 ---
+  // --- 手前の森（奥から手前へ、だんだん大きく） ---
   const r = rng(2024)
   const onRoadKV = (x, y) => {
     const p = c.get(x, y)
-    return p[0] > 150 && p[1] > 110 && p[2] < 150 && p[1] < 215
+    const isRoad = p[0] > 150 && p[1] > 110 && p[2] < 150 && p[1] < 215
+    const isWater = p[2] > 120 && p[2] > p[1] + 20
+    return isRoad || isWater
   }
   const plantRow = (y0, y1, size, dark, count) => {
-    for (let i = 0; i < count * 8 && count > 0; i++) {
+    for (let i = 0; i < count * 10 && count > 0; i++) {
       const x = Math.round(r() * (W - 6))
       const y = y0 + Math.round(r() * (y1 - y0))
       let clean = true
@@ -141,13 +143,27 @@ function keyVisual() {
       count--
     }
   }
-  plantRow(LAND_TOP + 1, LAND_TOP + 8, 3, true, 20)
-  plantRow(LAND_TOP + 6, LAND_TOP + 15, 4, false, 16)
-  plantRow(LAND_TOP + 13, LAND_TOP + 23, 4, true, 18)
-  plantRow(LAND_TOP + 20, LAND_TOP + 31, 5, false, 14)
-  plantRow(LAND_TOP + 26, H - 3, 6, true, 12)
-  for (let i = 0; i < 24; i++) {
-    bush(c, Math.round(r() * W), LAND_TOP + Math.round(r() * (H - LAND_TOP)), 1 + Math.round(r() * 1.6), r() > 0.5 ? PAL.forest : PAL.forestLight)
+  plantRow(LAND_TOP + 1, LAND_TOP + 10, 3, true, 46)
+  plantRow(LAND_TOP + 8, LAND_TOP + 22, 3, false, 38)
+  plantRow(LAND_TOP + 14, LAND_TOP + 28, 4, true, 40)
+  plantRow(LAND_TOP + 24, LAND_TOP + 40, 4, false, 34)
+  plantRow(LAND_TOP + 34, LAND_TOP + 52, 5, true, 30)
+  plantRow(LAND_TOP + 46, LAND_TOP + 66, 6, false, 24)
+  plantRow(LAND_TOP + 60, H - 4, 7, true, 18)
+  // 下草と茂み
+  for (let i = 0; i < 90; i++) {
+    const x = Math.round(r() * W)
+    const y = LAND_TOP + Math.round(r() * (H - LAND_TOP))
+    if (onRoadKV(x, y)) continue
+    bush(c, x, y, 1 + Math.round(r() * 2), r() > 0.45 ? PAL.forest : PAL.forestLight)
+  }
+  // 草のゆらぎ
+  for (let i = 0; i < 260; i++) {
+    const x = Math.round(r() * W)
+    const y = LAND_TOP + Math.round(r() * (H - LAND_TOP))
+    if (onRoadKV(x, y)) continue
+    c.px(x, y, PAL.grassDark)
+    c.px(x + 1, y - 1, PAL.grassLight)
   }
 
   return save('keyvisual', c)
@@ -543,106 +559,236 @@ function iconUnknown(name, kind) {
 }
 
 /* =========================================================
-   4. スケジュールのサムネイル（40x40）
+   4. スケジュールの日ごとイラスト（120x80）
    ========================================================= */
-function thumbDay1() {
-  const c = new Canvas(40, 40)
-  c.vgradient(0, 0, 40, 26, [[0, PAL.skyTop], [0.5, PAL.skyMid], [1, PAL.skyHorizon]])
-  cloud(c, 1, 3, 14, 5)
-  cloud(c, 24, 8, 15, 5, 0.9)
-  mountain(c, 6, 27, 9, 10)
-  mountain(c, 33, 27, 9, 9)
-  c.rect(0, 26, 40, 4, PAL.sea)
-  c.rect(0, 26, 40, 1, PAL.seaFoam)
-  waves(c, 0, 27, 40, 3, 5, 0.12)
-  c.rect(0, 29, 40, 11, PAL.grass)
-  grassTexture(c, 0, 29, 40, 11, 8)
-  c.rect(0, 29, 40, 1, PAL.sand)
-  // 城
-  wallRun(c, 12, 24, 16, 6)
-  c.rect(19, 25, 3, 5, PAL.window)
-  tower(c, 14, 25, 5, 8, 5, { flag: false })
-  tower(c, 26, 25, 5, 8, 5, { flag: false })
-  tower(c, 20, 26, 7, 13, 7)
+const BW = 120
+const BH = 80
+
+function bannerDay1() {
+  const c = new Canvas(BW, BH)
+  const r = rng(11)
+  // 空
+  c.vgradient(0, 0, BW, 40, [[0, PAL.skyTop], [0.4, PAL.skyMid], [0.75, PAL.skyLow], [1, PAL.skyHorizon]])
+  cloud(c, 4, 4, 26, 8)
+  cloud(c, 72, 2, 30, 9)
+  cloud(c, 44, 14, 20, 6, 0.85)
+  cloud(c, 100, 18, 20, 6, 0.8)
+  ;[[20, 24], [28, 21], [35, 25]].forEach(([x, y]) => {
+    c.px(x, y, '#20365e'); c.px(x + 1, y - 1, '#20365e'); c.px(x + 2, y, '#20365e')
+  })
+  // 山
+  mountain(c, 10, 42, 13, 13)
+  mountain(c, 28, 42, 9, 9)
+  mountain(c, 104, 42, 14, 12)
+  mountain(c, 86, 42, 9, 8, mix(PAL.mountain, '#ffffff', 0.12), PAL.mountainLight, PAL.snow)
+  c.dither(0, 38, BW, 4, PAL.skyHorizon, 2)
+  // 海
+  c.vgradient(0, 40, BW, 14, [[0, '#2a74c8'], [0.5, PAL.sea], [1, PAL.seaDeep]])
+  c.hline(0, 40, BW, mix(PAL.seaFoam, PAL.sea, 0.4))
+  waves(c, 0, 41, BW, 12, 5, 0.08)
+  // 城のある岬
+  c.disc(62, 58, 22, PAL.grassDark)
+  c.disc(62, 56, 20, PAL.grass)
+  c.disc(56, 54, 15, PAL.grassLight)
+  c.rect(42, 56, 42, 6, PAL.grass)
+  for (let x = 40; x < 86; x++) {
+    const y = 56 - Math.round(Math.cos((Math.abs(x - 62) / 24) * 1.5) * 2)
+    c.px(x, y, PAL.sand)
+  }
+  const cb = 56
+  wallRun(c, 48, cb - 7, 28, 7)
+  c.rect(60, cb - 6, 5, 6, PAL.window)
+  tower(c, 51, cb - 6, 5, 9, 5, { flag: false })
+  tower(c, 73, cb - 6, 5, 9, 5, { flag: false })
+  tower(c, 62, cb - 7, 9, 16, 8)
+  // 手前の陸
+  const hill = (cy, amp, freq, phase, col) => {
+    for (let x = 0; x < BW; x++) {
+      const y = Math.round(cy + Math.sin(x * freq + phase) * amp)
+      c.rect(x, y, 1, BH - y, col)
+    }
+  }
+  c.rect(0, 52, BW, BH - 52, PAL.grass)
+  hill(58, 2, 0.11, 0.4, PAL.grass)
+  hill(66, 3, 0.09, 2.2, PAL.grassDark)
+  hill(74, 2, 0.13, 4.0, PAL.forest)
+  grassTexture(c, 0, 56, BW, BH - 56, 21)
+  // 街道
+  const road = [[62, 55], [59, 59], [55, 63], [58, 67], [64, 70], [62, 74], [55, 77], [50, 80]]
+  c.path(road, PAL.roadEdge, 4)
+  c.path(road, PAL.road, 2)
   // 森
-  tree(c, 1, 31, 3, true)
-  tree(c, 6, 34, 3)
-  tree(c, 32, 32, 3, true)
-  tree(c, 36, 35, 3)
-  c.path([[20, 30], [16, 35], [22, 40]], PAL.road, 2)
-  return save('thumb-day1', c)
+  const onRoad = (x, y) => {
+    const p = c.get(x, y)
+    return p[0] > 150 && p[1] > 110 && p[2] < 150 && p[1] < 215
+  }
+  const plant = (y0, y1, size, dark, count) => {
+    for (let i = 0; i < count * 10 && count > 0; i++) {
+      const x = Math.round(r() * (BW - 6))
+      const y = y0 + Math.round(r() * (y1 - y0))
+      let clean = true
+      for (let dy = -1; dy <= size + 1 && clean; dy++) {
+        for (let dx = -1; dx <= size * 2; dx++) if (onRoad(x + dx, y + dy)) { clean = false; break }
+      }
+      if (clean) { tree(c, x, y, size, dark); count-- }
+    }
+  }
+  plant(55, 62, 3, true, 34)
+  plant(59, 68, 3, false, 28)
+  plant(64, 73, 4, true, 26)
+  plant(70, 77, 5, false, 18)
+  for (let i = 0; i < 46; i++) {
+    const bx = Math.round(r() * BW)
+    const by = 56 + Math.round(r() * 23)
+    if (onRoad(bx, by)) continue
+    bush(c, bx, by, 1 + Math.round(r() * 1.8), r() > 0.5 ? PAL.forest : PAL.forestLight)
+  }
+  for (let i = 0; i < 90; i++) {
+    const gx = Math.round(r() * BW)
+    const gy = 56 + Math.round(r() * 23)
+    if (onRoad(gx, gy)) continue
+    c.px(gx, gy, PAL.grassDark)
+    c.px(gx + 1, gy - 1, PAL.grassLight)
+  }
+  return save('banner-day1', c)
 }
 
-function thumbDay2() {
-  const c = new Canvas(40, 40)
-  c.vgradient(0, 0, 40, 40, [[0, '#1a0f3a'], [0.5, '#2c1a5e'], [1, '#0d0722']])
-  const r = rng(9)
-  for (let i = 0; i < 40; i++) {
-    const x = Math.round(r() * 39)
-    const y = Math.round(r() * 26)
-    c.px(x, y, r() > 0.6 ? PAL.magenta : '#ffffff', 0.4 + r() * 0.6)
+function bannerDay2() {
+  const c = new Canvas(BW, BH)
+  const r = rng(77)
+  // 夜空
+  c.vgradient(0, 0, BW, BH, [[0, '#150a33'], [0.45, '#2d1560'], [1, '#0a0620']])
+  for (let i = 0; i < 90; i++) {
+    const x = Math.round(r() * BW)
+    const y = Math.round(r() * 52)
+    c.px(x, y, r() > 0.62 ? PAL.magenta : '#ffffff', 0.35 + r() * 0.65)
   }
-  // スポットライト2本
-  for (let j = 0; j < 22; j++) {
-    const w = 2 + j
-    c.rect(14 - Math.floor(w / 2), j, w, 1, '#ffffff', 0.03 + j * 0.005)
-    const w2 = 2 + Math.round(j * 0.8)
-    c.rect(27 - Math.floor(w2 / 2), j, w2, 1, PAL.magenta, 0.03 + j * 0.005)
+  // スポットライト
+  const beam = (topX, botX, col, base) => {
+    for (let y = 0; y < 52; y++) {
+      const t = y / 52
+      const cx = topX + (botX - topX) * t
+      const w = 2 + Math.round(t * 16)
+      c.rect(Math.round(cx - w / 2), y, w, 1, col, base + t * 0.1)
+    }
   }
-  // ステージの光
-  c.disc(20, 24, 9, '#ffffff', 0.14)
-  c.disc(20, 24, 5, '#fff3c4', 0.22)
+  beam(24, 44, '#ffffff', 0.03)
+  beam(96, 76, PAL.magenta, 0.03)
+  beam(60, 60, '#a9d8ff', 0.035)
+  // ステージ後方の幕（縦縞は柵に見えるので使わず、色の濃淡だけで奥行きを出す）
+  c.vgradient(0, 44, BW, 12, [[0, '#241354'], [1, '#150b32']])
+  c.rect(0, 44, BW, 1, '#331f6b')
+
+  // 大きな光の輪
+  c.disc(60, 46, 20, '#ffffff', 0.09)
+  c.disc(60, 46, 13, '#fff3c4', 0.14)
+
   // アーティスト
-  c.rect(19, 19, 3, 7, '#ffffff')
-  c.rect(19, 17, 3, 2, '#ffe9b0')
-  c.rect(17, 20, 2, 1, '#ffffff')
-  c.rect(22, 18, 2, 1, '#ffffff')
-  c.px(24, 17, '#ffffff')
-  // 客席
-  for (let i = 0; i < 20; i++) {
-    const x = i * 2
-    const h = 4 + ((i * 7) % 4)
-    c.rect(x, 40 - h - 2, 2, h + 2, '#080416')
-    c.px(x, 38 - h - 1, '#080416')
-    if (i % 3 === 0) c.px(x, 36 - h, PAL.magenta, 0.8)
+  c.rect(57, 36, 6, 16, '#ffffff')
+  c.rect(58, 36, 4, 1, '#e6ecff')
+  c.rect(57, 31, 6, 5, '#ffe9b0')
+  c.rect(57, 30, 6, 2, '#6b4320')
+  c.rect(52, 38, 5, 3, '#ffffff')
+  c.rect(63, 32, 3, 6, '#ffffff')
+  c.rect(65, 28, 2, 5, '#ffffff')
+  c.disc(66, 27, 2, '#fff3c4')
+  c.rect(57, 52, 2, 4, '#20264a')
+  c.rect(61, 52, 2, 4, '#20264a')
+
+  // ステージ床
+  c.vgradient(0, 56, BW, 6, [[0, '#3a2470'], [1, '#1a0f3a']])
+  c.rect(0, 56, BW, 1, '#5b3ea8')
+  for (let x = 2; x < BW; x += 9) c.rect(x, 57, 4, 1, '#472c85')
+
+  // 客席（頭と上げた手）
+  for (let i = 0; i < 24; i++) {
+    const x = i * 5 + (i % 2) * 2 - 2
+    const h = 11 + ((i * 7) % 7)
+    const top = BH - h
+    c.rect(x, top + 3, 4, h, '#070418')
+    c.disc(x + 1, top + 1, 2, '#070418')
+    if (i % 2 === 0) {
+      c.rect(x - 1, top - 3, 1, 6, '#070418')
+      c.px(x - 1, top - 4, i % 4 === 0 ? PAL.magenta : '#a9d8ff', 0.95)
+    }
+    if (i % 3 === 0) {
+      c.rect(x + 4, top - 1, 1, 5, '#070418')
+      c.px(x + 4, top - 2, PAL.gold, 0.9)
+    }
   }
-  c.rect(0, 28, 40, 1, PAL.purpleLight, 0.7)
-  return save('thumb-day2', c)
+
+  // 紙吹雪
+  for (let i = 0; i < 26; i++) {
+    const x = Math.round(r() * BW)
+    const y = Math.round(r() * 58)
+    c.px(x, y, [PAL.gold, PAL.magenta, '#a9d8ff', '#ffffff'][Math.floor(r() * 4)], 0.9)
+  }
+  return save('banner-day2', c)
 }
 
-function thumbDay3() {
-  const c = new Canvas(40, 40)
-  c.vgradient(0, 0, 40, 22, [[0, '#1d5ab4'], [0.6, PAL.skyLow], [1, PAL.skyHorizon]])
-  cloud(c, 2, 2, 14, 5)
-  cloud(c, 25, 5, 14, 5, 0.9)
-  c.rect(0, 22, 40, 18, PAL.sea)
-  c.vgradient(0, 22, 40, 18, [[0, PAL.seaLight], [0.5, PAL.sea], [1, PAL.seaDeep]])
-  c.hline(0, 22, 40, PAL.seaFoam)
-  waves(c, 0, 24, 40, 15, 17, 0.1)
-  // 松島の島
-  const isle = (cx, cy, rad) => {
+function bannerDay3() {
+  const c = new Canvas(BW, BH)
+  const r = rng(303)
+  // 空
+  c.vgradient(0, 0, BW, 30, [[0, '#1d5ab4'], [0.55, PAL.skyLow], [1, PAL.skyHorizon]])
+  cloud(c, 2, 3, 26, 8)
+  cloud(c, 60, 1, 30, 9)
+  cloud(c, 96, 14, 22, 6, 0.85)
+  ;[[34, 18], [42, 15], [49, 19]].forEach(([x, y]) => {
+    c.px(x, y, '#20365e'); c.px(x + 1, y - 1, '#20365e'); c.px(x + 2, y, '#20365e')
+  })
+  // 海
+  c.vgradient(0, 28, BW, BH - 28, [[0, '#3d8ad8'], [0.4, PAL.sea], [1, PAL.seaDeep]])
+  c.hline(0, 28, BW, PAL.seaFoam)
+  waves(c, 0, 30, BW, BH - 30, 13, 0.09)
+  // 島
+  const isle = (cx, cy, rad, treeSize) => {
     c.disc(cx, cy + 1, rad, PAL.forest)
     c.disc(cx, cy, rad, PAL.grass)
-    c.disc(cx - 1, cy - 1, Math.max(1, rad - 1), PAL.grassLight)
-    c.ring(cx, cy + 1, rad + 1, PAL.seaFoam)
+    c.disc(cx - 1, cy - 1, Math.max(1, rad - 2), PAL.grassLight)
+    c.ring(cx, cy + 1, rad + 1, mix(PAL.seaFoam, PAL.sea, 0.3))
+    if (treeSize) {
+      tree(c, cx - rad + 1, cy - rad - treeSize + 2, treeSize, true)
+      tree(c, cx + rad - 4, cy - rad - treeSize + 3, treeSize, false)
+    }
   }
-  isle(5, 24, 4)
-  isle(33, 26, 5)
-  isle(19, 27, 9)
-  tree(c, 3, 19, 3, true)
-  tree(c, 31, 21, 3, true)
-  tree(c, 9, 22, 3, true)
-  tree(c, 27, 24, 3, true)
-  // 五大堂
-  c.rect(16, 22, 7, 5, '#f0ece0')
-  japaneseRoof(c, 19, 18, 7, 4, PAL.red, PAL.gold)
-  c.rect(18, 24, 3, 3, '#2a1830')
+  isle(14, 34, 6, 3)
+  isle(102, 33, 7, 3)
+  isle(36, 30, 4, 2)
+  isle(84, 44, 5, 3)
+  isle(8, 50, 5, 3)
+  isle(114, 54, 5, 3)
+  // 中央の島と五大堂
+  isle(58, 46, 16, 0)
+  c.rect(40, 46, 36, 6, PAL.grass)
+  tree(c, 42, 33, 4, true)
+  tree(c, 70, 34, 4, false)
+  tree(c, 36, 40, 3, true)
+  tree(c, 76, 41, 3, false)
+  c.rect(52, 38, 12, 8, '#f0ece0')
+  c.rect(52, 38, 1, 8, '#ffffff')
+  c.rect(63, 38, 1, 8, PAL.wallShade)
+  japaneseRoof(c, 58, 30, 12, 7, PAL.red, PAL.gold)
+  c.rect(55, 41, 6, 5, '#2a1830')
+  c.rect(56, 42, 4, 1, PAL.gold)
   // 鳥居
-  c.rect(11, 27, 1, 5, PAL.red)
-  c.rect(14, 27, 1, 5, PAL.red)
-  c.rect(10, 26, 6, 1, PAL.red)
-  c.rect(11, 28, 4, 1, PAL.red)
-  return save('thumb-day3', c)
+  c.rect(24, 52, 2, 9, PAL.red)
+  c.rect(33, 52, 2, 9, PAL.red)
+  c.rect(22, 49, 15, 2, PAL.red)
+  c.rect(23, 53, 13, 2, PAL.red)
+  c.rect(22, 48, 15, 1, PAL.redDark)
+  // 小舟
+  c.rect(88, 66, 11, 2, '#7a4f28')
+  c.rect(89, 65, 9, 1, '#a06b38')
+  c.rect(93, 60, 1, 5, '#e8e4d8')
+  c.rect(94, 60, 4, 4, '#ffffff')
+  // 手前の波
+  for (let i = 0; i < 26; i++) {
+    const x = Math.round(r() * BW)
+    const y = 62 + Math.round(r() * 18)
+    c.rect(x, y, 3 + Math.round(r() * 3), 1, PAL.seaFoam, 0.7)
+  }
+  return save('banner-day3', c)
 }
 
 /* =========================================================
@@ -672,6 +818,6 @@ function preview(items) {
 const kv = keyVisual()
 const terrain = mapTerrain()
 const icons = [iconStation(), iconZuihoden(), iconMatsushima(), iconGyutan(), iconLive(), iconUnknown('loc-unknown', 'castle'), iconUnknown('loc-unknown-small', 'shrine')]
-const thumbs = [thumbDay1(), thumbDay2(), thumbDay3()]
-if (process.env.ART_PREVIEW) preview([kv, terrain, ...thumbs, ...icons])
+const banners = [bannerDay1(), bannerDay2(), bannerDay3()]
+if (process.env.ART_PREVIEW) preview([kv, terrain, ...banners, ...icons])
 console.log('生成した素材:\n  ' + written.join('\n  '))

@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react'
 import { SCHEDULE } from '../data/schedule'
 import s from './ScheduleScreen.module.css'
 
@@ -7,66 +6,49 @@ interface Props {
   onSelectDay: (dayId: string) => void
 }
 
+/** 1日ぶんを1ページとして表示し、上部のタブで切り替える */
 export function ScheduleScreen({ selectedDayId, onSelectDay }: Props) {
-  const refs = useRef(new Map<string, HTMLElement>())
-  const firstRender = useRef(true)
-
-  // タブで選んだ日のカードまでスクロールする
-  useEffect(() => {
-    const node = refs.current.get(selectedDayId)
-    if (!node) return
-    node.scrollIntoView({ behavior: firstRender.current ? 'auto' : 'smooth', block: 'start' })
-    firstRender.current = false
-  }, [selectedDayId])
+  const day = SCHEDULE.find((d) => d.id === selectedDayId) ?? SCHEDULE[0]
 
   return (
     <>
       <div className={s.tabs}>
-        {SCHEDULE.map((day) => (
+        {SCHEDULE.map((item) => (
           <button
-            key={day.id}
+            key={item.id}
             type="button"
-            className={`${s.tab} ${day.id === selectedDayId ? s.tabActive : ''}`}
-            aria-pressed={day.id === selectedDayId}
-            onClick={() => onSelectDay(day.id)}
+            className={`${s.tab} ${item.id === day.id ? s.tabActive : ''}`}
+            aria-pressed={item.id === day.id}
+            onClick={() => onSelectDay(item.id)}
           >
-            <span className={s.tabName}>{day.dayLabel}</span>
-            <span className={s.tabDate}>{day.dateShort}</span>
+            <span className={s.tabName}>{item.dayLabel}</span>
+            <span className={s.tabDate}>{item.dateShort}</span>
           </button>
         ))}
       </div>
 
-      <div className={s.list}>
-        {SCHEDULE.map((day) => (
-          <article
-            key={day.id}
-            ref={(node) => {
-              if (node) refs.current.set(day.id, node)
-              else refs.current.delete(day.id)
-            }}
-            className={`${s.card} ${day.id === selectedDayId ? s.cardActive : ''}`}
-          >
-            <div className={s.cardMain}>
-              <div className={s.cardHead}>
-                <span className={s.dayChip}>{day.dayLabel}</span>
-                <span className={s.cardDate}>{day.dateFull}</span>
-              </div>
-              {day.badge && <span className={s.badge}>{day.badge}</span>}
-              <h3 className={s.cardTitle}>{day.title}</h3>
-              <ol className={s.timeline}>
-                {day.entries.map((entry) => (
-                  <li key={`${entry.time}-${entry.title}`} className={s.entry}>
-                    <span className={s.dot} />
-                    <span className={s.time}>{entry.time}</span>
-                    <span className={s.entryTitle}>{entry.title}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-            <img className={s.thumb} src={day.thumbnail} alt="" />
-          </article>
-        ))}
-      </div>
+      {/* key を変えることで、日を切り替えるたびにページがめくれる演出になる */}
+      <article key={day.id} className={s.card}>
+        <div className={s.headRow}>
+          <span className={s.dayChip}>{day.dayLabel}</span>
+          <span className={s.cardDate}>{day.dateFull}</span>
+          {day.badge && <span className={s.badge}>{day.badge}</span>}
+        </div>
+        <h2 className={s.cardTitle}>{day.title}</h2>
+        <p className={s.lead}>{day.lead}</p>
+
+        <img className={s.illustration} src={day.illustration} alt="" />
+
+        <ol className={s.timeline}>
+          {day.entries.map((entry) => (
+            <li key={`${entry.time}-${entry.title}`} className={s.entry}>
+              <span className={s.dot} />
+              <span className={s.time}>{entry.time}</span>
+              <span className={s.entryTitle}>{entry.title}</span>
+            </li>
+          ))}
+        </ol>
+      </article>
     </>
   )
 }

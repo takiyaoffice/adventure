@@ -26,7 +26,8 @@ export interface ScheduleDay {
   badge?: string
   /** ホームの TODAY'S ADVENTURE に出す一言 */
   lead: string
-  thumbnail: string
+  /** その日のイメージイラスト */
+  illustration: string
   entries: ScheduleEntry[]
 }
 

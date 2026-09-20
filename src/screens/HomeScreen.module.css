@@ -2,7 +2,7 @@
 .keyVisual {
   position: relative;
   flex: 1 1 auto;
-  min-height: calc(var(--u) * 230);
+  min-height: calc(var(--u) * 260);
   border: calc(var(--u) * 2) solid var(--line);
   background: #0c2b63;
   overflow: hidden;
@@ -18,7 +18,7 @@
 .keyVisualShade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(4, 14, 40, 0.16) 0%, rgba(4, 14, 40, 0.07) 46%, rgba(4, 14, 40, 0) 68%);
+  background: linear-gradient(180deg, rgba(4, 14, 40, 0.16) 0%, rgba(4, 14, 40, 0.07) 40%, rgba(4, 14, 40, 0) 60%);
 }
 
 .keyVisualBody {
@@ -27,7 +27,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: calc(var(--u) * 16);
+  padding-top: calc(var(--u) * 26);
   text-align: center;
 }
 
@@ -51,7 +51,7 @@
 
 .logo {
   font-family: var(--font-pixel);
-  font-size: calc(var(--u) * 26);
+  font-size: calc(var(--u) * 28);
   font-weight: 400;
   line-height: 1.24;
   letter-spacing: calc(var(--u) * 1);
@@ -68,16 +68,16 @@
 }
 
 .subtitle {
-  margin-top: calc(var(--u) * 8);
-  font-size: calc(var(--u) * 13);
+  margin-top: calc(var(--u) * 10);
+  font-size: calc(var(--u) * 14);
   letter-spacing: calc(var(--u) * 2);
   color: #eaf2ff;
   text-shadow: calc(var(--u) * 2) calc(var(--u) * 2) 0 #0b2559;
 }
 
 .copy {
-  margin-top: calc(var(--u) * 20);
-  font-size: calc(var(--u) * 13);
+  margin-top: calc(var(--u) * 24);
+  font-size: calc(var(--u) * 13.5);
   line-height: 1.7;
   letter-spacing: calc(var(--u) * 0.6);
   color: #ffffff;
@@ -85,70 +85,12 @@
 }
 
 .tripDate {
-  margin-top: calc(var(--u) * 13);
+  margin-top: calc(var(--u) * 15);
   font-family: var(--font-pixel);
-  font-size: calc(var(--u) * 14);
+  font-size: calc(var(--u) * 15);
   letter-spacing: calc(var(--u) * 1.5);
   color: #ffffff;
   text-shadow: calc(var(--u) * 2) calc(var(--u) * 2) 0 rgba(6, 22, 56, 0.95);
-}
-
-/* ---------- TODAY'S ADVENTURE ---------- */
-.today {
-  flex: none;
-  position: relative;
-  display: block;
-  width: 100%;
-  text-align: left;
-  border: calc(var(--u) * 2) solid var(--line);
-  background: var(--panel);
-  padding: calc(var(--u) * 13) calc(var(--u) * 34) calc(var(--u) * 13) calc(var(--u) * 14);
-}
-
-.today:active {
-  background: var(--panel-soft);
-}
-
-.todayLabel {
-  display: block;
-  font-family: var(--font-pixel);
-  font-size: calc(var(--u) * 10);
-  letter-spacing: calc(var(--u) * 2.2);
-  color: #ffffff;
-}
-
-.todayDate {
-  display: block;
-  margin-top: calc(var(--u) * 9);
-  font-size: calc(var(--u) * 14);
-  letter-spacing: calc(var(--u) * 1);
-  color: #ffffff;
-}
-
-.todayTitle {
-  display: block;
-  margin-top: calc(var(--u) * 3);
-  font-size: calc(var(--u) * 19);
-  line-height: 1.2;
-  letter-spacing: calc(var(--u) * 0.6);
-  color: #ffffff;
-}
-
-.todayLead {
-  display: block;
-  margin-top: calc(var(--u) * 7);
-  font-size: calc(var(--u) * 12);
-  line-height: 1.55;
-  color: var(--text-dim);
-  white-space: pre-line;
-}
-
-.todayChevron {
-  position: absolute;
-  right: calc(var(--u) * 12);
-  top: 50%;
-  transform: translateY(-50%);
-  color: #ffffff;
 }
 
 /* ---------- メニュー ---------- */
@@ -162,9 +104,10 @@
 .menuButton {
   display: flex;
   align-items: center;
-  gap: calc(var(--u) * 9);
-  height: calc(var(--u) * 58);
-  padding: 0 calc(var(--u) * 11);
+  justify-content: center;
+  gap: calc(var(--u) * 10);
+  height: calc(var(--u) * 76);
+  padding: 0 calc(var(--u) * 10);
   border: calc(var(--u) * 2) solid var(--line);
   background: var(--panel);
   color: #ffffff;
@@ -175,9 +118,8 @@
 }
 
 .menuLabel {
-  font-family: var(--font-pixel);
-  font-size: calc(var(--u) * 11);
-  letter-spacing: calc(var(--u) * 1.2);
+  font-size: calc(var(--u) * 15);
+  letter-spacing: calc(var(--u) * 0.8);
   line-height: 1;
+  white-space: nowrap;
 }
-

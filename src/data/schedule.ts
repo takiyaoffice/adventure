@@ -1,7 +1,7 @@
 import type { ScheduleDay } from '../types'
-import thumbDay1 from '../assets/art/thumb-day1.png'
-import thumbDay2 from '../assets/art/thumb-day2.png'
-import thumbDay3 from '../assets/art/thumb-day3.png'
+import bannerDay1 from '../assets/art/banner-day1.png'
+import bannerDay2 from '../assets/art/banner-day2.png'
+import bannerDay3 from '../assets/art/banner-day3.png'
 
 /** 旅程データ。予定を変えるときはこの配列を書き換える。 */
 export const SCHEDULE: ScheduleDay[] = [
@@ -14,7 +14,7 @@ export const SCHEDULE: ScheduleDay[] = [
     isoDate: '2027-01-22',
     title: '仙台への旅立ち',
     lead: '仙台に到着して、\nまずはホテルへ向かおう！',
-    thumbnail: thumbDay1,
+    illustration: bannerDay1,
     entries: [
       { time: '10:00', title: '東京駅 出発' },
       { time: '13:00', title: '仙台駅 到着', locationId: 'sendai-station' },
@@ -33,7 +33,7 @@ export const SCHEDULE: ScheduleDay[] = [
     title: '稲葉さんのライブ',
     badge: 'SPECIAL DAY',
     lead: '今日は特別な一日。\nライブ会場へ向かおう！',
-    thumbnail: thumbDay2,
+    illustration: bannerDay2,
     entries: [
       { time: '10:00', title: '朝食' },
       { time: '12:00', title: 'ライブ会場へ移動', locationId: 'live-venue' },
@@ -50,7 +50,7 @@ export const SCHEDULE: ScheduleDay[] = [
     isoDate: '2027-01-24',
     title: '最後の冒険',
     lead: '松島をめぐって、\n旅のしめくくりへ。',
-    thumbnail: thumbDay3,
+    illustration: bannerDay3,
     entries: [
       { time: '09:00', title: '松島観光', locationId: 'matsushima' },
       { time: '12:00', title: '海鮮ランチ' },

@@ -3,7 +3,6 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: calc(var(--u) * 9);
-  padding-top: calc(var(--u) * 2);
 }
 
 .tab {
@@ -12,7 +11,7 @@
   align-items: center;
   justify-content: center;
   gap: calc(var(--u) * 5);
-  height: calc(var(--u) * 50);
+  height: calc(var(--u) * 52);
   border: calc(var(--u) * 2) solid var(--line);
   background: var(--panel);
   color: #ffffff;
@@ -25,7 +24,7 @@
 
 .tabName {
   font-family: var(--font-pixel);
-  font-size: calc(var(--u) * 11);
+  font-size: calc(var(--u) * 12);
   letter-spacing: calc(var(--u) * 1.2);
   line-height: 1;
 }
@@ -41,94 +40,100 @@
   color: #ffffff;
 }
 
-/* ---------- 日ごとのカード ---------- */
-.list {
+/* ---------- 1日ぶんのページ ---------- */
+.card {
+  /* 画面を埋めるまで伸びるが、中身より小さくはならない（小さい端末ではスクロールする） */
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
-  gap: calc(var(--u) * 11);
-  padding-bottom: calc(var(--u) * 4);
-}
-
-.card {
-  display: flex;
-  align-items: flex-start;
-  gap: calc(var(--u) * 10);
   border: calc(var(--u) * 2) solid var(--line);
   background: var(--panel);
-  padding: calc(var(--u) * 11) calc(var(--u) * 11) calc(var(--u) * 13);
-  scroll-margin-top: calc(var(--u) * 8);
+  padding: calc(var(--u) * 14);
+  animation: pageIn 200ms steps(3) both;
 }
 
-.cardActive {
-  background: var(--panel-soft);
-  box-shadow: 0 0 calc(var(--u) * 12) rgba(77, 142, 245, 0.3);
-}
-
-.cardMain {
-  flex: 1;
-  min-width: 0;
-}
-
-.cardHead {
+.headRow {
+  flex: none;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: calc(var(--u) * 9);
 }
 
 .dayChip {
   font-family: var(--font-pixel);
-  font-size: calc(var(--u) * 10);
+  font-size: calc(var(--u) * 11);
   letter-spacing: calc(var(--u) * 1.2);
   line-height: 1;
-  padding: calc(var(--u) * 6) calc(var(--u) * 7);
+  padding: calc(var(--u) * 7) calc(var(--u) * 8);
   background: var(--blue);
   border: calc(var(--u) * 2) solid var(--line);
   color: #ffffff;
 }
 
 .cardDate {
-  font-size: calc(var(--u) * 12);
+  font-size: calc(var(--u) * 13);
   letter-spacing: calc(var(--u) * 0.6);
   color: rgba(255, 255, 255, 0.82);
 }
 
 .badge {
-  display: inline-block;
-  margin-top: calc(var(--u) * 9);
   font-family: var(--font-pixel);
   font-size: calc(var(--u) * 10);
   letter-spacing: calc(var(--u) * 1.2);
   line-height: 1;
-  padding: calc(var(--u) * 6) calc(var(--u) * 8);
+  padding: calc(var(--u) * 7) calc(var(--u) * 8);
   background: var(--red);
   color: #ffffff;
   box-shadow: calc(var(--u) * 2) calc(var(--u) * 2) 0 var(--red-deep);
 }
 
 .cardTitle {
-  margin-top: calc(var(--u) * 9);
-  font-size: calc(var(--u) * 19);
+  flex: none;
+  margin-top: calc(var(--u) * 12);
+  font-size: calc(var(--u) * 24);
   font-weight: 400;
-  line-height: 1.2;
+  line-height: 1.24;
   letter-spacing: calc(var(--u) * 0.6);
   color: #ffffff;
+}
+
+.lead {
+  flex: none;
+  margin-top: calc(var(--u) * 8);
+  font-size: calc(var(--u) * 13);
+  line-height: 1.6;
+  color: var(--text-dim);
+  white-space: pre-line;
+}
+
+.illustration {
+  flex: none;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  margin-top: calc(var(--u) * 13);
+  border: calc(var(--u) * 2) solid var(--line);
+  object-fit: cover;
 }
 
 /* ---------- タイムライン ---------- */
 .timeline {
   position: relative;
-  margin-top: calc(var(--u) * 10);
+  flex: 1;
+  min-height: calc(var(--u) * 150);
+  margin-top: calc(var(--u) * 16);
   display: flex;
   flex-direction: column;
-  gap: calc(var(--u) * 7);
+  justify-content: space-between;
+  gap: calc(var(--u) * 10);
 }
 
 .timeline::before {
   content: '';
   position: absolute;
-  left: calc(var(--u) * 4);
-  top: calc(var(--u) * 6);
-  bottom: calc(var(--u) * 6);
+  left: calc(var(--u) * 5);
+  top: calc(var(--u) * 8);
+  bottom: calc(var(--u) * 8);
   width: calc(var(--u) * 2);
   background: rgba(255, 255, 255, 0.4);
 }
@@ -137,35 +142,31 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: calc(var(--u) * 9);
+  gap: calc(var(--u) * 11);
 }
 
 .dot {
   position: relative;
   z-index: 1;
   flex: none;
-  width: calc(var(--u) * 10);
-  height: calc(var(--u) * 10);
+  width: calc(var(--u) * 12);
+  height: calc(var(--u) * 12);
   background: #ffffff;
   border-radius: 50%;
-  box-shadow: 0 0 0 calc(var(--u) * 2) var(--panel);
-}
-
-.cardActive .dot {
-  box-shadow: 0 0 0 calc(var(--u) * 2) var(--panel-soft);
+  box-shadow: 0 0 0 calc(var(--u) * 3) var(--panel);
 }
 
 .time {
   flex: none;
-  width: calc(var(--u) * 46);
-  font-size: calc(var(--u) * 13);
+  width: calc(var(--u) * 52);
+  font-size: calc(var(--u) * 15);
   line-height: 1.2;
   letter-spacing: calc(var(--u) * 0.4);
   color: #ffffff;
 }
 
 .entryTitle {
-  font-size: calc(var(--u) * 13);
+  font-size: calc(var(--u) * 15);
   line-height: 1.2;
   letter-spacing: calc(var(--u) * 0.4);
   color: #ffffff;
@@ -174,11 +175,19 @@
   white-space: nowrap;
 }
 
-/* ---------- サムネイル ---------- */
-.thumb {
-  flex: none;
-  width: calc(var(--u) * 72);
-  height: calc(var(--u) * 72);
-  border: calc(var(--u) * 2) solid var(--line);
-  object-fit: cover;
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--u) * 12));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+  }
 }

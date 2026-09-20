@@ -1,38 +1,12 @@
-.screen {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: calc(var(--u) * 10);
-  flex: none;
-  height: calc(var(--u) * 52);
-  padding: 0 calc(var(--u) * 14);
-  color: var(--text);
-}
-
-.title {
-  font-family: var(--font-pixel);
-  font-size: calc(var(--u) * 17);
-  font-weight: 400;
-  letter-spacing: calc(var(--u) * 2.5);
-  line-height: 1;
-  padding-top: calc(var(--u) * 2);
-}
-
 .body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 0 calc(var(--u) * 12) calc(var(--u) * 14);
+  padding: calc(var(--u) * 12) calc(var(--u) * 12) calc(var(--u) * 14);
   display: flex;
   flex-direction: column;
-  gap: calc(var(--u) * 10);
+  gap: calc(var(--u) * 12);
 }
 
 /* マップ画面のようにスクロールさせたくない画面用 */

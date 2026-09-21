@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { PixelIcon } from '../components/ui/PixelIcon'
 import { GUIDE_CATEGORY_LABEL, GUIDE_ENTRIES, GUIDE_TABS } from '../data/guide'
 import type { GuideCategory } from '../types'
 import s from './GuideScreen.module.css'
@@ -56,10 +55,9 @@ export function GuideScreen() {
               <p className={s.access}>{entry.access}</p>
               <p className={s.link}>{entry.linkLabel} を開く</p>
             </div>
-            <PixelIcon name="chevron" size={18} className={s.chevron} />
           </a>
         ))}
-        {entries.length === 0 && <p className={s.empty}>このカテゴリのスポットはまだありません。</p>}
+        {entries.length === 0 && <p className={s.empty}>このカテゴリのスポットはまだない。</p>}
       </div>
     </>
   )

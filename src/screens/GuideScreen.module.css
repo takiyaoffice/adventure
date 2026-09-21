@@ -47,7 +47,7 @@
 .card {
   display: flex;
   text-decoration: none;
-  align-items: stretch;
+  align-items: flex-start;
   gap: calc(var(--u) * 11);
   width: 100%;
   text-align: left;
@@ -62,8 +62,9 @@
 
 .photo {
   flex: none;
-  width: calc(var(--u) * 92);
-  height: calc(var(--u) * 92);
+  width: calc(var(--u) * 76);
+  height: calc(var(--u) * 76);
+  margin-top: calc(var(--u) * 2);
   border: calc(var(--u) * 2) solid var(--line);
   object-fit: cover;
 }
@@ -78,7 +79,6 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: calc(var(--u) * 6);
 }
 
@@ -145,12 +145,6 @@
   border-left: none;
   border-bottom: none;
   transform: rotate(45deg);
-}
-
-.chevron {
-  align-self: center;
-  flex: none;
-  color: rgba(255, 255, 255, 0.75);
 }
 
 .empty {

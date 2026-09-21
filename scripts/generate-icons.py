@@ -5,7 +5,7 @@
     python3 scripts/generate-icons.py
 
 元になる紋章は scripts/icon-crest.png（背景を切り抜いた PNG）。
-黒地の正方形に、余白なしで（上下いっぱいに）配置する。
+黒地の正方形の中央に、まわりに黒い余白を取って配置する。
 """
 import os
 
@@ -19,7 +19,7 @@ BG = (0, 0, 0)
 
 
 def build(size: int, fill: float = 1.0) -> Image.Image:
-    """黒の正方形に紋章を置く。fill は高さに対する紋章の割合。"""
+    """黒の正方形に紋章を置く。fill は正方形の高さに対する紋章の高さの割合。"""
     crest = Image.open(CREST).convert('RGBA')
     h = round(size * fill)
     w = round(crest.width * h / crest.height)
@@ -36,12 +36,12 @@ def build(size: int, fill: float = 1.0) -> Image.Image:
 def main() -> int:
     os.makedirs(os.path.join(PUBLIC, 'icons'), exist_ok=True)
     targets = [
-        ('icons/icon-192.png', 192, 1.0),
-        ('icons/icon-512.png', 512, 1.0),
-        # maskable は端が切り取られるので、安全領域（中央80%）に収める
-        ('icons/icon-maskable-512.png', 512, 0.78),
-        ('apple-touch-icon.png', 192, 1.0),
-        ('favicon.png', 64, 1.0),
+        ('icons/icon-192.png', 192, 0.72),
+        ('icons/icon-512.png', 512, 0.72),
+        # maskable は円形に切り取られることがあるので、角まで安全領域に収める
+        ('icons/icon-maskable-512.png', 512, 0.62),
+        ('apple-touch-icon.png', 192, 0.72),
+        ('favicon.png', 64, 0.80),
     ]
     for name, size, fill in targets:
         path = os.path.join(PUBLIC, name)

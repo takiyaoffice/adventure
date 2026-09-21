@@ -53,7 +53,7 @@ export function GuideScreen() {
                 </span>
               </div>
               <p className={s.description}>{entry.description}</p>
-              <p className={s.area}>エリア：{entry.area}</p>
+              <p className={s.access}>{entry.access}</p>
               <p className={s.link}>{entry.linkLabel} を開く</p>
             </div>
             <PixelIcon name="chevron" size={18} className={s.chevron} />

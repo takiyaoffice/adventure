@@ -79,8 +79,8 @@ export interface GuideEntry {
   category: GuideCategory
   /** カード内の説明文。2〜3行を想定 */
   description: string
-  /** 「エリア：」のあとに出す地名 */
-  area: string
+  /** 仙台駅を起点にしたアクセス。改行でそのまま2行に出せる */
+  access: string
   /** カード左の画像 */
   image: string
   /** タップしたときに開くリンク */

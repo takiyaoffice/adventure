@@ -1146,6 +1146,97 @@ function guideAsaichi() {
   return save('guide-asaichi', c)
 }
 
+function guideKaki() {
+  const c = new Canvas(GW, GW)
+  const r = rng(620)
+  // 炭火の網
+  c.vgradient(0, 0, GW, GW, [[0, '#332b22'], [1, '#17130d']])
+  c.rect(2, 5, 44, 38, '#241e16')
+  c.rect(2, 5, 44, 1, '#453b2e')
+  c.rect(2, 42, 44, 1, '#120e08')
+  for (let i = 0; i < 34; i++) {
+    const x = 4 + Math.round(r() * 40)
+    const y = 7 + Math.round(r() * 34)
+    c.px(x, y, r() > 0.5 ? '#e0691f' : '#7a3009', 0.75)
+  }
+  for (let x = 3; x < 46; x += 5) c.rect(x, 5, 1, 38, '#5c5348', 0.8)
+
+  /** 殻を開いた牡蠣 */
+  const oyster = (cx, cy, rx, ry) => {
+    const ovalW = (y, ax, ay) => Math.round(ax * Math.sqrt(Math.max(0, 1 - (y * y) / (ay * ay))))
+    // 落ちる影
+    for (let y = -ry; y <= ry; y++) {
+      const w = ovalW(y, rx, ry)
+      c.rect(cx - w + 1, cy + y + 2, w * 2 + 1, 1, '#0d0a06', 0.55)
+    }
+    // 殻の外側
+    for (let y = -ry; y <= ry; y++) {
+      const w = ovalW(y, rx, ry)
+      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#6e6659')
+    }
+    // 放射状のうね
+    for (let a = 0; a < 360; a += 15) {
+      const rad = (a * Math.PI) / 180
+      const dark = ((a / 15) % 2) === 0
+      for (let t = 0.62; t <= 1.0; t += 0.08) {
+        c.px(cx + Math.round(Math.cos(rad) * rx * t), cy + Math.round(Math.sin(rad) * ry * t),
+          dark ? '#514a3f' : '#867d6d')
+      }
+    }
+    // ふちを締める
+    for (let a = 0; a < 360; a += 8) {
+      const rad = (a * Math.PI) / 180
+      c.px(cx + Math.round(Math.cos(rad) * rx), cy + Math.round(Math.sin(rad) * ry), '#453f35')
+    }
+    // 貝の内側（真珠色）
+    for (let y = -ry + 2; y <= ry - 2; y++) {
+      const w = ovalW(y, rx - 2, ry - 2)
+      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#e4dfd0')
+    }
+    for (let y = -ry + 2; y <= 0; y++) {
+      const w = ovalW(y, rx - 2, ry - 2)
+      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#f4f1e6')
+    }
+    // 身（貝の内側を少し残してふっくら見せる）
+    for (let y = -ry + 4; y <= ry - 4; y++) {
+      const w = ovalW(y, rx - 5, ry - 4)
+      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#a89170')
+    }
+    for (let y = -ry + 4; y <= ry - 5; y++) {
+      const w = ovalW(y, rx - 6, ry - 4)
+      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#d9c49a')
+    }
+    for (let y = -ry + 4; y <= -1; y++) {
+      const w = ovalW(y, rx - 7, ry - 4)
+      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#ecdcb6')
+    }
+    // 身のひだと照り
+    c.rect(cx - rx + 6, cy + 1, (rx - 6) * 2 - 1, 1, '#bda47f')
+    c.rect(cx - 2, cy - ry + 5, 3, 1, '#fff7e2')
+    // 汁
+    c.px(cx - rx + 3, cy + 2, '#cfd8d0')
+    c.px(cx + rx - 3, cy - 1, '#cfd8d0')
+  }
+
+  oyster(14, 15, 11, 8)
+  oyster(34, 23, 11, 8)
+  oyster(18, 34, 12, 8)
+
+  // レモン
+  c.disc(41, 39, 5, '#b8991f')
+  c.disc(41, 39, 4, '#f2d24e')
+  c.disc(41, 39, 3, '#fbe98a')
+  c.rect(38, 39, 7, 1, '#e0bb2e')
+  c.rect(41, 36, 1, 7, '#e0bb2e')
+  c.px(39, 37, '#fff6c8')
+
+  // 湯気
+  for (const [x, y, a] of [[9, 4, 0.55], [10, 1, 0.35], [28, 9, 0.5], [29, 6, 0.32], [40, 11, 0.4]]) {
+    c.px(x, y, '#ffffff', a)
+  }
+  return save('guide-kaki', c)
+}
+
 function guideGyutanSet() {
   const c = new Canvas(GW, GW)
   // 折敷
@@ -1224,6 +1315,6 @@ const kv = keyVisual()
 const terrain = mapTerrain()
 const icons = [iconStation(), iconZuihoden(), iconMatsushima(), iconGyutan(), iconLive(), iconUnknown('loc-unknown', 'castle'), iconUnknown('loc-unknown-small', 'shrine')]
 const banners = [bannerDay1(), bannerDay2(), bannerDay3()]
-const guides = [guideMatsushima(), guideSendaijo(), guideZuihoden(), guideAkiu(), guideAer(), guideAsaichi(), guideZunda(), guideGyutan(), guideGyutanSet()]
+const guides = [guideMatsushima(), guideSendaijo(), guideZuihoden(), guideAkiu(), guideAer(), guideAsaichi(), guideZunda(), guideGyutan(), guideGyutanSet(), guideKaki()]
 if (process.env.ART_PREVIEW) preview([kv, terrain, ...banners, ...guides, ...icons])
 console.log('生成した素材:\n  ' + written.join('\n  '))

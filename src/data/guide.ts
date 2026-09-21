@@ -8,6 +8,7 @@ import imgAsaichi from '../assets/art/guide-asaichi.png'
 import imgZunda from '../assets/art/guide-zunda.png'
 import imgGyutan from '../assets/art/guide-gyutan.png'
 import imgGyutanSet from '../assets/art/guide-gyutan-set.png'
+import imgKaki from '../assets/art/guide-kaki.png'
 
 /** カテゴリタブ */
 export const GUIDE_TABS: { id: GuideCategory | 'all'; label: string }[] = [
@@ -117,5 +118,15 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
     image: imgGyutanSet,
     url: 'https://tabelog.com/miyagi/A0401/A040101/4000060/',
     linkLabel: '食べログ',
+  },
+  {
+    id: 'kaki',
+    name: '牡蠣',
+    category: 'food',
+    description: '冬が旬。松島名物の牡蠣。',
+    access: '仙台駅から電車で約40分',
+    image: imgKaki,
+    url: 'https://rikyu-m.com/matsushima-kaki/',
+    linkLabel: '松島の牡蠣ガイド',
   },
 ]

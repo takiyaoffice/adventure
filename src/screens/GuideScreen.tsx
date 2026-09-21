@@ -14,8 +14,6 @@ export function GuideScreen() {
 
   return (
     <>
-      <p className={s.lead}>仙台のおすすめスポットを探そう</p>
-
       <div className={s.tabs}>
         {GUIDE_TABS.map((item) => (
           <button

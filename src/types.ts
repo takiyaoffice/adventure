@@ -71,7 +71,7 @@ export interface Mission {
 }
 
 /** 冒険ガイドの分類 */
-export type GuideCategory = 'spot' | 'food' | 'cafe' | 'souvenir'
+export type GuideCategory = 'spot' | 'food'
 
 export interface GuideEntry {
   id: string
@@ -83,6 +83,10 @@ export interface GuideEntry {
   area: string
   /** カード左の画像 */
   image: string
+  /** タップしたときに開くリンク */
+  url: string
+  /** リンク先がどこかを示す短いラベル（例: 公式サイト、食べログ） */
+  linkLabel: string
   /**
    * 実写を入れたときは true にする。
    * ドット絵はそのまま拡大したいので、既定ではピクセル補間を切っている。

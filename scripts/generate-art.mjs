@@ -910,36 +910,290 @@ function guideZunda() {
   return save('guide-zunda', c)
 }
 
-function guideSouvenir() {
+function guideSendaijo() {
   const c = new Canvas(GW, GW)
-  // 棚の背景
-  c.vgradient(0, 0, GW, GW, [[0, '#7a5a38'], [1, '#4a3320']])
-  c.rect(0, 33, GW, 2, '#3d2a18')
-  c.rect(0, 35, GW, GW - 35, '#5c4227')
-  // 箱を描く
-  const box = (x, y, w, h, base, lid, ribbon) => {
-    c.rect(x, y, w, h, base)
-    c.rect(x, y, w, 1, mix(base, '#ffffff', 0.35))
-    c.rect(x, y + h - 1, w, 1, mix(base, '#000000', 0.3))
-    c.rect(x + w - 1, y, 1, h, mix(base, '#000000', 0.25))
-    c.rect(x, y, w, Math.max(2, Math.round(h * 0.3)), lid)
-    c.rect(x, y, w, 1, mix(lid, '#ffffff', 0.4))
-    if (ribbon) {
-      c.rect(x + Math.floor(w / 2) - 1, y, 2, h, ribbon)
-      c.rect(x, y + Math.floor(h / 2) - 1, w, 2, ribbon)
-      c.px(x + Math.floor(w / 2) - 2, y + Math.floor(h / 2) - 2, ribbon)
-      c.px(x + Math.floor(w / 2) + 2, y + Math.floor(h / 2) - 2, ribbon)
+  // 空
+  c.vgradient(0, 0, GW, 26, [[0, PAL.skyTop], [0.5, PAL.skyMid], [1, PAL.skyHorizon]])
+  cloud(c, 1, 2, 16, 6)
+  cloud(c, 30, 5, 16, 5, 0.85)
+  // 遠くの街並み
+  for (let i = 0; i < 12; i++) {
+    const x = i * 4
+    const h = 3 + ((i * 5) % 6)
+    c.rect(x, 24 - h, 4, h, '#3f5b8c')
+    c.px(x + 1, 25 - h, '#6f8bbd')
+  }
+  c.rect(0, 24, GW, 2, '#33497a')
+  // 城山の斜面（石垣のまわりを埋める）
+  c.vgradient(0, 26, GW, GW - 26, [[0, '#2f6b34'], [1, '#1c4a22']])
+  grassTexture(c, 0, 26, GW, GW - 26, 44)
+  // 石垣（下に向かって広がる）
+  for (let j = 0; j < 16; j++) {
+    const w = 26 + j
+    const x = 24 - Math.round(w / 2)
+    c.rect(x, 26 + j, w, 1, j % 2 ? '#8e8878' : '#9c9585')
+  }
+  // 石の目地
+  for (let j = 0; j < 16; j += 3) {
+    const w = 26 + j
+    const x = 24 - Math.round(w / 2)
+    c.rect(x, 26 + j, w, 1, '#6e685a')
+    for (let i = (j % 6) ? 0 : 3; i < w; i += 6) c.px(x + i, 27 + j, '#6e685a')
+  }
+  // 騎馬像
+  const bronze = '#3f5246'
+  const bronzeHi = '#5f7a66'
+  c.rect(17, 19, 13, 5, bronze)       // 馬の胴
+  c.rect(17, 19, 13, 1, bronzeHi)
+  c.rect(28, 15, 4, 5, bronze)        // 首
+  c.rect(30, 13, 4, 3, bronze)        // 頭
+  c.px(33, 14, bronzeHi)
+  c.rect(15, 17, 2, 4, bronze)        // 尾
+  c.rect(18, 24, 2, 4, bronze)        // 脚
+  c.rect(26, 24, 2, 4, bronze)
+  c.rect(22, 24, 2, 3, bronze)
+  c.rect(22, 13, 4, 7, bronze)        // 騎乗する人
+  c.rect(22, 13, 4, 1, bronzeHi)
+  c.rect(22, 10, 4, 3, bronze)
+  c.px(21, 9, PAL.gold)               // 三日月の前立て
+  c.px(22, 8, PAL.gold)
+  c.px(24, 8, PAL.gold)
+  c.px(25, 9, PAL.gold)
+  c.rect(26, 14, 4, 2, bronze)        // 腕
+  // 足もとの緑
+  c.rect(0, 42, GW, 6, PAL.grassDark)
+  c.rect(0, 42, GW, 1, PAL.grass)
+  tree(c, 1, 33, 4, true)
+  tree(c, 41, 34, 4, true)
+  tree(c, 8, 40, 3, false)
+  tree(c, 36, 41, 3, false)
+  return save('guide-sendaijo', c)
+}
+
+function guideZuihoden() {
+  const c = new Canvas(GW, GW)
+  // 杉木立
+  c.vgradient(0, 0, GW, GW, [[0, '#16301c'], [1, '#0d2013']])
+  const r = rng(88)
+  for (let i = 0; i < 22; i++) {
+    const x = Math.round(r() * GW)
+    const y = Math.round(r() * 26)
+    tree(c, x, y, 3 + Math.round(r() * 2), true)
+  }
+  // 石段
+  for (let j = 0; j < 8; j++) {
+    const w = 20 + j * 3
+    c.rect(24 - Math.round(w / 2), 40 + j, w, 1, j % 2 ? '#a8a294' : '#948e80')
+  }
+  c.rect(14, 39, 20, 1, '#b9b4a4')
+  // 本体（朱塗り）
+  c.rect(12, 26, 24, 13, PAL.red)
+  c.rect(12, 26, 1, 13, mix(PAL.red, '#ffffff', 0.35))
+  c.rect(35, 26, 1, 13, PAL.redDark)
+  c.rect(18, 29, 12, 10, '#2a1830')
+  c.rect(19, 30, 10, 1, PAL.gold)
+  c.rect(19, 37, 10, 1, PAL.gold)
+  // 大屋根
+  japaneseRoof(c, 24, 14, 21, 12, '#2b3550', PAL.gold)
+  japaneseRoof(c, 24, 24, 16, 5, '#242d45', PAL.gold)
+  // 金の装飾
+  c.rect(21, 10, 6, 3, PAL.gold)
+  c.px(20, 11, PAL.gold)
+  c.px(27, 11, PAL.gold)
+  c.rect(23, 8, 2, 2, '#fff0b0')
+  // 灯籠
+  const lantern = (x) => {
+    c.rect(x, 33, 4, 7, '#b9b4a4')
+    c.rect(x - 1, 31, 6, 2, '#a8a294')
+    c.rect(x + 1, 34, 2, 2, PAL.gold)
+    c.rect(x - 1, 40, 6, 1, '#8b8578')
+  }
+  lantern(3)
+  lantern(41)
+  return save('guide-zuihoden', c)
+}
+
+function guideAkiu() {
+  const c = new Canvas(GW, GW)
+  // 空と木々
+  c.vgradient(0, 0, GW, 10, [[0, PAL.skyMid], [1, PAL.skyHorizon]])
+  c.rect(0, 8, GW, 6, PAL.forest)
+  const r = rng(140)
+  for (let i = 0; i < 14; i++) tree(c, Math.round(r() * GW), 3 + Math.round(r() * 6), 3, true)
+  // 岩壁
+  const rock = (x, w) => {
+    c.rect(x, 10, w, 30, '#6b6054')
+    for (let j = 0; j < 30; j += 3) {
+      c.rect(x, 10 + j, w, 1, j % 6 ? '#5c5247' : '#7a6f60')
+      for (let i = 0; i < w; i += 5) c.px(x + i + (j % 5), 11 + j, '#4a4139')
+    }
+    c.rect(x + (x === 0 ? w - 1 : 0), 10, 1, 30, '#3d352e')
+  }
+  rock(0, 17)
+  rock(31, 17)
+  // 滝
+  c.rect(17, 10, 14, 28, '#cfe6fa')
+  c.rect(17, 10, 14, 28, '#e8f4ff', 0.5)
+  for (let i = 0; i < 6; i++) {
+    const x = 18 + i * 2
+    for (let y = 10; y < 38; y += 3) c.px(x, y + (i % 3), '#ffffff')
+  }
+  c.rect(17, 10, 1, 28, '#9cc4e0')
+  c.rect(30, 10, 1, 28, '#9cc4e0')
+  // 滝つぼ
+  c.vgradient(0, 38, GW, 10, [[0, '#4f9ad0'], [1, '#1f62b8']])
+  c.disc(24, 40, 9, '#ffffff', 0.7)
+  c.disc(24, 40, 6, '#ffffff')
+  for (let i = 0; i < 24; i++) {
+    c.rect(Math.round(r() * GW), 40 + Math.round(r() * 7), 2 + Math.round(r() * 3), 1, '#ffffff', 0.6)
+  }
+  // しぶき
+  for (let i = 0; i < 16; i++) c.px(18 + Math.round(r() * 12), 34 + Math.round(r() * 6), '#ffffff', 0.8)
+  return save('guide-akiu', c)
+}
+
+function guideAer() {
+  const c = new Canvas(GW, GW)
+  // 夕暮れの空
+  c.vgradient(0, 0, GW, 30, [[0, '#1b2a63'], [0.45, '#6b4a8c'], [0.75, '#d97a5c'], [1, '#f2b06a']])
+  const r = rng(210)
+  for (let i = 0; i < 14; i++) c.px(Math.round(r() * GW), Math.round(r() * 14), '#ffffff', 0.4 + r() * 0.5)
+  // 奥州連山
+  mountain(c, 6, 30, 12, 9, '#2f3f6b', '#42548a', '#cbd8f0')
+  mountain(c, 22, 30, 9, 7, '#2a3862', '#3c4d80', '#cbd8f0')
+  mountain(c, 41, 30, 12, 8, '#2f3f6b', '#42548a', '#cbd8f0')
+  // 街並み
+  c.rect(0, 30, GW, 18, '#101a33')
+  for (let i = 0; i < 16; i++) {
+    const x = i * 3
+    const h = 5 + ((i * 7) % 9)
+    c.rect(x, 48 - h, 3, h, i % 2 ? '#1b2949' : '#16223d')
+    for (let y = 48 - h + 1; y < 47; y += 2) {
+      if ((i + y) % 3) c.px(x + 1, y, PAL.gold, 0.85)
     }
   }
-  box(3, 14, 19, 19, '#e8e2d2', '#c0392b', PAL.gold)
-  box(25, 20, 20, 14, '#f0ece0', '#2f5fc0', '#e8e2d2')
-  box(10, 34, 17, 12, '#d9c89c', '#8a6a3a', '#5c4227')
-  box(29, 36, 16, 10, '#e8e2d2', '#3f9a57', '#ffffff')
-  // 手前の和菓子
-  c.disc(6, 42, 4, '#c9a06a')
-  c.disc(6, 41, 3, '#e0bb85')
-  c.px(6, 40, '#f2d8a8')
-  return save('guide-souvenir', c)
+  // AER タワー
+  c.rect(19, 6, 11, 38, '#20304f')
+  c.rect(19, 6, 1, 38, '#35496f')
+  c.rect(29, 6, 1, 38, '#141f36')
+  c.rect(19, 6, 11, 2, '#3f5680')
+  // 最上階の展望テラス
+  c.rect(18, 8, 13, 4, '#5a7ab0')
+  c.rect(18, 8, 13, 1, '#a9c8f0')
+  c.rect(19, 9, 11, 2, '#cfe4ff')
+  // 窓明かり
+  for (let y = 14; y < 43; y += 3) {
+    for (let x = 21; x < 29; x += 3) {
+      if ((x + y) % 4) c.rect(x, y, 2, 2, PAL.gold, 0.9)
+      else c.rect(x, y, 2, 2, '#4a6390')
+    }
+  }
+  c.px(24, 4, '#ffffff')
+  c.px(24, 3, '#ffffff', 0.6)
+  return save('guide-aer', c)
+}
+
+function guideAsaichi() {
+  const c = new Canvas(GW, GW)
+  const r = rng(360)
+  // アーケードの奥
+  c.vgradient(0, 0, GW, GW, [[0, '#3a3026'], [1, '#221b13']])
+  c.rect(0, 0, GW, 8, '#2b241a')
+  // 吊り下げ照明
+  for (let i = 0; i < 4; i++) {
+    const x = 6 + i * 12
+    c.rect(x, 0, 1, 4, '#5c5244')
+    c.disc(x, 5, 2, '#fff0b0')
+    c.disc(x, 5, 3, '#fff0b0', 0.25)
+  }
+  // 店先のひさし（紅白のストライプ）
+  for (let i = 0; i < GW; i++) {
+    c.rect(i, 9, 1, 5, Math.floor(i / 4) % 2 ? '#d94f4f' : '#f0ece0')
+  }
+  c.rect(0, 14, GW, 1, '#8c3636')
+  // 値札の札
+  c.rect(4, 16, 9, 5, '#f7f2df')
+  c.rect(4, 16, 9, 1, '#d9d3c2')
+  c.rect(6, 18, 5, 1, '#c0392b')
+  c.rect(35, 16, 9, 5, '#f7f2df')
+  c.rect(37, 18, 5, 1, '#c0392b')
+  // 木箱
+  const crate = (x, y, w, h, col) => {
+    c.rect(x, y, w, h, '#8a6a3a')
+    c.rect(x, y, w, 1, '#a9834a')
+    c.rect(x, y + h - 1, w, 1, '#5e4726')
+    c.rect(x + w - 1, y, 1, h, '#5e4726')
+    c.rect(x + 1, y + 1, w - 2, h - 3, col)
+  }
+  crate(1, 24, 15, 10, '#2f7d47')
+  crate(17, 22, 14, 12, '#d96a2a')
+  crate(32, 24, 15, 10, '#c0392b')
+  crate(4, 35, 16, 11, '#e8d24a')
+  crate(22, 36, 14, 10, '#6fc05a')
+  crate(37, 35, 11, 11, '#5a8ccc')
+  // 中身のつぶつぶ
+  for (let i = 0; i < 70; i++) {
+    const x = Math.round(r() * GW)
+    const y = 23 + Math.round(r() * 22)
+    const p = c.get(x, y)
+    if (p[3] === 0) continue
+    c.px(x, y, r() > 0.5 ? mix([p[0], p[1], p[2], 255], '#ffffff', 0.3) : mix([p[0], p[1], p[2], 255], '#000000', 0.25))
+  }
+  // 魚
+  c.disc(41, 28, 3, '#b9c6d6')
+  c.px(44, 28, '#8fa0b5')
+  c.px(39, 27, '#20304f')
+  return save('guide-asaichi', c)
+}
+
+function guideGyutanSet() {
+  const c = new Canvas(GW, GW)
+  // 折敷
+  c.vgradient(0, 0, GW, GW, [[0, '#5c4227'], [1, '#3a2a18']])
+  c.rect(2, 4, 44, 40, '#7a5a38')
+  c.rect(2, 4, 44, 1, '#94714a')
+  c.rect(2, 43, 44, 1, '#4a3320')
+  // 牛たん皿
+  c.disc(16, 16, 12, '#20303f')
+  c.disc(16, 15, 11, '#efeadc')
+  c.disc(16, 14, 9, '#ffffff')
+  const slice = (cx, cy, rx, ry) => {
+    for (let y = -ry; y <= ry; y++) {
+      const w = Math.round(rx * Math.sqrt(Math.max(0, 1 - (y * y) / (ry * ry))))
+      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#a34a33')
+    }
+    for (let y = -ry; y <= 0; y++) {
+      const w = Math.round((rx - 1) * Math.sqrt(Math.max(0, 1 - (y * y) / (ry * ry))))
+      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#c26a4c')
+    }
+    c.rect(cx - rx + 2, cy - 1, rx * 2 - 3, 1, '#7a3020')
+    c.rect(cx - rx + 2, cy + 1, rx * 2 - 3, 1, '#8c3a26')
+  }
+  slice(11, 13, 6, 3)
+  slice(21, 13, 6, 3)
+  slice(16, 19, 6, 3)
+  // 麦めし
+  c.disc(35, 18, 10, '#20303f')
+  c.disc(35, 17, 9, '#3f5266')
+  c.disc(35, 16, 7, '#f7f4ea')
+  c.disc(35, 15, 5, '#ffffff')
+  for (let i = 0; i < 14; i++) c.px(30 + Math.round((i * 7) % 11), 13 + ((i * 5) % 6), '#c9a06a')
+  // テールスープ
+  c.disc(14, 36, 9, '#1b1208')
+  c.disc(14, 35, 8, '#2e2114')
+  c.disc(14, 34, 6, '#6b4a2c')
+  c.disc(13, 33, 3, '#8a6138')
+  c.px(12, 33, '#c9a06a')
+  c.px(16, 35, '#4f9e46')
+  // 南蛮味噌漬け
+  c.disc(34, 36, 7, '#20303f')
+  c.disc(34, 35, 6, '#efeadc')
+  c.disc(34, 34, 4, '#2f7d47')
+  c.px(33, 34, '#6fc05a')
+  // 箸
+  c.rect(4, 40, 18, 1, '#c9a06a')
+  c.rect(4, 42, 18, 1, '#c9a06a')
+  return save('guide-gyutan-set', c)
 }
 
 /* =========================================================
@@ -970,6 +1224,6 @@ const kv = keyVisual()
 const terrain = mapTerrain()
 const icons = [iconStation(), iconZuihoden(), iconMatsushima(), iconGyutan(), iconLive(), iconUnknown('loc-unknown', 'castle'), iconUnknown('loc-unknown-small', 'shrine')]
 const banners = [bannerDay1(), bannerDay2(), bannerDay3()]
-const guides = [guideMatsushima(), guideGyutan(), guideZunda(), guideSouvenir()]
+const guides = [guideMatsushima(), guideSendaijo(), guideZuihoden(), guideAkiu(), guideAer(), guideAsaichi(), guideZunda(), guideGyutan(), guideGyutanSet()]
 if (process.env.ART_PREVIEW) preview([kv, terrain, ...banners, ...guides, ...icons])
 console.log('生成した素材:\n  ' + written.join('\n  '))

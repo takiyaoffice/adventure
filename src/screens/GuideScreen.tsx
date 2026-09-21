@@ -7,8 +7,6 @@ import s from './GuideScreen.module.css'
 const CATEGORY_CLASS: Record<GuideCategory, string> = {
   spot: s.spot,
   food: s.food,
-  cafe: s.cafe,
-  souvenir: s.souvenir,
 }
 
 export function GuideScreen() {
@@ -35,7 +33,13 @@ export function GuideScreen() {
 
       <div className={s.list}>
         {entries.map((entry) => (
-          <article key={entry.id} className={s.card}>
+          <a
+            key={entry.id}
+            className={s.card}
+            href={entry.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img
               className={`${s.photo} ${entry.isPhoto ? s.realPhoto : ''}`}
               src={entry.image}
@@ -50,9 +54,10 @@ export function GuideScreen() {
               </div>
               <p className={s.description}>{entry.description}</p>
               <p className={s.area}>エリア：{entry.area}</p>
+              <p className={s.link}>{entry.linkLabel} を開く</p>
             </div>
             <PixelIcon name="chevron" size={18} className={s.chevron} />
-          </article>
+          </a>
         ))}
         {entries.length === 0 && <p className={s.empty}>このカテゴリのスポットはまだありません。</p>}
       </div>

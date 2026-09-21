@@ -11,7 +11,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'fonts/*.woff2'],
+      includeAssets: ['favicon.png', 'apple-touch-icon.png', 'fonts/*.woff2'],
       manifest: {
         id: BASE,
         name: 'FUTURE FANTASY -未来の地図-',

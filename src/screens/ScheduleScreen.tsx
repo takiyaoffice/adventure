@@ -48,11 +48,10 @@ export function ScheduleScreen({ selectedDayId, onSelectDay }: Props) {
 
         <ol className={s.timeline}>
           {day.entries.map((entry) => (
-            <li key={`${entry.period}-${entry.title}`} className={s.entry}>
+            <li key={entry.title} className={s.entry}>
               <span className={s.dot} />
               <img className={s.entryIcon} src={entry.icon} alt="" />
               <div className={s.entryBody}>
-                <span className={s.period}>{entry.period}</span>
                 <span className={s.entryTitle}>{entry.title}</span>
                 {entry.note && <span className={s.entryNote}>{entry.note}</span>}
               </div>

@@ -91,9 +91,9 @@
 .cardTitle {
   flex: none;
   margin-top: calc(var(--u) * 12);
-  font-size: calc(var(--u) * 24);
+  font-size: calc(var(--u) * 20);
   font-weight: 400;
-  line-height: 1.24;
+  line-height: 1.26;
   letter-spacing: calc(var(--u) * 0.6);
   color: #ffffff;
 }
@@ -115,18 +115,19 @@
   margin-top: calc(var(--u) * 16);
   display: flex;
   flex-direction: column;
+  /* 余った高さは予定どうしの間に均等に配る */
   justify-content: space-between;
-  gap: calc(var(--u) * 10);
+  gap: calc(var(--u) * 20);
 }
 
 .timeline::before {
   content: '';
   position: absolute;
   left: calc(var(--u) * 5);
-  top: calc(var(--u) * 8);
-  bottom: calc(var(--u) * 8);
+  top: calc(var(--u) * 14);
+  bottom: calc(var(--u) * 14);
   width: calc(var(--u) * 2);
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .entry {
@@ -153,14 +154,8 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: calc(var(--u) * 5);
-}
-
-.period {
-  font-size: calc(var(--u) * 15);
-  line-height: 1;
-  letter-spacing: calc(var(--u) * 1);
-  color: #ffffff;
+  gap: calc(var(--u) * 6);
+  justify-content: center;
 }
 
 /* 予定ごとのドット絵 */

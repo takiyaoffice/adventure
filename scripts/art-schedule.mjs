@@ -196,7 +196,7 @@ function hotpot() {
 
 /* ---------------- DAY2 ---------------- */
 
-/** 朝：仙台朝市 */
+/** 朝：仙台朝市（現在は未使用。朝市の予定を入れるときに使う） */
 function market() {
   const c = tile([[0, '#7fb8e4'], [1, '#d9ecf8']])
   // 奥の建物
@@ -500,12 +500,12 @@ function trainNight() {
 
 /** すべてのスケジュールアイコンを生成する */
 export function scheduleIcons(save) {
+  void market
   return [
     save('sch-d1-move', trainDay()),
     save('sch-d1-gyutan', gyutan()),
     save('sch-d1-town', citywalk()),
     save('sch-d1-nabe', hotpot()),
-    save('sch-d2-asaichi', market()),
     save('sch-d2-free', signpost()),
     save('sch-d2-live', live()),
     save('sch-d2-hotel', hotel()),

@@ -2,12 +2,8 @@
 
 export type ScreenId = 'home' | 'schedule' | 'map' | 'mission' | 'guide'
 
-/** 時間帯 */
-export type SchedulePeriod = '朝' | '昼' | '夕' | '夜'
-
 /** スケジュール1行分 */
 export interface ScheduleEntry {
-  period: SchedulePeriod
   /** 左に置くドット絵 */
   icon: string
   /** その時間帯にやること。改行を入れると複数行で表示される */

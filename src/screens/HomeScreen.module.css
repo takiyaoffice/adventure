@@ -21,6 +21,39 @@
   background: linear-gradient(180deg, rgba(4, 14, 40, 0.16) 0%, rgba(4, 14, 40, 0.07) 40%, rgba(4, 14, 40, 0) 60%);
 }
 
+/* 写真に差し替わったとき。ドット絵ではないので拡大をなめらかに戻す */
+.keyVisualPhoto {
+  image-rendering: auto;
+  object-position: center center;
+  animation: photoIn 500ms steps(5) both;
+}
+
+/* 写真の上でも文字が読めるように、上側を濃いめに落とす */
+.keyVisualShadePhoto {
+  background: linear-gradient(
+    180deg,
+    rgba(4, 14, 40, 0.68) 0%,
+    rgba(4, 14, 40, 0.42) 34%,
+    rgba(4, 14, 40, 0.12) 56%,
+    rgba(4, 14, 40, 0) 72%
+  );
+}
+
+@keyframes photoIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .keyVisualPhoto {
+    animation: none;
+  }
+}
+
 .keyVisualBody {
   position: absolute;
   inset: 0;

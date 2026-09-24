@@ -32,7 +32,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,webmanifest,mp3}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,webmanifest,mp3,jpg}'],
         // BGM を丸ごと先読みするので、既定の上限を引き上げる
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         navigateFallback: `${BASE}index.html`,

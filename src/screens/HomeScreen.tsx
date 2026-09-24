@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { ConfirmDialog } from '../components/ui/ConfirmDialog'
 import { PixelIcon } from '../components/ui/PixelIcon'
 import { TRIP } from '../data/trip'
+import { SECRET_MISSION_ID } from '../data/secret'
 import { useProgress } from '../state/ProgressContext'
 import keyVisual from '../assets/art/keyvisual.png'
+import keyVisualUnlocked from '../assets/photo/bouquet-home.jpg'
 import type { ScreenId } from '../types'
 import s from './HomeScreen.module.css'
 
@@ -19,14 +21,20 @@ const MENU: { label: string; icon: 'calendar' | 'map' | 'mission' | 'book'; scre
 ]
 
 export function HomeScreen({ onNavigate }: Props) {
-  const { clearedCount, totalCount, resetProgress } = useProgress()
+  const { clearedCount, totalCount, resetProgress, isCleared } = useProgress()
   const [confirming, setConfirming] = useState(false)
+  // 隠しミッションを解くと、キービジュアルが本物の花束の写真に変わる
+  const unlocked = isCleared(SECRET_MISSION_ID)
 
   return (
     <>
       <section className={s.keyVisual}>
-        <img className={s.keyVisualArt} src={keyVisual} alt="" />
-        <div className={s.keyVisualShade} />
+        <img
+          className={`${s.keyVisualArt} ${unlocked ? s.keyVisualPhoto : ''}`}
+          src={unlocked ? keyVisualUnlocked : keyVisual}
+          alt=""
+        />
+        <div className={`${s.keyVisualShade} ${unlocked ? s.keyVisualShadePhoto : ''}`} />
         <div className={s.keyVisualBody}>
           <div className={s.logoRow}>
             <PixelIcon name="sword" size={36} className={s.sword} />

@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import type { CSSProperties } from 'react'
 import { PixelIcon } from '../components/ui/PixelIcon'
-import { LOCATIONS, MAP_TERRAIN } from '../data/locations'
+import {
+  LOCATIONS,
+  MAP_COMPASS,
+  MAP_PIN_TODO,
+  MAP_PIN_VISITED,
+  MAP_TERRAIN,
+} from '../data/locations'
 import { useProgress } from '../state/ProgressContext'
 import type { LocationId, Mission } from '../types'
 import s from './MapScreen.module.css'
@@ -14,16 +20,15 @@ export function MapScreen({ onComplete }: Props) {
   const [selected, setSelected] = useState<LocationId | null>(null)
   const { isVisited, isCleared, missionsAt, toggleMission } = useProgress()
 
-  const openLocations = LOCATIONS.filter((l) => !l.locked)
-  const visitedCount = openLocations.filter((l) => isVisited(l.id)).length
+  const visitedCount = LOCATIONS.filter((l) => isVisited(l.id)).length
   const selectedLocation = selected ? LOCATIONS.find((l) => l.id === selected) ?? null : null
 
   const defaultLines =
     visitedCount === 0
-      ? ['まだ訪れていない場所が', 'たくさんあります。', '冒険を続けましょう！']
-      : visitedCount < openLocations.length
-        ? [`おとずれた場所　${visitedCount} / ${openLocations.length}`, '未踏の地がまだ残っています。', '冒険を続けましょう！']
-        : ['すべての場所をおとずれた！', '未来の地図が完成しました。']
+      ? ['いろいろな場所を訪れて、', '新しい発見をしよう！']
+      : visitedCount < LOCATIONS.length
+        ? [`おとずれた場所　${visitedCount} / ${LOCATIONS.length}`, '冒険を続けよう！']
+        : ['すべての場所をおとずれた！', '未来の地図が完成した。']
 
   return (
     <>
@@ -32,13 +37,8 @@ export function MapScreen({ onComplete }: Props) {
           <div className={s.canvas} onClick={() => setSelected(null)}>
             <img className={s.terrain} src={MAP_TERRAIN} alt="仙台をもとにしたファンタジー風ワールドマップ" />
             {LOCATIONS.map((loc) => {
-              const visited = !loc.locked && isVisited(loc.id)
-              const classes = [
-                s.marker,
-                loc.locked ? s.locked : '',
-                visited ? s.visited : '',
-                selected === loc.id ? s.selected : '',
-              ]
+              const visited = isVisited(loc.id)
+              const classes = [s.marker, visited ? s.visited : '', selected === loc.id ? s.selected : '']
                 .filter(Boolean)
                 .join(' ')
               return (
@@ -52,57 +52,76 @@ export function MapScreen({ onComplete }: Props) {
                     setSelected((prev) => (prev === loc.id ? null : loc.id))
                   }}
                 >
+                  <img className={s.pin} src={visited ? MAP_PIN_VISITED : MAP_PIN_TODO} alt="" />
                   <img className={s.markerIcon} src={loc.icon} alt="" />
-                  <span className={s.label}>{loc.locked ? '？？？' : loc.name}</span>
+                  <span className={s.label}>{loc.name}</span>
                 </button>
               )
             })}
           </div>
         </div>
+
+        <div className={s.legend}>
+          <span className={s.legendRow}>
+            <img className={s.legendPin} src={MAP_PIN_VISITED} alt="" />
+            訪問済み
+          </span>
+          <span className={s.legendRow}>
+            <img className={s.legendPin} src={MAP_PIN_TODO} alt="" />
+            行ってみたい
+          </span>
+        </div>
+        <img className={s.compass} src={MAP_COMPASS} alt="" />
       </div>
 
       <div className={s.info}>
-        <PixelIcon name="mission" size={22} className={s.infoIcon} />
-        <div className={s.infoBody}>
-          {selectedLocation ? (
-            <>
-              <p className={s.infoName}>{selectedLocation.locked ? '？？？' : selectedLocation.name}</p>
-              <p className={s.infoDesc}>{selectedLocation.description}</p>
-              {!selectedLocation.locked && missionsAt(selectedLocation.id).length > 0 && (
-                <div className={s.infoMissions}>
-                  {missionsAt(selectedLocation.id).map((mission) => {
-                    const done = isCleared(mission.id)
-                    return (
-                      <button
-                        key={mission.id}
-                        type="button"
-                        className={`${s.infoMission} ${done ? s.done : ''}`}
-                        onClick={() => {
-                          const completed = toggleMission(mission.id)
-                          if (completed) onComplete(completed)
-                        }}
-                      >
-                        <span className={`${s.box} ${done ? s.boxDone : ''}`}>
-                          <PixelIcon name="check" size={14} />
-                        </span>
-                        <span>{mission.title}</span>
-                      </button>
-                    )
-                  })}
-                </div>
-              )}
-              <button type="button" className={s.close} onClick={() => setSelected(null)}>
-                ×
-              </button>
-            </>
-          ) : (
-            defaultLines.map((line) => (
+        {selectedLocation ? (
+          <>
+            <p className={s.infoTitle}>
+              <PixelIcon name="mission" size={16} className={s.infoIcon} />
+              {selectedLocation.name.replace('\n', '')}
+            </p>
+            <p className={s.infoDesc}>{selectedLocation.description}</p>
+            {missionsAt(selectedLocation.id).length > 0 && (
+              <div className={s.infoMissions}>
+                {missionsAt(selectedLocation.id).map((mission) => {
+                  const done = isCleared(mission.id)
+                  return (
+                    <button
+                      key={mission.id}
+                      type="button"
+                      className={`${s.infoMission} ${done ? s.done : ''}`}
+                      onClick={() => {
+                        const completed = toggleMission(mission.id)
+                        if (completed) onComplete(completed)
+                      }}
+                    >
+                      <span className={`${s.box} ${done ? s.boxDone : ''}`}>
+                        <PixelIcon name="check" size={13} />
+                      </span>
+                      <span>{mission.title}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+            <button type="button" className={s.close} onClick={() => setSelected(null)}>
+              ×
+            </button>
+          </>
+        ) : (
+          <>
+            <p className={s.infoTitle}>
+              <PixelIcon name="mission" size={16} className={s.infoIcon} />
+              冒険の舞台：仙台エリア
+            </p>
+            {defaultLines.map((line) => (
               <p key={line} className={s.infoLine}>
                 {line}
               </p>
-            ))
-          )}
-        </div>
+            ))}
+          </>
+        )}
       </div>
     </>
   )

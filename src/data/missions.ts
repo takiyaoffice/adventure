@@ -27,11 +27,11 @@ export const MISSIONS: Mission[] = [
     reward: '冒険のはじまりの地に立った！',
   },
   {
-    id: 'visit-zuihoden',
+    id: 'visit-arena',
     category: 'place',
-    title: '瑞鳳殿を訪れる',
-    locationId: 'zuihoden',
-    reward: '金色の社をその目で見た！',
+    title: 'スーパーアリーナに行く',
+    locationId: 'arena',
+    reward: 'ライブ会場にたどり着いた！',
   },
   {
     id: 'visit-matsushima',
@@ -44,7 +44,6 @@ export const MISSIONS: Mission[] = [
     id: 'eat-gyutan',
     category: 'experience',
     title: '牛たんを食べる',
-    locationId: 'gyutan',
     reward: '体力が大きく回復した！',
   },
   {
@@ -63,14 +62,14 @@ export const MISSIONS: Mission[] = [
     id: 'join-live',
     category: 'special',
     title: '稲葉さんのライブに参加する',
-    locationId: 'live-venue',
+    locationId: 'arena',
     reward: '特別な一日がはじまった！',
   },
   {
     id: 'enjoy-live',
     category: 'special',
     title: 'ライブを楽しむ',
-    locationId: 'live-venue',
+    locationId: 'arena',
     reward: '60年の軌跡に、新しい1ページ！',
   },
 ]

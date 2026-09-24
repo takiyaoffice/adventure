@@ -19,8 +19,8 @@ export const SCHEDULE: ScheduleDay[] = [
       { time: '10:00', title: '東京駅 出発' },
       { time: '13:00', title: '仙台駅 到着', locationId: 'sendai-station' },
       { time: '14:00', title: 'ホテルチェックイン' },
-      { time: '16:00', title: '仙台城跡 観光', locationId: 'zuihoden' },
-      { time: '18:30', title: '牛たんディナー', locationId: 'gyutan' },
+      { time: '16:00', title: '仙台城跡 観光' },
+      { time: '18:30', title: '牛たんディナー' },
     ],
   },
   {
@@ -36,8 +36,8 @@ export const SCHEDULE: ScheduleDay[] = [
     illustration: bannerDay2,
     entries: [
       { time: '10:00', title: '朝食' },
-      { time: '12:00', title: 'ライブ会場へ移動', locationId: 'live-venue' },
-      { time: '15:00', title: '稲葉さんのライブ', locationId: 'live-venue' },
+      { time: '12:00', title: 'ライブ会場へ移動', locationId: 'arena' },
+      { time: '15:00', title: '稲葉さんのライブ', locationId: 'arena' },
       { time: '20:00', title: '仙台の夜を楽しむ' },
     ],
   },

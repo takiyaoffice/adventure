@@ -172,168 +172,195 @@ function keyVisual() {
 /* =========================================================
    2. マップの地形（アイコンは別素材で重ねる）
    ========================================================= */
-// 海岸線: y に対する海の始まる x
-const SEA_EDGE = [
-  [0, 78], [14, 82], [26, 86], [38, 92], [48, 100], [56, 112],
-  [62, 126], [67, 142], [71, 158], [76, 172],
+// 海岸線: y に対する海の始まる x（右側が海）
+const COAST = [
+  [0, 96], [18, 90], [34, 99], [50, 86], [64, 93], [80, 104],
+  [96, 98], [112, 106], [128, 96], [146, 103], [162, 95], [180, 104],
+  [196, 97], [212, 105], [228, 98], [240, 103],
 ]
-function seaEdgeX(y) {
-  if (y <= SEA_EDGE[0][0]) return SEA_EDGE[0][1]
-  for (let i = 0; i < SEA_EDGE.length - 1; i++) {
-    const [y0, x0] = SEA_EDGE[i]
-    const [y1, x1] = SEA_EDGE[i + 1]
-    if (y >= y0 && y <= y1) return x0 + ((x1 - x0) * (y - y0)) / (y1 - y0)
+function coastX(y) {
+  if (y <= COAST[0][0]) return COAST[0][1]
+  for (let i = 0; i < COAST.length - 1; i++) {
+    const [y0, x0] = COAST[i]
+    const [y1, x1] = COAST[i + 1]
+    if (y >= y0 && y <= y1) {
+      const t = (y - y0) / (y1 - y0)
+      const e = t * t * (3 - 2 * t) // なめらかに補間する
+      return x0 + (x1 - x0) * e
+    }
   }
-  return 999
+  return COAST[COAST.length - 1][1]
 }
 
 function mapTerrain() {
   const W = 160
   const H = 240
   const c = new Canvas(W, H)
-  const r = rng(777)
+  const r = rng(4321)
 
-  // --- 大地 ---
+  /* ---------- 大地 ---------- */
   c.fill(PAL.grass)
   grassTexture(c, 0, 0, W, H, 55)
-  // 明暗のムラ
-  for (let i = 0; i < 26; i++) {
-    const x = Math.round(r() * W)
-    const y = Math.round(r() * H)
-    const rad = 6 + Math.round(r() * 12)
-    c.disc(x, y, rad, r() > 0.5 ? PAL.grassLight : PAL.grassDark, 0.28)
+  for (let i = 0; i < 40; i++) {
+    c.disc(Math.round(r() * W), Math.round(r() * H), 5 + Math.round(r() * 14),
+      r() > 0.5 ? PAL.grassLight : PAL.grassDark, 0.26)
   }
 
-  // --- 海 ---
+  /* ---------- 海と岩の海岸 ---------- */
+  const seaAt = (y) => Math.round(coastX(y) + Math.sin(y * 0.7) * 1.4 + Math.sin(y * 0.23) * 2.2)
   for (let y = 0; y < H; y++) {
-    const ex = Math.round(seaEdgeX(y))
-    if (ex >= W) continue
-    const jitter = Math.sin(y * 0.55) > 0.3 ? 1 : Math.sin(y * 0.9) < -0.6 ? -1 : 0
-    const sx = ex + jitter
-    // 砂浜
-    c.rect(sx - 2, y, 3, 1, PAL.sand)
-    c.rect(sx - 3, y, 1, 1, mix(PAL.sand, PAL.grass, 0.5))
-    // 浅瀬 → 深海
-    c.rect(sx + 1, y, 4, 1, PAL.seaLight)
-    c.rect(sx + 5, y, 6, 1, PAL.sea)
-    c.rect(sx + 11, y, W - (sx + 11), 1, PAL.seaDeep)
+    const sx = seaAt(y)
+    // 岩場の崖
+    c.rect(sx - 4, y, 4, 1, '#6b5f4e')
+    c.rect(sx - 4, y, 2, 1, '#8a7c66')
+    c.px(sx - 1, y, '#4a4136')
+    // 浅瀬 → 深い海
+    c.rect(sx, y, 5, 1, '#54b0e0')
+    c.rect(sx + 5, y, 7, 1, PAL.seaLight)
+    c.rect(sx + 12, y, 10, 1, PAL.sea)
+    c.rect(sx + 22, y, W - (sx + 22), 1, PAL.seaDeep)
   }
-  waves(c, 76, 0, 84, 176, 31, 0.07)
-
-  // --- 松島の島々 ---
-  const isle = (cx, cy, rad) => {
-    c.disc(cx, cy + 1, rad, PAL.forest)
-    c.disc(cx, cy, rad, PAL.grass)
-    c.disc(cx - 1, cy - 1, Math.max(1, rad - 1), PAL.grassLight)
-    c.ring(cx, cy + 1, rad + 1, mix(PAL.seaFoam, PAL.sea, 0.35))
+  waves(c, 84, 0, 76, H, 31, 0.08)
+  // 岩礁
+  for (let i = 0; i < 14; i++) {
+    const y = Math.round(r() * H)
+    const sx = seaAt(y) + 4 + Math.round(r() * 26)
+    if (sx > W - 3) continue
+    const rad = 1 + Math.round(r() * 2)
+    c.disc(sx, y, rad, '#5c5142')
+    c.disc(sx - 1, y - 1, Math.max(1, rad - 1), '#7d7159')
+    c.ring(sx, y + 1, rad + 1, mix(PAL.seaFoam, PAL.sea, 0.3))
   }
-  isle(125, 34, 11)
-  isle(110, 18, 4)
-  isle(143, 22, 5)
-  isle(148, 46, 4)
-  isle(133, 58, 3)
-  isle(104, 40, 3)
-  tree(c, 141, 18, 3, true)
-  tree(c, 147, 44, 3, true)
-  tree(c, 108, 16, 2, true)
-
-  // --- 川 ---
-  const river = [[118, 96], [126, 116], [122, 138], [132, 160], [128, 182], [138, 206], [134, 240]]
-  c.path(river, mix(PAL.sea, '#000000', 0.25), 6)
-  c.path(river, PAL.sea, 4)
-  c.path(river, PAL.seaLight, 2)
-  // 河口
-  c.disc(120, 92, 5, PAL.sea)
-  c.disc(120, 92, 3, PAL.seaLight)
-
-  // --- 山地（左と下） ---
-  const mt = (cx, by, hw, h) => {
-    mountain(c, cx, by, hw, h, '#3f6f38', '#578c46', '#cfe3d2')
+  // 小島
+  const islet = (cx, cy, rad, treeSize) => {
+    c.disc(cx, cy + 1, rad + 1, '#4a4136')
+    c.disc(cx, cy, rad, PAL.forest)
+    c.disc(cx, cy - 1, rad, PAL.grass)
+    c.disc(cx - 1, cy - 2, Math.max(1, rad - 2), PAL.grassLight)
+    c.ring(cx, cy + 1, rad + 2, mix(PAL.seaFoam, PAL.sea, 0.35))
+    if (treeSize) tree(c, cx - 2, cy - rad - treeSize + 2, treeSize, true)
   }
-  mt(12, 34, 14, 16)
-  mt(28, 30, 10, 12)
-  mt(10, 212, 16, 18)
-  mt(66, 226, 13, 14)
-  mt(150, 226, 14, 15)
+  islet(112, 18, 4, 3)
+  islet(106, 78, 3, 2)
+  islet(118, 146, 3, 2)
+  islet(110, 202, 4, 3)
 
-  // --- 池 ---
-  const pond = (cx, cy, rx, ry) => {
-    for (let y = -ry; y <= ry; y++) {
-      const w = Math.round(rx * Math.sqrt(Math.max(0, 1 - (y * y) / (ry * ry))))
-      c.rect(cx - w, cy + y, w * 2 + 1, 1, PAL.sea)
-      c.rect(cx - w, cy + y, w * 2 + 1, 1, y < 0 ? PAL.seaLight : PAL.sea)
+  /* ---------- 山地（左上） ---------- */
+  const rockMountain = (cx, baseY, halfW, h) => {
+    for (let j = 0; j < h; j++) {
+      const t = j / h
+      const w = Math.round(halfW * t)
+      const y = baseY - h + j
+      c.rect(cx - w, y, w * 2 + 1, 1, '#6e6352')
+      c.rect(cx - w, y, Math.max(1, Math.round(w * 0.8)), 1, '#8a7e69')
+      c.rect(cx + Math.round(w * 0.4), y, Math.max(1, Math.round(w * 0.6)), 1, '#554c3f')
+      if ((j + cx) % 7 === 0 && w > 2) c.px(cx - w + 2, y, '#4a4237')
     }
-    c.ring(cx, cy, Math.max(rx, ry), mix(PAL.sand, PAL.grass, 0.4))
+    // 雪
+    const sh = Math.max(3, Math.round(h * 0.3))
+    for (let j = 0; j < sh; j++) {
+      const t = j / h
+      const w = Math.round(halfW * t)
+      const y = baseY - h + j
+      c.rect(cx - w, y, w * 2 + 1, 1, '#e8eef5')
+      c.rect(cx + Math.round(w * 0.3), y, Math.max(1, Math.round(w * 0.7)), 1, '#c2ccda')
+      if (j === sh - 1) {
+        c.px(cx - w, y, '#e8eef5'); c.px(cx + w, y, '#e8eef5')
+        c.px(cx - w + 3, y + 1, '#e8eef5'); c.px(cx + w - 3, y + 1, '#e8eef5')
+      }
+    }
   }
-  pond(28, 62, 9, 6)
-  pond(70, 206, 11, 7)
+  rockMountain(20, 96, 20, 46)
+  rockMountain(44, 92, 15, 34)
+  rockMountain(6, 88, 13, 30)
+  // 山裾
+  for (let x = 0; x < 62; x++) {
+    const y = 96 + Math.round(Math.sin(x * 0.2) * 2)
+    c.rect(x, y, 1, 4, PAL.grassDark)
+  }
 
-  // --- 街道（曲がりくねった道） ---
+  /* ---------- 川 ---------- */
+  const river = (pts, width) => {
+    c.path(pts, '#2a5a86', width + 2)
+    c.path(pts, PAL.sea, width)
+    c.path(pts, PAL.seaLight, Math.max(1, width - 2))
+  }
+  river([[58, 0], [62, 14], [58, 28], [66, 42], [76, 52], [84, 58], [92, 60]], 4)
+  river([[34, 108], [30, 128], [38, 148], [32, 168], [40, 188], [36, 210], [42, 240]], 3)
+  c.disc(90, 60, 4, PAL.sea)
+  c.disc(90, 60, 2, PAL.seaLight)
+
+  /* ---------- 街道 ---------- */
+  const NODES = { station: [26, 163], arena: [74, 120], north: [62, 74], west: [24, 120], south: [58, 206], east: [92, 168] }
   const ROADS = [
-    [[40, 32], [46, 40], [55, 44], [62, 52], [70, 57], [79, 65]],
-    [[79, 65], [70, 70], [62, 74], [54, 82], [46, 87], [40, 93]],
-    [[79, 65], [90, 68], [99, 75], [110, 82], [118, 88], [125, 93]],
-    [[40, 93], [36, 102], [39, 112], [36, 122], [40, 128], [44, 134]],
-    [[125, 93], [124, 100], [118, 105], [116, 112], [114, 117]],
-    [[114, 117], [110, 124], [115, 132], [117, 141], [120, 149]],
-    [[44, 134], [58, 139], [72, 137], [86, 143], [100, 147], [110, 145], [120, 149]],
-    [[44, 134], [38, 145], [43, 156], [38, 168], [40, 179]],
-    [[40, 179], [52, 187], [66, 189], [80, 184], [93, 179]],
-    [[93, 179], [104, 174], [110, 164], [116, 156], [120, 149]],
-    [[79, 65], [86, 76], [92, 88], [100, 98], [106, 108], [114, 117]],
-    [[93, 179], [99, 192], [94, 206], [88, 218], [86, 228]],
+    [[26, 163], [36, 150], [50, 140], [62, 130], [74, 120]],
+    [[74, 120], [70, 104], [64, 90], [62, 74]],
+    [[62, 74], [50, 62], [44, 48], [48, 32]],
+    [[26, 163], [22, 146], [20, 132], [24, 120]],
+    [[24, 120], [36, 112], [50, 108], [62, 100]],
+    [[74, 120], [82, 134], [88, 150], [92, 168]],
+    [[26, 163], [34, 180], [44, 194], [58, 206]],
+    [[58, 206], [74, 200], [86, 186], [92, 168]],
+    [[58, 206], [60, 222], [54, 236]],
+    [[92, 168], [96, 152], [94, 138]],
   ]
   ROADS.forEach((pts) => c.path(pts, PAL.roadEdge, 4))
   ROADS.forEach((pts) => c.path(pts, PAL.road, 2))
 
-  // --- 森（クラスタ状に密生させる） ---
-  const isSea = (x, y) => x >= seaEdgeX(y) - 3
-  const nodes = [[40, 32], [79, 65], [40, 93], [125, 93], [114, 117], [44, 134], [120, 149], [40, 179], [93, 179], [125, 34]]
-  const nearNode = (x, y) => nodes.some(([nx, ny]) => Math.abs(nx - x) < 15 && Math.abs(ny - y) < 15)
+  /* ---------- 森 ---------- */
   const blocked = (x, y) => {
     const p = c.get(x, y)
     if (p[3] === 0) return true
     const isRoad = p[0] > 150 && p[1] > 110 && p[2] < 160
     const isWater = p[2] > 120 && p[2] > p[1] + 20
-    return isRoad || isWater
+    const isRock = Math.abs(p[0] - p[1]) < 30 && p[0] > 70 && p[2] < p[0] - 10 && p[1] < p[0]
+    const isSnow = p[0] > 190 && p[1] > 195 && p[2] > 200
+    return isRoad || isWater || isRock || isSnow
   }
+  const ICON_SPOTS = [NODES.station, NODES.arena]
+  const near = (x, y) => ICON_SPOTS.some(([nx, ny]) => Math.abs(nx - x) < 16 && Math.abs(ny - y) < 16)
   const canPlant = (x, y, size) => {
-    if (isSea(x + size, y + size) || nearNode(x + size, y + size)) return false
+    if (x < 0 || y < 0 || x > W - size * 2 - 2 || y > H - size - 2) return false
+    if (x + size >= seaAt(y + size) - 4 || near(x + size, y + size)) return false
     for (let dy = -1; dy <= size + 1; dy++) {
       for (let dx = -1; dx <= size * 2; dx++) if (blocked(x + dx, y + dy)) return false
     }
     return true
   }
-  // 森のかたまり
-  const clusters = [
-    [16, 12], [58, 20], [92, 26], [16, 56], [62, 96], [92, 128], [20, 116], [66, 118],
-    [18, 150], [70, 160], [104, 196], [24, 200], [54, 226], [116, 214], [136, 178],
-    [8, 78], [100, 58], [140, 120], [62, 48], [30, 164],
-  ]
+  // 陸地をほぼ覆うように、細かいかたまりを並べる
+  const clusters = []
+  for (let cy = 8; cy < H; cy += 15) {
+    for (let cx = 6; cx < 96; cx += 15) {
+      clusters.push([cx + Math.round((r() - 0.5) * 8), cy + Math.round((r() - 0.5) * 8)])
+    }
+  }
   clusters.forEach(([cx, cy], ci) => {
-    const cr = rng(500 + ci)
-    for (let i = 0; i < 90; i++) {
-      const x = cx + Math.round((cr() - 0.5) * 30)
-      const y = cy + Math.round((cr() - 0.5) * 30)
-      const size = cr() < 0.25 ? 2 : cr() < 0.75 ? 3 : 4
-      if (x < 0 || y < 0 || x > W - 8 || y > H - 8) continue
-      if (!canPlant(x, y, size)) continue
-      tree(c, x, y, size, cr() > 0.35)
+    const cr = rng(900 + ci)
+    for (let i = 0; i < 40; i++) {
+      const x = cx + Math.round((cr() - 0.5) * 20)
+      const y = cy + Math.round((cr() - 0.5) * 20)
+      const size = cr() < 0.24 ? 2 : cr() < 0.74 ? 3 : 4
+      if (canPlant(x, y, size)) tree(c, x, y, size, cr() > 0.3)
     }
   })
-  // まばらな単木
-  for (let i = 0; i < 2200; i++) {
-    const x = Math.round(r() * (W - 8))
-    const y = Math.round(r() * (H - 8))
+  for (let i = 0; i < 9000; i++) {
+    const x = Math.round(r() * 100)
+    const y = Math.round(r() * H)
     const size = r() < 0.5 ? 2 : 3
-    if (!canPlant(x, y, size)) continue
-    tree(c, x, y, size, r() > 0.45)
+    if (canPlant(x, y, size)) tree(c, x, y, size, r() > 0.4)
   }
-  // 草むら
-  for (let i = 0; i < 260; i++) {
+  // 広葉樹と茂み
+  for (let i = 0; i < 300; i++) {
+    const x = Math.round(r() * 100)
+    const y = Math.round(r() * H)
+    if (!canPlant(x, y, 2)) continue
+    bush(c, x + 2, y + 2, 1 + Math.round(r() * 1.6), r() > 0.5 ? PAL.forest : PAL.forestLight)
+  }
+  // 草のゆらぎ
+  for (let i = 0; i < 320; i++) {
     const x = Math.round(r() * W)
     const y = Math.round(r() * H)
-    if (isSea(x, y) || blocked(x, y)) continue
+    if (x >= seaAt(y) - 4 || blocked(x, y)) continue
     c.px(x, y, PAL.grassDark)
     c.px(x + 1, y - 1, PAL.grassLight)
   }
@@ -341,221 +368,208 @@ function mapTerrain() {
 }
 
 /* =========================================================
-   3. マップのロケーションアイコン（24x24）
+   3. マップのロケーションアイコン（32x32）とマーカー
    ========================================================= */
-const ICON = 24
+const ICON = 32
 function iconCanvas() {
   return new Canvas(ICON, ICON)
 }
 /* アイコン下部の影 */
-function shadow(c, cy = 21, w = 7) {
+function shadow(c, cy = 29, w = 10) {
   for (let i = -w; i <= w; i++) {
-    const a = 0.3 * (1 - Math.abs(i) / (w + 1))
-    c.px(12 + i, cy, '#06210c', a)
-    c.px(12 + i, cy + 1, '#06210c', a * 0.5)
+    const a = 0.34 * (1 - Math.abs(i) / (w + 1))
+    c.px(16 + i, cy, '#06210c', a)
+    c.px(16 + i, cy + 1, '#06210c', a * 0.5)
   }
   return c
 }
 
+/** 仙台駅：高層ビルの並ぶ街 */
 function iconStation() {
   const c = iconCanvas()
-  shadow(c)
-  // 本体
-  c.rect(4, 10, 16, 11, PAL.wall)
-  c.rect(4, 10, 1, 11, mix(PAL.wall, '#ffffff', 0.6))
-  c.rect(19, 10, 1, 11, PAL.wallShade)
-  c.rect(4, 20, 16, 1, PAL.wallShade)
-  // 屋根
-  for (let j = 0; j < 4; j++) c.rect(3 + j, 6 + j, 18 - j * 2, 1, j === 0 ? PAL.roofLight : PAL.roof)
-  c.rect(2, 9, 20, 2, PAL.roofDark)
-  c.rect(2, 9, 20, 1, PAL.roof)
-  // 中央の塔屋
-  tower(c, 12, 7, 7, 5, 4, { flag: false })
-  c.rect(11, 3, 3, 1, PAL.gold)
-  // アーチの入口
-  c.rect(10, 15, 5, 6, PAL.window)
-  c.rect(11, 14, 3, 1, PAL.window)
-  c.rect(11, 15, 3, 1, mix(PAL.window, '#ffffff', 0.25))
-  // 窓
-  ;[6, 16].forEach((x) => {
-    c.rect(x, 13, 3, 3, PAL.window)
-    c.px(x, 13, PAL.gold)
-    c.px(x + 2, 15, mix(PAL.window, '#ffffff', 0.4))
-  })
-  c.rect(5, 17, 2, 2, PAL.gold)
-  c.rect(18, 17, 2, 2, PAL.gold)
+  shadow(c, 29, 13)
+  // 足もとの地面
+  c.rect(2, 26, 28, 4, '#3f6b3a')
+  c.rect(2, 26, 28, 1, '#56903f')
+  const lit = (x, y, w, h, on) => {
+    for (let j = 1; j < h - 1; j += 2) {
+      for (let i = 1; i < w - 1; i += 2) {
+        c.px(x + i, y + j, (i + j + x) % 3 ? on : '#2a3a56')
+      }
+    }
+  }
+  const tower = (x, y, w, h, wall, edge, roof) => {
+    c.rect(x, y, w, h, wall)
+    c.rect(x, y, 1, h, edge)
+    c.rect(x + w - 1, y, 1, h, mix(wall, '#000000', 0.32))
+    if (roof) c.rect(x - 1, y - 2, w + 2, 2, roof)
+    lit(x, y, w, h, PAL.gold)
+  }
+  // 奥のビル
+  tower(3, 14, 5, 13, '#7d8ea8', '#9fb0c8', null)
+  tower(25, 12, 5, 15, '#7d8ea8', '#9fb0c8', null)
+  tower(20, 9, 5, 18, '#8fa0ba', '#b4c4da', '#2f7d6b')
+  // 中央の高層ビル
+  tower(12, 3, 8, 24, '#a9bcd6', '#cfdcee', null)
+  c.rect(12, 3, 8, 2, '#dfe9f6')
+  c.rect(15, 0, 2, 3, '#8fa0ba')
+  c.px(16, 0, '#ffe9b0')
+  // 手前の低い建物（緑の屋根）
+  const lowRoof = (x, y, w, h) => {
+    c.rect(x, y, w, h, '#efeadc')
+    c.rect(x, y, 1, h, '#ffffff')
+    for (let j = 0; j < 3; j++) c.rect(x - 1 + j, y - 3 + j, w + 2 - j * 2, 1, j === 0 ? '#3f9a86' : '#2f7d6b')
+    c.rect(x + 1, y + 2, 2, 3, PAL.window)
+    c.rect(x + w - 3, y + 2, 2, 3, PAL.window)
+  }
+  lowRoof(5, 20, 8, 7)
+  lowRoof(19, 21, 8, 6)
+  // 駅前の木
+  tree(c, 0, 21, 3, true)
+  tree(c, 28, 22, 3, true)
   return save('loc-station', c)
 }
 
-function iconZuihoden() {
+/** セキスイハイムスーパーアリーナ：リブの入ったドーム */
+function iconArena() {
   const c = iconCanvas()
-  shadow(c)
-  // 石段
-  c.rect(6, 19, 13, 1, '#b9b4a4')
-  c.rect(7, 20, 11, 1, '#9a9585')
-  // 本体（朱塗り）
-  c.rect(6, 12, 13, 7, PAL.red)
-  c.rect(6, 12, 1, 7, mix(PAL.red, '#ffffff', 0.35))
-  c.rect(18, 12, 1, 7, PAL.redDark)
-  c.rect(10, 14, 5, 5, '#2a1830')
-  c.rect(11, 15, 3, 1, PAL.gold)
-  // 大屋根
-  japaneseRoof(c, 12, 6, 10, 6, '#33405f', PAL.gold)
-  japaneseRoof(c, 12, 10, 8, 3, '#2b3550', PAL.gold)
-  // 千木・鰹木
-  c.rect(11, 3, 3, 2, PAL.gold)
-  c.px(10, 4, PAL.gold)
-  c.px(14, 4, PAL.gold)
-  // 灯籠
-  c.rect(4, 16, 2, 4, '#b9b4a4')
-  c.rect(19, 16, 2, 4, '#b9b4a4')
-  c.px(4, 15, PAL.gold)
-  c.px(20, 15, PAL.gold)
-  return save('loc-zuihoden', c)
+  shadow(c, 29, 13)
+  // 敷地
+  c.rect(2, 24, 28, 5, '#8e9aa6')
+  c.rect(2, 24, 28, 1, '#aab6c2')
+  c.rect(2, 28, 28, 1, '#5e6a76')
+  // ドームの本体
+  for (let y = 0; y < 12; y++) {
+    const t = y / 11
+    const w = Math.round(13 * Math.sqrt(Math.max(0, 1 - (1 - t) * (1 - t))))
+    c.rect(16 - w, 11 + y, w * 2 + 1, 1, '#7f93ab')
+  }
+  // 明るい面
+  for (let y = 0; y < 12; y++) {
+    const t = y / 11
+    const w = Math.round(13 * Math.sqrt(Math.max(0, 1 - (1 - t) * (1 - t))))
+    c.rect(16 - w, 11 + y, Math.max(1, w), 1, '#9db0c6')
+  }
+  // リブ
+  for (let a = -78; a <= 78; a += 13) {
+    const rad = (a * Math.PI) / 180
+    for (let t = 0.15; t <= 1.0; t += 0.07) {
+      const x = Math.round(16 + Math.sin(rad) * 13 * t)
+      const y = Math.round(23 - Math.cos(rad) * 12 * t)
+      if (y >= 11) c.px(x, y, '#c6d6e8')
+    }
+  }
+  c.rect(3, 22, 27, 1, '#5e6a76')
+  // ドームのてっぺん
+  c.rect(14, 9, 5, 3, '#b4c6da')
+  c.rect(15, 8, 3, 1, '#dfe9f6')
+  c.px(16, 6, '#ffffff')
+  c.px(16, 7, '#c6d6e8')
+  // 外周の柱
+  for (let x = 4; x < 29; x += 3) c.rect(x, 23, 1, 3, '#4f5a66')
+  c.rect(3, 23, 26, 1, '#8e9aa6')
+  // 入口
+  c.rect(14, 23, 5, 4, '#2a3340')
+  c.rect(15, 24, 3, 1, PAL.gold)
+  // 照明塔
+  c.rect(1, 14, 1, 10, '#6e7a86')
+  c.rect(0, 12, 3, 2, '#c6d6e8')
+  c.rect(30, 14, 1, 10, '#6e7a86')
+  c.rect(29, 12, 3, 2, '#c6d6e8')
+  return save('loc-arena', c)
 }
 
+/** 松島：島に建つ五大堂 */
 function iconMatsushima() {
   const c = iconCanvas()
-  // 海
-  c.disc(12, 19, 10, PAL.sea, 0.9)
-  c.disc(12, 19, 8, PAL.seaLight, 0.9)
-  c.rect(2, 20, 20, 3, PAL.sea)
-  // 島
-  c.disc(12, 16, 8, PAL.forest)
-  c.disc(12, 15, 7, PAL.grass)
-  c.disc(10, 14, 5, PAL.grassLight)
-  c.rect(4, 17, 17, 3, PAL.grass)
-  c.rect(4, 19, 17, 1, mix(PAL.sand, '#000000', 0.1))
+  // まわりの海
+  c.disc(16, 22, 15, PAL.sea, 0.85)
+  c.disc(16, 22, 13, PAL.seaLight, 0.9)
+  c.ring(16, 22, 15, mix(PAL.seaFoam, PAL.sea, 0.35))
+  // 島（岩場のふち）
+  c.disc(16, 20, 12, '#4a4136')
+  c.disc(16, 19, 12, PAL.forest)
+  c.disc(16, 18, 11, PAL.grass)
+  c.disc(13, 16, 8, PAL.grassLight)
+  c.rect(5, 20, 23, 3, PAL.grass)
+  for (let x = 4; x < 29; x++) {
+    const y = 23 + (Math.sin(x * 0.7) > 0.3 ? 1 : 0)
+    c.px(x, y, '#6b5f4e')
+    c.px(x, y + 1, '#4a4136')
+  }
   // 松
-  tree(c, 3, 11, 3, true)
-  tree(c, 18, 12, 3, true)
-  // 社殿
-  c.rect(9, 12, 7, 5, '#f0ece0')
-  c.rect(9, 12, 1, 5, '#ffffff')
-  japaneseRoof(c, 12, 8, 7, 4, PAL.red, PAL.gold)
-  c.rect(11, 14, 3, 3, '#2a1830')
-  // 鳥居
-  c.rect(4, 14, 1, 5, PAL.red)
-  c.rect(7, 14, 1, 5, PAL.red)
-  c.rect(3, 13, 6, 1, PAL.red)
-  c.rect(4, 15, 4, 1, PAL.red)
+  tree(c, 2, 12, 4, true)
+  tree(c, 25, 13, 4, true)
+  tree(c, 6, 18, 3, false)
+  tree(c, 23, 19, 3, false)
+  // 五大堂
+  c.rect(11, 14, 10, 7, '#c9a06a')
+  c.rect(11, 14, 1, 7, '#e0bb85')
+  c.rect(20, 14, 1, 7, '#8a6a3a')
+  japaneseRoof(c, 16, 8, 11, 6, '#2b3550', PAL.gold)
+  japaneseRoof(c, 16, 13, 8, 3, '#242d45', PAL.gold)
+  c.rect(14, 17, 4, 4, '#2a1830')
+  c.rect(15, 18, 2, 1, PAL.gold)
+  c.rect(15, 5, 3, 2, PAL.gold)
+  // 赤い橋
+  c.rect(1, 24, 7, 1, PAL.red)
+  c.rect(2, 25, 1, 2, PAL.redDark)
+  c.rect(6, 25, 1, 2, PAL.redDark)
   // 波
-  c.rect(2, 21, 3, 1, PAL.seaFoam)
-  c.rect(8, 22, 4, 1, PAL.seaFoam)
-  c.rect(16, 21, 4, 1, PAL.seaFoam)
+  c.rect(3, 28, 4, 1, PAL.seaFoam)
+  c.rect(14, 30, 5, 1, PAL.seaFoam)
+  c.rect(24, 28, 4, 1, PAL.seaFoam)
   return save('loc-matsushima', c)
 }
 
-function iconGyutan() {
-  const c = iconCanvas()
-  shadow(c, 21, 9)
-  // 木の皿
-  c.disc(12, 17, 10, '#3a2a1c')
-  c.disc(12, 16, 10, '#6b4a2c')
-  c.disc(12, 16, 8, '#8a6138')
-  c.disc(12, 15, 7, '#a07747')
-  c.ring(12, 16, 10, '#2a1c12')
-  // 牛たん（楕円のスライス）
-  const slice = (cx, cy, rx, ry) => {
-    for (let y = -ry; y <= ry; y++) {
-      const w = Math.round(rx * Math.sqrt(Math.max(0, 1 - (y * y) / (ry * ry))))
-      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#a34a33')
+/** 地図のピン（15x21） */
+function mapPin(name, body, light, dark) {
+  const c = new Canvas(15, 21)
+  const cx = 7
+  /** 丸い頭と、下へすぼまる胴をひとつづきに塗る */
+  const drop = (headY, r, tipY, col) => {
+    c.disc(cx, headY, r, col)
+    for (let y = headY; y <= tipY; y++) {
+      const t = (y - headY) / (tipY - headY)
+      const w = Math.max(0, Math.round(r * (1 - t) * (1 - t * 0.3)))
+      c.rect(cx - w, y, w * 2 + 1, 1, col)
     }
-    for (let y = -ry; y <= 0; y++) {
-      const w = Math.round((rx - 1) * Math.sqrt(Math.max(0, 1 - (y * y) / (ry * ry))))
-      c.rect(cx - w, cy + y, w * 2 + 1, 1, '#c26a4c')
-    }
-    c.rect(cx - rx + 1, cy + ry, (rx - 1) * 2 + 1, 1, '#6e2a1c')
-    // 焼き目
-    c.rect(cx - rx + 2, cy - 1, rx * 2 - 3, 1, '#7a3020')
-    c.rect(cx - rx + 2, cy + 1, rx * 2 - 3, 1, '#8c3a26')
-    c.px(cx - 2, cy - ry + 1, '#d98c66')
   }
-  slice(7, 16, 5, 3)
-  slice(17, 16, 5, 3)
-  slice(12, 12, 6, 3)
-  // レモン
-  c.disc(20, 10, 3, '#f2d24e')
-  c.disc(20, 10, 2, '#fbe98a')
-  c.px(20, 10, '#f2d24e')
-  // 湯気
-  c.px(8, 6, '#ffffff', 0.45)
-  c.px(9, 4, '#ffffff', 0.35)
-  c.px(7, 2, '#ffffff', 0.25)
-  c.px(15, 6, '#ffffff', 0.45)
-  c.px(14, 4, '#ffffff', 0.35)
-  c.px(16, 2, '#ffffff', 0.25)
-  return save('loc-gyutan', c)
-}
-
-function iconLive() {
-  const c = iconCanvas()
-  shadow(c, 21, 9)
-  // ステージ背面
-  c.rect(2, 4, 20, 14, PAL.night)
-  c.rect(2, 4, 20, 1, PAL.purpleLight)
-  c.rect(2, 4, 1, 14, PAL.purple)
-  c.rect(21, 4, 1, 14, PAL.purple)
-  // スポットライト
-  for (let j = 0; j < 11; j++) {
-    const w = 3 + j
-    c.rect(12 - Math.floor(w / 2), 5 + j, w, 1, '#ffffff', 0.16 + j * 0.012)
-  }
-  // 星
-  const r = rng(42)
-  for (let i = 0; i < 16; i++) {
-    const x = 3 + Math.round(r() * 18)
-    const y = 5 + Math.round(r() * 9)
-    c.px(x, y, r() > 0.5 ? '#ffffff' : PAL.magenta, 0.6 + r() * 0.4)
-  }
-  // アーティスト
-  c.rect(11, 9, 2, 5, '#ffffff')
-  c.px(11, 8, '#ffe9b0')
-  c.px(12, 8, '#ffe9b0')
-  c.px(10, 10, '#ffffff')
-  c.px(13, 9, '#ffffff')
-  // 客席シルエット
-  for (let i = 0; i < 9; i++) {
-    const x = 3 + i * 2
-    const h = 2 + ((i * 5) % 3)
-    c.rect(x, 18 - h, 2, h + 1, '#0b0718')
-    c.px(x, 17 - h, '#0b0718')
-  }
-  // ステージ床
-  c.rect(1, 18, 22, 3, '#241a42')
-  c.rect(1, 18, 22, 1, PAL.purpleLight)
-  c.rect(1, 20, 22, 1, '#120c26')
-  return save('loc-live', c)
-}
-
-function iconUnknown(name, kind) {
-  const c = iconCanvas()
-  shadow(c, 21, 7)
-  const dark = '#1e2a3d'
-  const darker = '#141d2c'
-  const edge = '#2d3c55'
-  if (kind === 'castle') {
-    c.rect(5, 10, 14, 11, dark)
-    c.rect(5, 10, 1, 11, edge)
-    c.rect(18, 10, 1, 11, darker)
-    for (let j = 0; j < 4; j++) c.rect(4 + j, 6 + j, 16 - j * 2, 1, j === 0 ? edge : dark)
-    c.rect(3, 9, 18, 2, darker)
-    c.rect(9, 1, 6, 6, dark)
-    for (let j = 0; j < 3; j++) c.rect(9 - j, 3 + j, 6 + j * 2, 1, dark)
-    c.rect(10, 14, 4, 7, darker)
-    c.rect(7, 13, 2, 2, '#38496a')
-    c.rect(15, 13, 2, 2, '#38496a')
-  } else {
-    // 小さな祠
-    c.rect(6, 12, 12, 9, dark)
-    c.rect(6, 12, 1, 9, edge)
-    c.rect(17, 12, 1, 9, darker)
-    for (let j = 0; j < 5; j++) c.rect(3 + j, 7 + j, 18 - j * 2, 1, j === 0 ? edge : dark)
-    c.rect(10, 15, 4, 6, darker)
-    c.rect(7, 14, 2, 2, '#38496a')
-    c.rect(15, 14, 2, 2, '#38496a')
-  }
+  drop(7, 6, 20, '#ffffff')   // 白いふち
+  drop(7, 5, 19, dark)        // 濃い影
+  drop(6, 4, 18, body)        // 本体
+  c.disc(6, 5, 3, light)
+  c.disc(cx, 7, 3, '#ffffff')
+  c.disc(cx, 7, 2, body)
+  c.disc(cx - 1, 6, 1, light)
   return save(name, c)
+}
+
+/** 方位磁針（28x28） */
+function compass() {
+  const c = new Canvas(28, 28)
+  c.disc(14, 14, 13, '#1a1f33')
+  c.disc(14, 14, 12, '#222a40')
+  c.ring(14, 14, 13, PAL.gold)
+  c.ring(14, 14, 10, mix(PAL.gold, '#000000', 0.35))
+  // 4方位の星
+  const spike = (dx, dy, len, colA, colB) => {
+    for (let t = 0; t <= len; t++) {
+      const w = Math.max(0, Math.round((len - t) / 3))
+      const x = 14 + Math.round(dx * t)
+      const y = 14 + Math.round(dy * t)
+      for (let o = -w; o <= w; o++) {
+        c.px(x + Math.round(dy * o), y + Math.round(dx * o), o < 0 ? colA : colB)
+      }
+    }
+  }
+  spike(0, -1, 10, '#fff0b0', PAL.gold)
+  spike(0, 1, 10, PAL.gold, '#a8791d')
+  spike(-1, 0, 10, '#fff0b0', PAL.gold)
+  spike(1, 0, 10, PAL.gold, '#a8791d')
+  c.disc(14, 14, 2, '#fff0b0')
+  c.px(14, 14, PAL.gold)
+  return save('compass', c)
 }
 
 /* =========================================================
@@ -1313,7 +1327,10 @@ function preview(items) {
 
 const kv = keyVisual()
 const terrain = mapTerrain()
-const icons = [iconStation(), iconZuihoden(), iconMatsushima(), iconGyutan(), iconLive(), iconUnknown('loc-unknown', 'castle'), iconUnknown('loc-unknown-small', 'shrine')]
+const icons = [iconStation(), iconArena(), iconMatsushima(),
+  mapPin('pin-visited', '#2f8fe0', '#7fc4f5', '#14538f'),
+  mapPin('pin-todo', '#e0a72f', '#f5d47f', '#8f6014'),
+  compass()]
 const banners = [bannerDay1(), bannerDay2(), bannerDay3()]
 const guides = [guideMatsushima(), guideSendaijo(), guideZuihoden(), guideAkiu(), guideAer(), guideAsaichi(), guideZunda(), guideGyutan(), guideGyutanSet(), guideKaki()]
 if (process.env.ART_PREVIEW) preview([kv, terrain, ...banners, ...guides, ...icons])

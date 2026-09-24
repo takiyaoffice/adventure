@@ -31,21 +31,11 @@ export interface ScheduleDay {
   entries: ScheduleEntry[]
 }
 
-export type LocationId =
-  | 'sendai-station'
-  | 'zuihoden'
-  | 'matsushima'
-  | 'gyutan'
-  | 'live-venue'
-  | 'unknown-1'
-  | 'unknown-2'
-  | 'unknown-3'
-  | 'unknown-4'
-  | 'unknown-5'
+export type LocationId = 'sendai-station' | 'arena' | 'matsushima'
 
 export interface MapLocation {
   id: LocationId
-  /** 未開放エリアは name を伏せる */
+  /** 改行を入れると2行で表示される */
   name: string
   /** マップ上の位置（地形画像に対する％） */
   x: number
@@ -53,8 +43,6 @@ export interface MapLocation {
   icon: string
   /** アイコンの表示サイズ倍率 */
   scale?: number
-  /** 未開放エリア（??? 表示） */
-  locked?: boolean
   description: string
 }
 

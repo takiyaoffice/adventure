@@ -5,15 +5,15 @@ export type ScreenId = 'home' | 'schedule' | 'map' | 'mission' | 'guide'
 /** 時間帯 */
 export type SchedulePeriod = '朝' | '昼' | '夕' | '夜'
 
-/** 予定の決まりぐあい */
-export type ScheduleStatus = 'fixed' | 'recommended' | 'free'
-
 /** スケジュール1行分 */
 export interface ScheduleEntry {
   period: SchedulePeriod
-  status: ScheduleStatus
-  /** 改行を入れると複数行で表示される */
+  /** 左に置くドット絵 */
+  icon: string
+  /** その時間帯にやること。改行を入れると複数行で表示される */
   title: string
+  /** 選び方の余地を書き添える一言（任意）。改行可 */
+  note?: string
   /** 対応するマップ上の場所（任意） */
   locationId?: LocationId
 }

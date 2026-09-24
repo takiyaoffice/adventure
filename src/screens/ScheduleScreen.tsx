@@ -1,17 +1,10 @@
 import { useState } from 'react'
-import { SCHEDULE, STATUS_LABEL } from '../data/schedule'
-import type { ScheduleStatus } from '../types'
+import { SCHEDULE } from '../data/schedule'
 import s from './ScheduleScreen.module.css'
 
 interface Props {
   selectedDayId: string
   onSelectDay: (dayId: string) => void
-}
-
-const STATUS_CLASS: Record<ScheduleStatus, string> = {
-  fixed: s.fixed,
-  recommended: s.recommended,
-  free: s.free,
 }
 
 /** 1日ぶんを1ページとして表示し、上部のタブで切り替える */
@@ -57,14 +50,11 @@ export function ScheduleScreen({ selectedDayId, onSelectDay }: Props) {
           {day.entries.map((entry) => (
             <li key={`${entry.period}-${entry.title}`} className={s.entry}>
               <span className={s.dot} />
+              <img className={s.entryIcon} src={entry.icon} alt="" />
               <div className={s.entryBody}>
-                <div className={s.entryHead}>
-                  <span className={s.period}>{entry.period}</span>
-                  <span className={`${s.status} ${STATUS_CLASS[entry.status]}`}>
-                    {STATUS_LABEL[entry.status]}
-                  </span>
-                </div>
+                <span className={s.period}>{entry.period}</span>
                 <span className={s.entryTitle}>{entry.title}</span>
+                {entry.note && <span className={s.entryNote}>{entry.note}</span>}
               </div>
             </li>
           ))}

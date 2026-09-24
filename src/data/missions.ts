@@ -53,6 +53,12 @@ export const MISSIONS: Mission[] = [
     reward: 'しあわせが少し増えた！',
   },
   {
+    id: 'ask-local',
+    category: 'experience',
+    title: '旅先で出会った人におすすめの場所を聞く',
+    reward: '地元の人だけが知る場所を教わった！',
+  },
+  {
     id: 'enjoy-live',
     category: 'special',
     title: 'ライブを楽しむ',

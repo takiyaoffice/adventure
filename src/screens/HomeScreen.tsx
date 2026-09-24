@@ -31,27 +31,30 @@ export function HomeScreen({ onNavigate }: Props) {
           src={unlocked ? keyVisualUnlocked : keyVisual}
           alt=""
         />
-        <div className={`${s.keyVisualShade} ${unlocked ? s.keyVisualShadePhoto : ''}`} />
-        <div className={s.keyVisualBody}>
-          <div className={s.logoRow}>
-            <PixelIcon name="sword" size={36} className={s.sword} />
-            <h1 className={s.logo}>
-              <span>FUTURE</span>
-              <span>FANTASY</span>
-            </h1>
-            <PixelIcon name="star" size={17} className={s.star} />
+        {/* 暗号を解いたあとは、写真だけを見せる */}
+        {!unlocked && <div className={s.keyVisualShade} />}
+        {!unlocked && (
+          <div className={s.keyVisualBody}>
+            <div className={s.logoRow}>
+              <PixelIcon name="sword" size={36} className={s.sword} />
+              <h1 className={s.logo}>
+                <span>FUTURE</span>
+                <span>FANTASY</span>
+              </h1>
+              <PixelIcon name="star" size={17} className={s.star} />
+            </div>
+            <p className={s.subtitle}>— {TRIP.subtitle} —</p>
+            <p className={s.copy}>
+              {TRIP.catchCopy.map((line) => (
+                <span key={line}>
+                  {line}
+                  <br />
+                </span>
+              ))}
+            </p>
+            <p className={s.tripDate}>{TRIP.dateRange}</p>
           </div>
-          <p className={s.subtitle}>— {TRIP.subtitle} —</p>
-          <p className={s.copy}>
-            {TRIP.catchCopy.map((line) => (
-              <span key={line}>
-                {line}
-                <br />
-              </span>
-            ))}
-          </p>
-          <p className={s.tripDate}>{TRIP.dateRange}</p>
-        </div>
+        )}
       </section>
 
       <div className={s.menu}>

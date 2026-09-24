@@ -2,7 +2,7 @@
 .tabs {
   flex: none;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: calc(var(--u) * 6);
 }
 
@@ -12,7 +12,7 @@
   justify-content: center;
   text-align: center;
   min-height: calc(var(--u) * 36);
-  padding: calc(var(--u) * 4);
+  padding: calc(var(--u) * 4) calc(var(--u) * 2);
   border: calc(var(--u) * 2) solid var(--line);
   background: var(--panel);
   font-size: calc(var(--u) * 12);
@@ -102,6 +102,10 @@
 
 .food {
   background: #a82f33;
+}
+
+.sweets {
+  background: #8a6a2f;
 }
 
 .description {

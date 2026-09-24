@@ -18,12 +18,14 @@ export const GUIDE_TABS: { id: GuideCategory | 'all'; label: string }[] = [
   { id: 'all', label: 'すべて' },
   { id: 'spot', label: 'スポット' },
   { id: 'food', label: '食事処' },
+  { id: 'sweets', label: '甘味処' },
 ]
 
 /** カード右上に出すラベル */
 export const GUIDE_CATEGORY_LABEL: Record<GuideCategory, string> = {
   spot: 'スポット',
   food: '食事処',
+  sweets: '甘味処',
 }
 
 /**
@@ -93,36 +95,6 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
     linkLabel: '公式サイト',
   },
   {
-    id: 'murakamiya',
-    name: '村上屋餅店',
-    category: 'food',
-    description: 'ずんだ餅で知られる和菓子店。',
-    access: '仙台駅から地下鉄と徒歩で約10分',
-    image: imgZunda,
-    url: 'https://tabelog.com/miyagi/A0401/A040101/4000119/',
-    linkLabel: '食べログ',
-  },
-  {
-    id: 'hikoichi',
-    name: '甘味処 彦いち',
-    category: 'food',
-    description: '古い日本家屋の人気の甘味処。',
-    access: '仙台駅から地下鉄と徒歩で約10分',
-    image: imgKanmi,
-    url: 'https://tabelog.com/miyagi/A0401/A040101/4001665/',
-    linkLabel: '食べログ',
-  },
-  {
-    id: 'baisaou',
-    name: '菓子司 賣茶翁',
-    category: 'food',
-    description: 'みちのくせんべいで知られる和菓子店。',
-    access: '仙台駅から地下鉄と徒歩で約15分',
-    image: imgWagashi,
-    url: 'https://tabelog.com/miyagi/A0401/A040101/4001481/',
-    linkLabel: '食べログ',
-  },
-  {
     id: 'kaku',
     name: '牛たん料理 閣',
     category: 'food',
@@ -159,7 +131,37 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
     description: '仙台名物のせり鍋の専門店。',
     access: '仙台駅西口から徒歩約2分',
     image: imgSerinabe,
-    url: 'https://www.hotpepper.jp/strJ004661149/',
-    linkLabel: 'ホットペッパー',
+    url: 'https://tabelog.com/rstLst/?sw=%E3%81%9B%E3%82%8A%E3%81%84%E3%81%A1&sa=%E4%BB%99%E5%8F%B0',
+    linkLabel: '食べログ',
+  },
+  {
+    id: 'murakamiya',
+    name: '村上屋餅店',
+    category: 'sweets',
+    description: 'ずんだ餅で知られる和菓子店。',
+    access: '仙台駅から地下鉄と徒歩で約10分',
+    image: imgZunda,
+    url: 'https://tabelog.com/miyagi/A0401/A040101/4000119/',
+    linkLabel: '食べログ',
+  },
+  {
+    id: 'hikoichi',
+    name: '甘味処 彦いち',
+    category: 'sweets',
+    description: '古い日本家屋の人気の甘味処。',
+    access: '仙台駅から地下鉄と徒歩で約10分',
+    image: imgKanmi,
+    url: 'https://tabelog.com/miyagi/A0401/A040101/4001665/',
+    linkLabel: '食べログ',
+  },
+  {
+    id: 'baisaou',
+    name: '菓子司 賣茶翁',
+    category: 'sweets',
+    description: 'みちのくせんべいで知られる和菓子店。',
+    access: '仙台駅から地下鉄と徒歩で約15分',
+    image: imgWagashi,
+    url: 'https://tabelog.com/miyagi/A0401/A040101/4001481/',
+    linkLabel: '食べログ',
   },
 ]

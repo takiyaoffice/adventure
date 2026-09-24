@@ -59,7 +59,7 @@ export interface Mission {
 }
 
 /** 冒険ガイドの分類 */
-export type GuideCategory = 'spot' | 'food'
+export type GuideCategory = 'spot' | 'food' | 'sweets'
 
 export interface GuideEntry {
   id: string

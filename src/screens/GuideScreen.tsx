@@ -6,6 +6,7 @@ import s from './GuideScreen.module.css'
 const CATEGORY_CLASS: Record<GuideCategory, string> = {
   spot: s.spot,
   food: s.food,
+  sweets: s.sweets,
 }
 
 export function GuideScreen() {

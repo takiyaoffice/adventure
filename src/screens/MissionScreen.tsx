@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ConfirmDialog } from '../components/ui/ConfirmDialog'
 import { HintDialog } from '../components/ui/HintDialog'
 import { PixelIcon } from '../components/ui/PixelIcon'
 import type { GlyphName } from '../components/ui/pixel-glyphs'
@@ -20,7 +21,8 @@ const CATEGORY_ICON: Record<MissionCategory, GlyphName> = {
 export function MissionScreen({ onComplete }: Props) {
   const [tab, setTab] = useState<MissionCategory | 'all'>('all')
   const [hint, setHint] = useState<string | null>(null)
-  const { isCleared, toggleMission } = useProgress()
+  const [confirming, setConfirming] = useState(false)
+  const { isCleared, toggleMission, clearedCount, totalCount, resetProgress } = useProgress()
 
   const categories = tab === 'all' ? CATEGORY_ORDER : [tab]
 
@@ -92,7 +94,28 @@ export function MissionScreen({ onComplete }: Props) {
         })}
       </div>
 
+      <div className={s.record}>
+        <span className={s.recordText}>
+          冒険の記録　{clearedCount} / {totalCount}
+        </span>
+        <button type="button" className={s.reset} onClick={() => setConfirming(true)}>
+          リセット
+        </button>
+      </div>
+
       <HintDialog text={hint} onClose={() => setHint(null)} />
+
+      <ConfirmDialog
+        open={confirming}
+        title="冒険の記録をリセット"
+        body={'ミッションの達成記録と暗号の解除を\nすべて消して、最初から始める。'}
+        confirmLabel="リセットする"
+        onConfirm={() => {
+          resetProgress()
+          setConfirming(false)
+        }}
+        onCancel={() => setConfirming(false)}
+      />
     </>
   )
 }

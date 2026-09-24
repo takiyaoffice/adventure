@@ -156,32 +156,3 @@
   line-height: 1;
   white-space: nowrap;
 }
-
-/* ---------- 冒険の記録とリセット ---------- */
-.record {
-  flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: calc(var(--u) * 10);
-  padding: calc(var(--u) * 2) calc(var(--u) * 2) 0;
-}
-
-.recordText {
-  font-size: calc(var(--u) * 12);
-  letter-spacing: calc(var(--u) * 0.4);
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.reset {
-  padding: calc(var(--u) * 6) calc(var(--u) * 12);
-  border: calc(var(--u) * 2) solid rgba(255, 255, 255, 0.28);
-  background: transparent;
-  font-size: calc(var(--u) * 12);
-  letter-spacing: calc(var(--u) * 0.6);
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.reset:active {
-  background: rgba(255, 255, 255, 0.12);
-}

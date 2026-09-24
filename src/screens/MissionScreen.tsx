@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { HintDialog } from '../components/ui/HintDialog'
 import { PixelIcon } from '../components/ui/PixelIcon'
 import type { GlyphName } from '../components/ui/pixel-glyphs'
 import { CATEGORY_LABEL, CATEGORY_ORDER, MISSIONS, MISSION_TABS } from '../data/missions'
@@ -18,6 +19,7 @@ const CATEGORY_ICON: Record<MissionCategory, GlyphName> = {
 
 export function MissionScreen({ onComplete }: Props) {
   const [tab, setTab] = useState<MissionCategory | 'all'>('all')
+  const [hint, setHint] = useState<string | null>(null)
   const { isCleared, toggleMission } = useProgress()
 
   const categories = tab === 'all' ? CATEGORY_ORDER : [tab]
@@ -51,13 +53,24 @@ export function MissionScreen({ onComplete }: Props) {
               <ul className={s.rows}>
                 {missions.map((mission) => {
                   const done = isCleared(mission.id)
+                  // 隠しミッションは手でチェックできない。押すとヒントが出る
+                  const secretLocked = mission.secret === true && !done
+                  const rowClass = [s.row, done ? s.rowDone : '', mission.secret ? s.rowSecret : '']
+                    .filter(Boolean)
+                    .join(' ')
                   return (
                     <li key={mission.id}>
                       <button
                         type="button"
-                        className={`${s.row} ${done ? s.rowDone : ''}`}
+                        className={rowClass}
                         aria-pressed={done}
+                        disabled={mission.secret === true && done}
                         onClick={() => {
+                          if (secretLocked) {
+                            setHint(mission.hint ?? null)
+                            return
+                          }
+                          if (mission.secret) return
                           const completed = toggleMission(mission.id)
                           if (completed) onComplete(completed)
                         }}
@@ -65,7 +78,10 @@ export function MissionScreen({ onComplete }: Props) {
                         <span className={`${s.badge} ${done ? s.badgeDone : ''}`}>
                           {done && <PixelIcon name="check" size={18} />}
                         </span>
-                        <span className={s.rowTitle}>{mission.title}</span>
+                        <span className={s.rowTitle}>
+                          {done && mission.revealedTitle ? mission.revealedTitle : mission.title}
+                        </span>
+                        {secretLocked && <PixelIcon name="lock" size={14} className={s.lockIcon} />}
                       </button>
                     </li>
                   )
@@ -75,6 +91,8 @@ export function MissionScreen({ onComplete }: Props) {
           )
         })}
       </div>
+
+      <HintDialog text={hint} onClose={() => setHint(null)} />
     </>
   )
 }

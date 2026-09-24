@@ -14,10 +14,13 @@ export const NAV_ITEMS: { id: ScreenId; label: string; icon: GlyphName }[] = [
 interface Props {
   current: ScreenId
   onNavigate: (id: ScreenId) => void
+  /** BGM が止まっているか */
+  bgmMuted: boolean
+  onToggleBgm: () => void
 }
 
-/** 4画面共通のフッターナビゲーション */
-export function BottomNav({ current, onNavigate }: Props) {
+/** 全画面共通のフッターナビゲーション。右端に BGM の切り替えを置く */
+export function BottomNav({ current, onNavigate, bgmMuted, onToggleBgm }: Props) {
   return (
     <nav className={s.nav}>
       {NAV_ITEMS.map((item) => (
@@ -32,6 +35,15 @@ export function BottomNav({ current, onNavigate }: Props) {
           <span className={s.label}>{item.label}</span>
         </button>
       ))}
+      <button
+        type="button"
+        className={s.bgm}
+        aria-pressed={!bgmMuted}
+        aria-label={bgmMuted ? 'BGM をオンにする' : 'BGM をオフにする'}
+        onClick={onToggleBgm}
+      >
+        <PixelIcon name={bgmMuted ? 'soundOff' : 'soundOn'} size={16} />
+      </button>
     </nav>
   )
 }

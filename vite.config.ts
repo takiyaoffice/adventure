@@ -11,7 +11,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.png', 'apple-touch-icon.png', 'fonts/*.woff2'],
+      includeAssets: ['favicon.png', 'apple-touch-icon.png', 'fonts/*.woff2', 'audio/*.mp3'],
       manifest: {
         id: BASE,
         name: 'FUTURE FANTASY -未来の地図-',
@@ -32,7 +32,9 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,webmanifest}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,webmanifest,mp3}'],
+        // BGM を丸ごと先読みするので、既定の上限を引き上げる
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         navigateFallback: `${BASE}index.html`,
         cleanupOutdatedCaches: true,
       },

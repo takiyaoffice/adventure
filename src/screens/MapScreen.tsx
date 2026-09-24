@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import type { CSSProperties } from 'react'
 import { PixelIcon } from '../components/ui/PixelIcon'
+import { CodeLock } from '../components/ui/CodeLock'
 import { LOCATIONS, MAP_COMPASS, MAP_TERRAIN } from '../data/locations'
+import { SECRET_MISSION_ID } from '../data/secret'
 import { useProgress } from '../state/ProgressContext'
 import type { LocationId, Mission } from '../types'
 import s from './MapScreen.module.css'
@@ -12,7 +14,8 @@ interface Props {
 
 export function MapScreen({ onComplete }: Props) {
   const [selected, setSelected] = useState<LocationId | null>(null)
-  const { isVisited, isCleared, placeMissionAt, toggleMission } = useProgress()
+  const [lockOpen, setLockOpen] = useState(false)
+  const { isVisited, isCleared, placeMissionAt, toggleMission, completeMission } = useProgress()
 
   const visitedCount = LOCATIONS.filter((l) => isVisited(l.id)).length
   const selectedLocation = selected ? LOCATIONS.find((l) => l.id === selected) ?? null : null
@@ -54,7 +57,15 @@ export function MapScreen({ onComplete }: Props) {
             })}
           </div>
         </div>
-        <img className={s.compass} src={MAP_COMPASS} alt="" />
+        {/* 方位磁針はボタン。押すと隠された暗号の入力画面が開く */}
+        <button
+          type="button"
+          className={`${s.compass} ${isCleared(SECRET_MISSION_ID) ? s.compassUnlocked : ''}`}
+          aria-label="方角を示すものを調べる"
+          onClick={() => setLockOpen(true)}
+        >
+          <img className={s.compassIcon} src={MAP_COMPASS} alt="" />
+        </button>
       </div>
 
       {/* 高さを固定して、選んでもマップの大きさが変わらないようにする */}
@@ -99,6 +110,17 @@ export function MapScreen({ onComplete }: Props) {
           </>
         )}
       </div>
+
+      <CodeLock
+        open={lockOpen}
+        unlocked={isCleared(SECRET_MISSION_ID)}
+        onUnlock={() => {
+          setLockOpen(false)
+          const completed = completeMission(SECRET_MISSION_ID)
+          if (completed) onComplete(completed)
+        }}
+        onClose={() => setLockOpen(false)}
+      />
     </>
   )
 }

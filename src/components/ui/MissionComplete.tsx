@@ -52,7 +52,8 @@ export function MissionComplete({ mission, onClose }: Props) {
           <br />
           COMPLETE!
         </p>
-        <p className={s.title}>{mission.title}</p>
+        {/* 隠しミッションは、解けた瞬間に本当の名前を見せる */}
+        <p className={s.title}>{mission.revealedTitle ?? mission.title}</p>
         {mission.reward && <p className={s.reward}>{mission.reward}</p>}
         <p className={s.hint}>TAP TO CLOSE</p>
       </div>

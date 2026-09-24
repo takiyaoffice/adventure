@@ -60,15 +60,24 @@ export const MISSIONS: Mission[] = [
   },
   {
     id: 'enjoy-live',
-    category: 'special',
+    category: 'experience',
     title: 'ライブを楽しむ',
     reward: '60年の軌跡に、新しい1ページ！',
   },
   {
     id: 'take-photo',
-    category: 'special',
+    category: 'experience',
     title: 'ふたりで記念写真を撮る',
     reward: '思い出をひとつ記録した！',
+  },
+  {
+    id: 'secret-compass',
+    category: 'special',
+    title: '？？？',
+    secret: true,
+    hint: '冒険者よ、未知なる道標を見逃すな。\n\n方角を示すものに、隠された力がある。',
+    revealedTitle: '未来の地図の暗号を解く',
+    reward: '隠されていた力が目を覚ました！',
   },
 ]
 

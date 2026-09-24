@@ -56,6 +56,12 @@ export interface Mission {
   locationId?: LocationId
   /** 達成時の演出に出す一言 */
   reward?: string
+  /** 手動ではチェックできない隠しミッション。タップするとヒントが出る */
+  secret?: boolean
+  /** 隠しミッションのヒント本文（改行可） */
+  hint?: string
+  /** 隠しミッションを解いたあとに表示するタイトル */
+  revealedTitle?: string
 }
 
 /** 冒険ガイドの分類 */

@@ -37,6 +37,27 @@
   background: var(--blue);
 }
 
+/* 右端の BGM 切り替え */
+.bgm {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--u) * 28);
+  border: calc(var(--u) * 2) solid rgba(255, 255, 255, 0.28);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.bgm[aria-pressed='true'] {
+  border-color: rgba(245, 200, 78, 0.75);
+  color: var(--gold);
+}
+
+.bgm:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
 .label {
   font-size: calc(var(--u) * 9.5);
   line-height: 1;

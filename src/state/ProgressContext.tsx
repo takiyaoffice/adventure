@@ -11,6 +11,8 @@ interface ProgressValue {
   isCleared: (missionId: string) => boolean
   /** 達成状態を反転。新たに達成した場合はそのミッションを返す */
   toggleMission: (missionId: string) => Mission | null
+  /** 達成済みにする（解除はしない）。新たに達成した場合はそのミッションを返す */
+  completeMission: (missionId: string) => Mission | null
   /** その場所の「〇〇に行く」ミッションを達成しているか */
   isVisited: (locationId: LocationId) => boolean
   /** その場所の「〇〇に行く」ミッション */
@@ -60,6 +62,13 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     return wasCleared ? null : mission
   }, [cleared])
 
+  const completeMission = useCallback((missionId: string): Mission | null => {
+    const mission = MISSION_BY_ID.get(missionId)
+    if (!mission || cleared.has(missionId)) return null
+    setCleared((prev) => new Set(prev).add(missionId))
+    return mission
+  }, [cleared])
+
   const value = useMemo<ProgressValue>(() => {
     // 場所ごとの「〇〇に行く」ミッション。訪問したかどうかはこれだけで決まる
     const placeByLocation = new Map<LocationId, Mission>()
@@ -70,6 +79,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       cleared,
       isCleared: (id) => cleared.has(id),
       toggleMission,
+      completeMission,
       isVisited: (locationId) => {
         const m = placeByLocation.get(locationId)
         return m ? cleared.has(m.id) : false
@@ -79,7 +89,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       totalCount: MISSIONS.length,
       resetProgress: () => setCleared(new Set()),
     }
-  }, [cleared, toggleMission])
+  }, [cleared, toggleMission, completeMission])
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>
 }

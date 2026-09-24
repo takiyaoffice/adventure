@@ -89,6 +89,26 @@
   color: var(--ink-soft);
 }
 
+/* 隠しミッション。手ではチェックできないので、少し別の見た目にする */
+.rowSecret .rowTitle {
+  letter-spacing: calc(var(--u) * 2);
+  color: #5a4a86;
+}
+
+.rowSecret:disabled {
+  opacity: 1;
+}
+
+.rowSecret:disabled .rowTitle {
+  letter-spacing: calc(var(--u) * 0.4);
+  color: var(--ink-soft);
+}
+
+.lockIcon {
+  flex: none;
+  color: #7a68b0;
+}
+
 /* ---------- 左端のチェック欄 ---------- */
 .badge {
   flex: none;

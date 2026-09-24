@@ -46,14 +46,12 @@ export function CodeLock({ open, unlocked, onUnlock, onClose }: Props) {
       return
     }
     if (key === 'ok') {
+      // そろっていないうちは判定しない
       if (code.length === LENGTH) submit(code)
       return
     }
     if (code.length >= LENGTH) return
-    const next = code + key
-    setCode(next)
-    // 4桁そろったら、そのまま判定する
-    if (next.length === LENGTH) submit(next)
+    setCode(code + key)
   }
 
   return (
@@ -71,7 +69,7 @@ export function CodeLock({ open, unlocked, onUnlock, onClose }: Props) {
           </>
         ) : (
           <>
-            <p className={s.message}>4桁の数字を入力せよ。</p>
+            <p className={s.message}>{LENGTH}桁の数字を入力し、OK を押せ。</p>
             <div className={`${s.slots} ${error ? s.shake : ''}`}>
               {Array.from({ length: LENGTH }, (_, i) => (
                 <span key={i} className={`${s.slot} ${i < code.length ? s.slotFilled : ''}`}>
@@ -80,14 +78,16 @@ export function CodeLock({ open, unlocked, onUnlock, onClose }: Props) {
               ))}
             </div>
             <p className={`${s.status} ${error ? s.statusError : ''}`}>
-              {error ? '暗号がちがうようだ…' : '　'}
+              {error ? '暗号がちがうようだ…' : `${code.length} / ${LENGTH}`}
             </p>
             <div className={s.pad}>
               {KEYS.map((key) => (
                 <button
                   key={key}
                   type="button"
-                  className={`${s.key} ${key === 'del' || key === 'ok' ? s.keyWide : ''}`}
+                  className={`${s.key} ${key === 'del' || key === 'ok' ? s.keyWide : ''} ${
+                    key === 'ok' && code.length === LENGTH ? s.keyReady : ''
+                  }`}
                   onClick={() => press(key)}
                 >
                   {key === 'del' ? '←' : key === 'ok' ? 'OK' : key}

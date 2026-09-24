@@ -13,7 +13,7 @@
 .window {
   position: relative;
   width: 100%;
-  max-width: calc(var(--u) * 300);
+  max-width: calc(var(--u) * 320);
   text-align: center;
   border: calc(var(--u) * 2) solid var(--gold);
   background: linear-gradient(180deg, #16255a 0%, #0a1330 100%);
@@ -48,20 +48,23 @@
 .slots {
   display: flex;
   justify-content: center;
-  gap: calc(var(--u) * 10);
+  gap: calc(var(--u) * 5);
   margin-top: calc(var(--u) * 14);
 }
 
+/* 桁数が増えても横に収まるよう、幅は均等割り */
 .slot {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: calc(var(--u) * 42);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: calc(var(--u) * 42);
-  height: calc(var(--u) * 50);
+  height: calc(var(--u) * 44);
   border: calc(var(--u) * 2) solid rgba(255, 255, 255, 0.4);
   background: rgba(6, 11, 28, 0.8);
   font-family: var(--font-pixel);
-  font-size: calc(var(--u) * 20);
+  font-size: calc(var(--u) * 16);
   line-height: 1;
   color: #ffffff;
 }
@@ -105,16 +108,23 @@
 }
 
 .keyWide {
-  font-family: var(--font-jp, inherit);
+  font-family: var(--font-jp);
   font-size: calc(var(--u) * 14);
   background: #1b2a52;
+}
+
+/* 桁がそろったら OK を目立たせる */
+.keyReady {
+  background: var(--blue);
+  border-color: var(--gold);
+  color: #ffffff;
 }
 
 .cleared {
   margin-top: calc(var(--u) * 14);
   font-family: var(--font-pixel);
-  font-size: calc(var(--u) * 24);
-  letter-spacing: calc(var(--u) * 4);
+  font-size: calc(var(--u) * 18);
+  letter-spacing: calc(var(--u) * 2);
   color: var(--gold);
   text-shadow: calc(var(--u) * 2) calc(var(--u) * 2) 0 #6a3d00;
 }

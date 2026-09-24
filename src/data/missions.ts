@@ -75,7 +75,8 @@ export const MISSIONS: Mission[] = [
     category: 'special',
     title: '？？？',
     secret: true,
-    hint: '冒険者よ、未知なる道標を見逃すな。\n\n方角を示すものに、隠された力がある。',
+    hint:
+      '冒険者よ、未知なる道標を見逃すな。\n\n方角を示すものに、隠された力がある。\n\nこの旅を導く者が、\nこの世に降り立った日を思い出せ。',
     revealedTitle: '未来の地図の暗号を解く',
     reward: '隠されていた力が目を覚ました！',
   },

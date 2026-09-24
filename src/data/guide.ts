@@ -9,6 +9,8 @@ import imgZunda from '../assets/art/guide-zunda.png'
 import imgGyutan from '../assets/art/guide-gyutan.png'
 import imgGyutanSet from '../assets/art/guide-gyutan-set.png'
 import imgKaki from '../assets/art/guide-kaki.png'
+import imgKanmi from '../assets/art/guide-kanmi.png'
+import imgSerinabe from '../assets/art/guide-serinabe.png'
 
 /** カテゴリタブ */
 export const GUIDE_TABS: { id: GuideCategory | 'all'; label: string }[] = [
@@ -100,6 +102,16 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
     linkLabel: '食べログ',
   },
   {
+    id: 'hikoichi',
+    name: '甘味処 彦いち',
+    category: 'food',
+    description: '古い日本家屋の人気の甘味処。',
+    access: '仙台駅から地下鉄と徒歩で約10分',
+    image: imgKanmi,
+    url: 'https://tabelog.com/miyagi/A0401/A040101/4001665/',
+    linkLabel: '食べログ',
+  },
+  {
     id: 'kaku',
     name: '牛たん料理 閣',
     category: 'food',
@@ -128,5 +140,15 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
     image: imgKaki,
     url: 'https://rikyu-m.com/matsushima-kaki/',
     linkLabel: '松島の牡蠣ガイド',
+  },
+  {
+    id: 'seriichi',
+    name: 'せり鍋専門店 せりいち',
+    category: 'food',
+    description: '仙台名物のせり鍋の専門店。',
+    access: '仙台駅西口から徒歩約2分',
+    image: imgSerinabe,
+    url: 'https://www.hotpepper.jp/strJ004661149/',
+    linkLabel: 'ホットペッパー',
   },
 ]

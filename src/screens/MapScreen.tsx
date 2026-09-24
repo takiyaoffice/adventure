@@ -1,13 +1,7 @@
 import { useState } from 'react'
 import type { CSSProperties } from 'react'
 import { PixelIcon } from '../components/ui/PixelIcon'
-import {
-  LOCATIONS,
-  MAP_COMPASS,
-  MAP_PIN_TODO,
-  MAP_PIN_VISITED,
-  MAP_TERRAIN,
-} from '../data/locations'
+import { LOCATIONS, MAP_COMPASS, MAP_TERRAIN } from '../data/locations'
 import { useProgress } from '../state/ProgressContext'
 import type { LocationId, Mission } from '../types'
 import s from './MapScreen.module.css'
@@ -18,10 +12,11 @@ interface Props {
 
 export function MapScreen({ onComplete }: Props) {
   const [selected, setSelected] = useState<LocationId | null>(null)
-  const { isVisited, isCleared, missionsAt, toggleMission } = useProgress()
+  const { isVisited, isCleared, placeMissionAt, toggleMission } = useProgress()
 
   const visitedCount = LOCATIONS.filter((l) => isVisited(l.id)).length
   const selectedLocation = selected ? LOCATIONS.find((l) => l.id === selected) ?? null : null
+  const selectedMission = selectedLocation ? placeMissionAt(selectedLocation.id) : null
 
   const defaultLines =
     visitedCount === 0
@@ -52,7 +47,6 @@ export function MapScreen({ onComplete }: Props) {
                     setSelected((prev) => (prev === loc.id ? null : loc.id))
                   }}
                 >
-                  <img className={s.pin} src={visited ? MAP_PIN_VISITED : MAP_PIN_TODO} alt="" />
                   <img className={s.markerIcon} src={loc.icon} alt="" />
                   <span className={s.label}>{loc.name}</span>
                 </button>
@@ -60,20 +54,10 @@ export function MapScreen({ onComplete }: Props) {
             })}
           </div>
         </div>
-
-        <div className={s.legend}>
-          <span className={s.legendRow}>
-            <img className={s.legendPin} src={MAP_PIN_VISITED} alt="" />
-            訪問済み
-          </span>
-          <span className={s.legendRow}>
-            <img className={s.legendPin} src={MAP_PIN_TODO} alt="" />
-            行ってみたい
-          </span>
-        </div>
         <img className={s.compass} src={MAP_COMPASS} alt="" />
       </div>
 
+      {/* 高さを固定して、選んでもマップの大きさが変わらないようにする */}
       <div className={s.info}>
         {selectedLocation ? (
           <>
@@ -82,28 +66,20 @@ export function MapScreen({ onComplete }: Props) {
               {selectedLocation.name.replace('\n', '')}
             </p>
             <p className={s.infoDesc}>{selectedLocation.description}</p>
-            {missionsAt(selectedLocation.id).length > 0 && (
-              <div className={s.infoMissions}>
-                {missionsAt(selectedLocation.id).map((mission) => {
-                  const done = isCleared(mission.id)
-                  return (
-                    <button
-                      key={mission.id}
-                      type="button"
-                      className={`${s.infoMission} ${done ? s.done : ''}`}
-                      onClick={() => {
-                        const completed = toggleMission(mission.id)
-                        if (completed) onComplete(completed)
-                      }}
-                    >
-                      <span className={`${s.box} ${done ? s.boxDone : ''}`}>
-                        <PixelIcon name="check" size={13} />
-                      </span>
-                      <span>{mission.title}</span>
-                    </button>
-                  )
-                })}
-              </div>
+            {selectedMission && (
+              <button
+                type="button"
+                className={`${s.infoMission} ${isCleared(selectedMission.id) ? s.done : ''}`}
+                onClick={() => {
+                  const completed = toggleMission(selectedMission.id)
+                  if (completed) onComplete(completed)
+                }}
+              >
+                <span className={`${s.box} ${isCleared(selectedMission.id) ? s.boxDone : ''}`}>
+                  <PixelIcon name="check" size={13} />
+                </span>
+                <span>{selectedMission.title}</span>
+              </button>
             )}
             <button type="button" className={s.close} onClick={() => setSelected(null)}>
               ×

@@ -522,29 +522,6 @@ function iconMatsushima() {
   return save('loc-matsushima', c)
 }
 
-/** 地図のピン（15x21） */
-function mapPin(name, body, light, dark) {
-  const c = new Canvas(15, 21)
-  const cx = 7
-  /** 丸い頭と、下へすぼまる胴をひとつづきに塗る */
-  const drop = (headY, r, tipY, col) => {
-    c.disc(cx, headY, r, col)
-    for (let y = headY; y <= tipY; y++) {
-      const t = (y - headY) / (tipY - headY)
-      const w = Math.max(0, Math.round(r * (1 - t) * (1 - t * 0.3)))
-      c.rect(cx - w, y, w * 2 + 1, 1, col)
-    }
-  }
-  drop(7, 6, 20, '#ffffff')   // 白いふち
-  drop(7, 5, 19, dark)        // 濃い影
-  drop(6, 4, 18, body)        // 本体
-  c.disc(6, 5, 3, light)
-  c.disc(cx, 7, 3, '#ffffff')
-  c.disc(cx, 7, 2, body)
-  c.disc(cx - 1, 6, 1, light)
-  return save(name, c)
-}
-
 /** 方位磁針（28x28） */
 function compass() {
   const c = new Canvas(28, 28)
@@ -1327,10 +1304,7 @@ function preview(items) {
 
 const kv = keyVisual()
 const terrain = mapTerrain()
-const icons = [iconStation(), iconArena(), iconMatsushima(),
-  mapPin('pin-visited', '#2f8fe0', '#7fc4f5', '#14538f'),
-  mapPin('pin-todo', '#e0a72f', '#f5d47f', '#8f6014'),
-  compass()]
+const icons = [iconStation(), iconArena(), iconMatsushima(), compass()]
 const banners = [bannerDay1(), bannerDay2(), bannerDay3()]
 const guides = [guideMatsushima(), guideSendaijo(), guideZuihoden(), guideAkiu(), guideAer(), guideAsaichi(), guideZunda(), guideGyutan(), guideGyutanSet(), guideKaki()]
 if (process.env.ART_PREVIEW) preview([kv, terrain, ...banners, ...guides, ...icons])

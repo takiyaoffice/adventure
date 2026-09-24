@@ -3,13 +3,9 @@ import terrain from '../assets/art/map-terrain.png'
 import iconStation from '../assets/art/loc-station.png'
 import iconArena from '../assets/art/loc-arena.png'
 import iconMatsushima from '../assets/art/loc-matsushima.png'
-import pinVisited from '../assets/art/pin-visited.png'
-import pinTodo from '../assets/art/pin-todo.png'
 import compass from '../assets/art/compass.png'
 
 export const MAP_TERRAIN = terrain
-export const MAP_PIN_VISITED = pinVisited
-export const MAP_PIN_TODO = pinTodo
 export const MAP_COMPASS = compass
 
 /** 地形画像のドット数。マーカーの座標計算に使う */

@@ -20,23 +20,23 @@ export const CATEGORY_ORDER: MissionCategory[] = ['place', 'experience', 'specia
 /** ミッション一覧。追加・変更はこの配列で完結する。 */
 export const MISSIONS: Mission[] = [
   {
-    id: 'arrive-sendai',
+    id: 'go-sendai-station',
     category: 'place',
-    title: '仙台駅に到着する',
+    title: '仙台駅に行く',
     locationId: 'sendai-station',
     reward: '冒険のはじまりの地に立った！',
   },
   {
-    id: 'visit-arena',
+    id: 'go-arena',
     category: 'place',
     title: 'スーパーアリーナに行く',
     locationId: 'arena',
     reward: 'ライブ会場にたどり着いた！',
   },
   {
-    id: 'visit-matsushima',
+    id: 'go-matsushima',
     category: 'place',
-    title: '松島を訪れる',
+    title: '松島に行く',
     locationId: 'matsushima',
     reward: '日本三景の絶景を手に入れた！',
   },
@@ -53,24 +53,16 @@ export const MISSIONS: Mission[] = [
     reward: 'しあわせが少し増えた！',
   },
   {
-    id: 'take-photo',
-    category: 'experience',
-    title: 'ふたりで記念写真を撮る',
-    reward: '思い出をひとつ記録した！',
-  },
-  {
-    id: 'join-live',
-    category: 'special',
-    title: '稲葉さんのライブに参加する',
-    locationId: 'arena',
-    reward: '特別な一日がはじまった！',
-  },
-  {
     id: 'enjoy-live',
     category: 'special',
     title: 'ライブを楽しむ',
-    locationId: 'arena',
     reward: '60年の軌跡に、新しい1ページ！',
+  },
+  {
+    id: 'take-photo',
+    category: 'special',
+    title: 'ふたりで記念写真を撮る',
+    reward: '思い出をひとつ記録した！',
   },
 ]
 

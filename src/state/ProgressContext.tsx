@@ -11,10 +11,10 @@ interface ProgressValue {
   isCleared: (missionId: string) => boolean
   /** 達成状態を反転。新たに達成した場合はそのミッションを返す */
   toggleMission: (missionId: string) => Mission | null
-  /** その場所に紐づくミッションを1つでも達成しているか */
+  /** その場所の「〇〇に行く」ミッションを達成しているか */
   isVisited: (locationId: LocationId) => boolean
-  /** 場所に紐づくミッション */
-  missionsAt: (locationId: LocationId) => Mission[]
+  /** その場所の「〇〇に行く」ミッション */
+  placeMissionAt: (locationId: LocationId) => Mission | null
   clearedCount: number
   totalCount: number
   resetProgress: () => void
@@ -61,19 +61,20 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   }, [cleared])
 
   const value = useMemo<ProgressValue>(() => {
-    const missionsByLocation = new Map<LocationId, Mission[]>()
+    // 場所ごとの「〇〇に行く」ミッション。訪問したかどうかはこれだけで決まる
+    const placeByLocation = new Map<LocationId, Mission>()
     MISSIONS.forEach((m) => {
-      if (!m.locationId) return
-      const list = missionsByLocation.get(m.locationId) ?? []
-      list.push(m)
-      missionsByLocation.set(m.locationId, list)
+      if (m.category === 'place' && m.locationId) placeByLocation.set(m.locationId, m)
     })
     return {
       cleared,
       isCleared: (id) => cleared.has(id),
       toggleMission,
-      isVisited: (locationId) => (missionsByLocation.get(locationId) ?? []).some((m) => cleared.has(m.id)),
-      missionsAt: (locationId) => missionsByLocation.get(locationId) ?? [],
+      isVisited: (locationId) => {
+        const m = placeByLocation.get(locationId)
+        return m ? cleared.has(m.id) : false
+      },
+      placeMissionAt: (locationId) => placeByLocation.get(locationId) ?? null,
       clearedCount: cleared.size,
       totalCount: MISSIONS.length,
       resetProgress: () => setCleared(new Set()),

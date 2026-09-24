@@ -30,35 +30,7 @@
   object-fit: fill;
 }
 
-/* ---------- 凡例と方位磁針 ---------- */
-.legend {
-  position: absolute;
-  top: calc(var(--u) * 8);
-  left: calc(var(--u) * 8);
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--u) * 5);
-  padding: calc(var(--u) * 7) calc(var(--u) * 9) calc(var(--u) * 7) calc(var(--u) * 7);
-  background: rgba(8, 14, 28, 0.88);
-  border: calc(var(--u) * 2) solid rgba(245, 200, 78, 0.85);
-  pointer-events: none;
-}
-
-.legendRow {
-  display: flex;
-  align-items: center;
-  gap: calc(var(--u) * 6);
-  font-size: calc(var(--u) * 11);
-  line-height: 1;
-  color: #ffffff;
-  white-space: nowrap;
-}
-
-.legendPin {
-  width: calc(var(--u) * 11);
-  height: calc(var(--u) * 15);
-}
-
+/* ---------- 方位磁針 ---------- */
 .compass {
   position: absolute;
   top: calc(var(--u) * 8);
@@ -76,21 +48,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: calc(var(--u) * 1);
+  gap: calc(var(--u) * 2);
   padding: calc(var(--u) * 2);
   background: none;
-}
-
-.pin {
-  width: calc(var(--u) * 15);
-  height: calc(var(--u) * 21);
-  margin-bottom: calc(var(--u) * -2);
-  /* 未訪問のピンも少し落ち着かせる */
-  filter: brightness(0.82) drop-shadow(0 calc(var(--u) * 1) 0 rgba(0, 0, 0, 0.45));
-}
-
-.visited .pin {
-  filter: brightness(1.1) drop-shadow(0 0 calc(var(--u) * 5) rgba(127, 196, 245, 0.9));
 }
 
 .markerIcon {
@@ -108,7 +68,6 @@
 }
 
 .label {
-  margin-top: calc(var(--u) * -2);
   padding: calc(var(--u) * 4) calc(var(--u) * 7);
   background: rgba(8, 14, 28, 0.92);
   border: calc(var(--u) * 2) solid rgba(245, 200, 78, 0.8);
@@ -144,7 +103,9 @@
 .info {
   flex: none;
   position: relative;
-  min-height: calc(var(--u) * 86);
+  /* マップの縮尺を変えないため高さを固定する */
+  height: calc(var(--u) * 106);
+  overflow: hidden;
   border: calc(var(--u) * 2) solid var(--line);
   background: var(--panel);
   padding: calc(var(--u) * 11) calc(var(--u) * 12);
@@ -179,14 +140,8 @@
   white-space: pre-line;
 }
 
-.infoMissions {
-  margin-top: calc(var(--u) * 8);
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--u) * 6);
-}
-
 .infoMission {
+  margin-top: calc(var(--u) * 9);
   display: flex;
   align-items: center;
   gap: calc(var(--u) * 8);

@@ -93,11 +93,19 @@ SVG の矩形に変換して描画しています。拡大してもにじみま�
 `DotGothic16`（日本語）と `Press Start 2P`（英字）を、アプリで使う文字だけに絞って
 `public/fonts/` に self-host しています（合計約 36KB）。オフラインでも表示が崩れません。
 
-文言を大きく変えて字が足りなくなった場合は、以下で作り直します。
+**画面の文言を変えたら、毎回これを実行してください。** 新しく使った漢字が
+フォントに入っていないと、その字だけ別のフォントで表示されてドット絵の
+見た目が崩れます。
 
 ```bash
 pip install fonttools brotli
 python3 scripts/subset-fonts.py
+```
+
+足りない字がないかは次で確認できます。
+
+```bash
+python3 scripts/check-fonts.py
 ```
 
 ## PWA

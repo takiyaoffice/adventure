@@ -11,6 +11,7 @@ import imgGyutanSet from '../assets/art/guide-gyutan-set.png'
 import imgKaki from '../assets/art/guide-kaki.png'
 import imgKanmi from '../assets/art/guide-kanmi.png'
 import imgSerinabe from '../assets/art/guide-serinabe.png'
+import imgWagashi from '../assets/art/guide-wagashi.png'
 
 /** カテゴリタブ */
 export const GUIDE_TABS: { id: GuideCategory | 'all'; label: string }[] = [
@@ -109,6 +110,16 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
     access: '仙台駅から地下鉄と徒歩で約10分',
     image: imgKanmi,
     url: 'https://tabelog.com/miyagi/A0401/A040101/4001665/',
+    linkLabel: '食べログ',
+  },
+  {
+    id: 'baisaou',
+    name: '菓子司 賣茶翁',
+    category: 'food',
+    description: 'みちのくせんべいで知られる和菓子店。',
+    access: '仙台駅から地下鉄と徒歩で約15分',
+    image: imgWagashi,
+    url: 'https://tabelog.com/miyagi/A0401/A040101/4001481/',
     linkLabel: '食べログ',
   },
   {

@@ -1399,6 +1399,61 @@ function guideSerinabe() {
   return save('guide-serinabe', c)
 }
 
+function guideWagashi() {
+  const c = new Canvas(GW, GW)
+  const r = rng(733)
+  // 和紙のような背景
+  c.vgradient(0, 0, GW, GW, [[0, '#6b5f4a'], [1, '#463d2e']])
+  for (let i = 0; i < 160; i++) c.px(Math.round(r() * GW), Math.round(r() * GW), '#7d7057', 0.5)
+  // 黒塗りのお盆
+  c.rect(2, 9, 44, 32, '#1c1610')
+  c.rect(2, 9, 44, 1, '#3d3226')
+  c.rect(2, 40, 44, 1, '#0d0906')
+
+  // 桐箱（開いたところ）
+  c.rect(4, 14, 24, 24, '#c9b78f')
+  c.rect(4, 14, 24, 1, '#e0d0aa')
+  c.rect(4, 37, 24, 1, '#9c8a66')
+  c.rect(27, 14, 1, 24, '#9c8a66')
+  c.rect(6, 16, 20, 20, '#8a7b5c')
+  c.rect(6, 16, 20, 1, '#6e6248')
+  // みちのくせんべい（薄く淡い丸）
+  const senbei = (cx, cy, rad) => {
+    c.disc(cx, cy + 1, rad, '#b9a97f')
+    c.disc(cx, cy, rad, '#f2ead2')
+    c.disc(cx - 1, cy - 1, rad - 1, '#faf5e6')
+    c.ring(cx, cy, rad, '#d9c89c')
+    // 焼き印のような模様
+    c.px(cx, cy - 1, '#d9c89c')
+    c.px(cx - 1, cy + 1, '#d9c89c')
+    c.px(cx + 1, cy + 1, '#d9c89c')
+  }
+  senbei(12, 22, 5)
+  senbei(21, 22, 5)
+  senbei(12, 31, 5)
+  senbei(21, 31, 5)
+
+  // どら焼き
+  const dorayaki = (cx, cy) => {
+    c.disc(cx, cy + 3, 8, '#8a5f28')
+    c.disc(cx, cy + 2, 8, '#c9903f')
+    c.disc(cx - 1, cy + 1, 7, '#dfa855')
+    c.rect(cx - 7, cy, 15, 3, '#4a2418')   // あんこ
+    c.rect(cx - 7, cy, 15, 1, '#63301f')
+    c.disc(cx, cy - 2, 8, '#c9903f')
+    c.disc(cx - 1, cy - 3, 7, '#dfa855')
+    c.disc(cx - 2, cy - 4, 4, '#edc37c')
+    c.ring(cx, cy - 2, 8, '#a8752f')
+  }
+  dorayaki(38, 25)
+
+  // 懐紙と楊枝
+  c.rect(31, 35, 14, 4, '#efe9da')
+  c.rect(31, 35, 14, 1, '#ffffff')
+  c.rect(33, 37, 10, 1, '#c9a06a')
+  return save('guide-wagashi', c)
+}
+
 /* =========================================================
    5. プレビュー（確認用の一覧画像）
    ========================================================= */
@@ -1427,6 +1482,6 @@ const kv = keyVisual()
 const terrain = mapTerrain()
 const icons = [iconStation(), iconArena(), iconMatsushima(), compass()]
 const banners = [bannerDay1(), bannerDay2(), bannerDay3()]
-const guides = [guideMatsushima(), guideSendaijo(), guideZuihoden(), guideAkiu(), guideAer(), guideAsaichi(), guideZunda(), guideGyutan(), guideGyutanSet(), guideKaki(), guideKanmi(), guideSerinabe()]
+const guides = [guideMatsushima(), guideSendaijo(), guideZuihoden(), guideAkiu(), guideAer(), guideAsaichi(), guideZunda(), guideGyutan(), guideGyutanSet(), guideKaki(), guideKanmi(), guideSerinabe(), guideWagashi()]
 if (process.env.ART_PREVIEW) preview([kv, terrain, ...banners, ...guides, ...icons])
 console.log('生成した素材:\n  ' + written.join('\n  '))

@@ -1,10 +1,17 @@
 import { useState } from 'react'
-import { SCHEDULE } from '../data/schedule'
+import { SCHEDULE, STATUS_LABEL } from '../data/schedule'
+import type { ScheduleStatus } from '../types'
 import s from './ScheduleScreen.module.css'
 
 interface Props {
   selectedDayId: string
   onSelectDay: (dayId: string) => void
+}
+
+const STATUS_CLASS: Record<ScheduleStatus, string> = {
+  fixed: s.fixed,
+  recommended: s.recommended,
+  free: s.free,
 }
 
 /** 1日ぶんを1ページとして表示し、上部のタブで切り替える */
@@ -43,16 +50,22 @@ export function ScheduleScreen({ selectedDayId, onSelectDay }: Props) {
           {day.badge && <span className={s.badge}>{day.badge}</span>}
         </div>
         <h2 className={s.cardTitle}>{day.title}</h2>
-        <p className={s.lead}>{day.lead}</p>
 
         <img className={s.illustration} src={day.illustration} alt="" />
 
         <ol className={s.timeline}>
           {day.entries.map((entry) => (
-            <li key={`${entry.time}-${entry.title}`} className={s.entry}>
+            <li key={`${entry.period}-${entry.title}`} className={s.entry}>
               <span className={s.dot} />
-              <span className={s.time}>{entry.time}</span>
-              <span className={s.entryTitle}>{entry.title}</span>
+              <div className={s.entryBody}>
+                <div className={s.entryHead}>
+                  <span className={s.period}>{entry.period}</span>
+                  <span className={`${s.status} ${STATUS_CLASS[entry.status]}`}>
+                    {STATUS_LABEL[entry.status]}
+                  </span>
+                </div>
+                <span className={s.entryTitle}>{entry.title}</span>
+              </div>
             </li>
           ))}
         </ol>

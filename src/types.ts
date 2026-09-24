@@ -2,9 +2,17 @@
 
 export type ScreenId = 'home' | 'schedule' | 'map' | 'mission' | 'guide'
 
+/** 時間帯 */
+export type SchedulePeriod = '朝' | '昼' | '夕' | '夜'
+
+/** 予定の決まりぐあい */
+export type ScheduleStatus = 'fixed' | 'recommended' | 'free'
+
 /** スケジュール1行分 */
 export interface ScheduleEntry {
-  time: string
+  period: SchedulePeriod
+  status: ScheduleStatus
+  /** 改行を入れると複数行で表示される */
   title: string
   /** 対応するマップ上の場所（任意） */
   locationId?: LocationId
@@ -17,15 +25,11 @@ export interface ScheduleDay {
   /** タブ2行目・カード右上に出す日付 */
   dateShort: string
   dateFull: string
-  /** 「1月22日」形式。ホームのカードで使う */
-  dateJp: string
   /** ISO 形式。今日の判定に使う */
   isoDate: string
   title: string
   /** SPECIAL DAY などのラベル */
   badge?: string
-  /** ホームの TODAY'S ADVENTURE に出す一言 */
-  lead: string
   /** その日のイメージイラスト */
   illustration: string
   entries: ScheduleEntry[]

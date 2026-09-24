@@ -1,5 +1,8 @@
+import { useState } from 'react'
+import { ConfirmDialog } from '../components/ui/ConfirmDialog'
 import { PixelIcon } from '../components/ui/PixelIcon'
 import { TRIP } from '../data/trip'
+import { useProgress } from '../state/ProgressContext'
 import keyVisual from '../assets/art/keyvisual.png'
 import type { ScreenId } from '../types'
 import s from './HomeScreen.module.css'
@@ -16,6 +19,9 @@ const MENU: { label: string; icon: 'calendar' | 'map' | 'mission' | 'book'; scre
 ]
 
 export function HomeScreen({ onNavigate }: Props) {
+  const { clearedCount, totalCount, resetProgress } = useProgress()
+  const [confirming, setConfirming] = useState(false)
+
   return (
     <>
       <section className={s.keyVisual}>
@@ -56,6 +62,27 @@ export function HomeScreen({ onNavigate }: Props) {
           </button>
         ))}
       </div>
+
+      <div className={s.record}>
+        <span className={s.recordText}>
+          冒険の記録　{clearedCount} / {totalCount}
+        </span>
+        <button type="button" className={s.reset} onClick={() => setConfirming(true)}>
+          リセット
+        </button>
+      </div>
+
+      <ConfirmDialog
+        open={confirming}
+        title="冒険の記録をリセット"
+        body={'ミッションの達成記録と暗号の解除を\nすべて消して、最初から始める。'}
+        confirmLabel="リセットする"
+        onConfirm={() => {
+          resetProgress()
+          setConfirming(false)
+        }}
+        onCancel={() => setConfirming(false)}
+      />
     </>
   )
 }

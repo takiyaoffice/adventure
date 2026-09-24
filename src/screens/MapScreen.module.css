@@ -104,7 +104,7 @@
   flex: none;
   position: relative;
   /* マップの縮尺を変えないため高さを固定する */
-  height: calc(var(--u) * 106);
+  height: calc(var(--u) * 96);
   overflow: hidden;
   border: calc(var(--u) * 2) solid var(--line);
   background: var(--panel);

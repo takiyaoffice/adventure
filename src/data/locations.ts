@@ -23,7 +23,7 @@ export const LOCATIONS: MapLocation[] = [
     y: 18.3,
     icon: iconMatsushima,
     scale: 1.1,
-    description: '日本三景のひとつ。\n島々に朝日が差しこむ絶景の地。',
+    description: '日本三景のひとつ。島々の絶景。',
   },
   {
     id: 'arena',
@@ -32,7 +32,7 @@ export const LOCATIONS: MapLocation[] = [
     y: 50,
     icon: iconArena,
     scale: 1.05,
-    description: 'この旅のいちばんの目的地。\n特別な夜がここで待っている。',
+    description: 'この旅のいちばんの目的地。',
   },
   {
     id: 'sendai-station',
@@ -40,7 +40,7 @@ export const LOCATIONS: MapLocation[] = [
     x: 16.3,
     y: 67.9,
     icon: iconStation,
-    description: '冒険のはじまりの地。\nここから仙台の旅がはじまる。',
+    description: 'ここから仙台の旅がはじまる。',
   },
 ]
 

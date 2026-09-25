@@ -1,0 +1,66 @@
+.nav {
+  flex: none;
+  display: flex;
+  align-items: stretch;
+  gap: calc(var(--u) * 3);
+  background: var(--bg-deep);
+  border-top: calc(var(--u) * 2) solid var(--line);
+  padding: calc(var(--u) * 8) calc(var(--u) * 6);
+  padding-bottom: calc(var(--u) * 8 + env(safe-area-inset-bottom, 0px));
+}
+
+.item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--u) * 5);
+  padding: calc(var(--u) * 7) calc(var(--u) * 1) calc(var(--u) * 6);
+  color: var(--text);
+  border: calc(var(--u) * 2) solid transparent;
+  background: transparent;
+  transition: background-color 90ms steps(2), color 90ms steps(2);
+}
+
+.item:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.active {
+  background: var(--blue);
+  border-color: var(--line);
+  box-shadow: 0 0 calc(var(--u) * 10) rgba(77, 142, 245, 0.45);
+}
+
+.active:active {
+  background: var(--blue);
+}
+
+/* 右端の BGM 切り替え */
+.bgm {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--u) * 28);
+  border: calc(var(--u) * 2) solid rgba(255, 255, 255, 0.28);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.bgm[aria-pressed='true'] {
+  border-color: rgba(245, 200, 78, 0.75);
+  color: var(--gold);
+}
+
+.bgm:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.label {
+  font-size: calc(var(--u) * 9.5);
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}

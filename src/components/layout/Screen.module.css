@@ -1,0 +1,15 @@
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: calc(var(--u) * 12) calc(var(--u) * 12) calc(var(--u) * 14);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 12);
+}
+
+/* マップ画面のようにスクロールさせたくない画面用 */
+.bodyFixed {
+  overflow: hidden;
+}

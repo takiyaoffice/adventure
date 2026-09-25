@@ -1,0 +1,121 @@
+import { useState } from 'react'
+import { ConfirmDialog } from '../components/ui/ConfirmDialog'
+import { HintDialog } from '../components/ui/HintDialog'
+import { PixelIcon } from '../components/ui/PixelIcon'
+import type { GlyphName } from '../components/ui/pixel-glyphs'
+import { CATEGORY_LABEL, CATEGORY_ORDER, MISSIONS, MISSION_TABS } from '../data/missions'
+import { useProgress } from '../state/ProgressContext'
+import type { Mission, MissionCategory } from '../types'
+import s from './MissionScreen.module.css'
+
+interface Props {
+  onComplete: (mission: Mission) => void
+}
+
+const CATEGORY_ICON: Record<MissionCategory, GlyphName> = {
+  place: 'place',
+  experience: 'mission',
+  special: 'mission',
+}
+
+export function MissionScreen({ onComplete }: Props) {
+  const [tab, setTab] = useState<MissionCategory | 'all'>('all')
+  const [hint, setHint] = useState<string | null>(null)
+  const [confirming, setConfirming] = useState(false)
+  const { isCleared, toggleMission, clearedCount, totalCount, resetProgress } = useProgress()
+
+  const categories = tab === 'all' ? CATEGORY_ORDER : [tab]
+
+  return (
+    <>
+      <div className={s.tabs}>
+        {MISSION_TABS.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className={`${s.tab} ${tab === item.id ? s.tabActive : ''}`}
+            aria-pressed={tab === item.id}
+            onClick={() => setTab(item.id)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      <div className={s.sections}>
+        {categories.map((category) => {
+          const missions = MISSIONS.filter((m) => m.category === category)
+          if (missions.length === 0) return null
+          return (
+            <section key={category} className={s.section}>
+              <header className={s.sectionHead}>
+                <PixelIcon name={CATEGORY_ICON[category]} size={18} />
+                <span className={s.sectionTitle}>{CATEGORY_LABEL[category]}</span>
+              </header>
+              <ul className={s.rows}>
+                {missions.map((mission) => {
+                  const done = isCleared(mission.id)
+                  // 隠しミッションは手でチェックできない。押すとヒントが出る
+                  const secretLocked = mission.secret === true && !done
+                  const rowClass = [s.row, done ? s.rowDone : '', mission.secret ? s.rowSecret : '']
+                    .filter(Boolean)
+                    .join(' ')
+                  return (
+                    <li key={mission.id}>
+                      <button
+                        type="button"
+                        className={rowClass}
+                        aria-pressed={done}
+                        disabled={mission.secret === true && done}
+                        onClick={() => {
+                          if (secretLocked) {
+                            setHint(mission.hint ?? null)
+                            return
+                          }
+                          if (mission.secret) return
+                          const completed = toggleMission(mission.id)
+                          if (completed) onComplete(completed)
+                        }}
+                      >
+                        <span className={`${s.badge} ${done ? s.badgeDone : ''}`}>
+                          {done && <PixelIcon name="check" size={18} />}
+                        </span>
+                        <span className={s.rowTitle}>
+                          {done && mission.revealedTitle ? mission.revealedTitle : mission.title}
+                        </span>
+                        {secretLocked && <PixelIcon name="lock" size={14} className={s.lockIcon} />}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+          )
+        })}
+      </div>
+
+      <div className={s.record}>
+        <span className={s.recordText}>
+          冒険の記録　{clearedCount} / {totalCount}
+        </span>
+        <button type="button" className={s.reset} onClick={() => setConfirming(true)}>
+          リセット
+        </button>
+      </div>
+
+      <HintDialog text={hint} onClose={() => setHint(null)} />
+
+      <ConfirmDialog
+        open={confirming}
+        title="冒険の記録をリセット"
+        body={'ミッションの達成記録と暗号の解除を\nすべて消して、最初から始める。'}
+        confirmLabel="リセットする"
+        onConfirm={() => {
+          resetProgress()
+          setConfirming(false)
+        }}
+        onCancel={() => setConfirming(false)}
+      />
+    </>
+  )
+}

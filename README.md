@@ -1,50 +1,133 @@
-# 仙台の冒険 〜二人の旅、思い出の地図〜
+# FUTURE FANTASY -未来の地図-
 
-お父さん夫婦のための旅のしおりPWA。ファンタジー冒険風のUIで、仙台旅行の行程・訪問先をミッション形式でたどれます。
+2027年1月22日〜24日の仙台旅行のための、RPG風デザインのスマートフォン専用 PWA。
+「ゲーム」ではなく、旅行そのものを主役にして、RPGの世界観と演出を少しだけ足した旅のしおりです。
 
-## 画面構成
+- アプリ名: FUTURE FANTASY / 未来の地図
+- コンセプト: 60年の軌跡、ここから新たな冒険へ。舞台は仙台。
+- 対象: スマートフォン（iPhone 想定）のみ。PC向けレイアウトはありません。
 
-1. **冒険の書** — 旅のタイトル・日程・概要
-2. **ワールドマップ** — 訪れた場所が光るファンタジーマップ
-3. **今日の冒険** — 日ごとの時系列プラン
-4. **ミッション** — 各訪問先の「到着チェック」と写真ミッション
+## 画面
 
-最後の「帰宅」ミッションを達成すると `ADVENTURE COMPLETE!` 画面が表示されます。
+| 画面 | 内容 |
+| --- | --- |
+| ホーム | キービジュアルと、各画面へのメニュー |
+| スケジュール | DAY 1〜3 のタブで1日ずつ表示。イラストとタイムライン |
+| マップ | 仙台をもとにしたドット絵のワールドマップ。3つのスポットをタップすると詳細が出る |
+| ミッション | 場所 / 体験 / 特別のミッション一覧。達成すると MISSION COMPLETE 演出が出る |
+| 冒険ガイド | 仙台のおすすめスポット一覧。カードを押すと公式サイトなどが開く |
+
+5画面すべてに共通フッターがあり、そこから相互に移動できます。
+画面上部にタイトルバーは置かず、内容をできるだけ広く使っています。
 
 ## 開発
 
 ```bash
 npm install
-npm run dev
+npm run dev        # 開発サーバー
+npm run build      # 型チェック + 本番ビルド
+npm run preview    # ビルド結果の確認
 ```
 
-## ビルド
+スマートフォンでの確認は `npm run dev -- --host` で同じネットワークの端末から開きます。
+
+## データの変更
+
+旅程・場所・ミッションは `src/data/` にまとまっています。ここだけ書き換えれば画面に反映されます。
+
+| ファイル | 内容 |
+| --- | --- |
+| `src/data/trip.ts` | アプリ名・キャッチコピー・旅行期間 |
+| `src/data/schedule.ts` | DAY 1〜3 の日付・タイトル・一言・時刻ごとの予定 |
+| `src/data/locations.ts` | マップ上の場所、座標（地形画像に対する％）、説明文 |
+| `src/data/missions.ts` | ミッションと、達成時に明るくなるマップ上の場所の紐づけ |
+
+マップの場所は、カテゴリが `place` の「〇〇に行く」ミッションと1対1でつながっています。
+そのミッションを達成すると、アイコンが暗い状態から明るく光る状態に変わります。
+マップ下の情報ウィンドウは高さを固定してあるので、場所を選んでもマップの縮尺は変わりません。
+
+達成状況は端末の localStorage（キー `future-fantasy:progress:v1`）に保存され、
+アプリを閉じても残ります。
+
+### 冒険ガイドを編集する
+
+`src/data/guide.ts` の `GUIDE_ENTRIES` に1件足すだけで、
+カテゴリタブの絞り込みにも自動で反映されます。1件はこの形です。
+
+| 項目 | 内容 |
+| --- | --- |
+| `name` | カードの見出し |
+| `category` | `spot`（スポット）か `food`（食事処） |
+| `description` | 説明文。改行はそのまま表示される |
+| `access` | 仙台駅を起点にしたアクセス。改行でそのまま2行に出る |
+| `image` | カード左の画像 |
+| `url` | カードを押したときに開くリンク |
+| `linkLabel` | リンク先の名前。「食べログ を開く」のように出る |
+| `isPhoto` | 実写のときだけ `true`。ドットの拡大補間を切る |
+
+写真はいまドット絵の仮画像です。実写にするときは画像を
+`src/assets/art/` に置いて `image` を差し替え、`isPhoto: true` を足します。
+
+カテゴリを増やしたいときは `src/types.ts` の `GuideCategory` に足し、
+`GUIDE_TABS` と `GUIDE_CATEGORY_LABEL`、`GuideScreen.module.css` の
+色クラスをそろえてください。
+
+## ドット絵素材
+
+キービジュアル・マップ・アイコンは、すべてコード（`scripts/`）から生成した PNG です。
+生成物は `src/assets/art/` にコミット済みなので、ビルド時に再生成する必要はありません。
 
 ```bash
-npm run build
-npm run preview
+npm run art      # src/assets/art/*.png を再生成
+npm run icons    # public/icons/*.png, favicon.svg を再生成
 ```
 
-## データの編集
+`scripts/pixel.mjs` が PNG 書き出しと描画、`scripts/art-parts.mjs` が雲・木・塔などの
+共通パーツ、`scripts/generate-art.mjs` が各素材の構図を担当します。
 
-- 旅程: [src/data/itinerary.ts](src/data/itinerary.ts)
-- 訪問先・マップ座標: [src/data/locations.ts](src/data/locations.ts)
-- 旅の概要: [src/data/trip.ts](src/data/trip.ts)
+UI のアイコンは `src/components/ui/pixel-glyphs.ts` に 16x16 のドットの文字列として定義し、
+SVG の矩形に変換して描画しています。拡大してもにじみません。
 
-日付・訪問先・ミッション文言はすべてこの3ファイルを編集するだけで変更できます。
+## フォント
 
-## デプロイ（GitHub Pages）
+`DotGothic16`（日本語）と `Press Start 2P`（英字）を、アプリで使う文字だけに絞って
+`public/fonts/` に self-host しています（合計約 36KB）。オフラインでも表示が崩れません。
 
-`gh-pages` ブランチにビルド済みファイルを push して公開します。
+**画面の文言を変えたら、毎回これを実行してください。** 新しく使った漢字が
+フォントに入っていないと、その字だけ別のフォントで表示されてドット絵の
+見た目が崩れます。
 
 ```bash
-npm run deploy
+pip install fonttools brotli
+python3 scripts/subset-fonts.py
 ```
 
-初回のみ、リポジトリの **Settings → Pages → Build and deployment → Source** を **Deploy from a branch**、ブランチを **gh-pages / (root)** に設定してください。公開URLは `https://<ユーザー名>.github.io/adventure/` になります。
+足りない字がないかは次で確認できます。
 
-コードを変更したら、都度 `npm run deploy` を実行してください。
+```bash
+python3 scripts/check-fonts.py
+```
 
 ## PWA
 
-ホーム画面に追加してアプリのように使えます（`vite-plugin-pwa` によりオフライン対応・自動更新）。進捗（到着・写真ミッション）は端末内の `localStorage` に保存されます。
+- `vite-plugin-pwa` で manifest と Service Worker を生成
+- `display: standalone` / `viewport-fit=cover` / セーフエリア対応
+- ホーム画面に追加すると、アドレスバーなしのアプリとして起動します
+- 初回表示後はオフラインでも4画面すべて閲覧できます
+
+## 配信
+
+GitHub Pages 向けに `vite.config.ts` の `base` を `/adventure/` にしています。
+別の場所へ置く場合はこの値と `index.html` 内のパスを合わせて変更してください。
+
+```bash
+npm run deploy   # dist を gh-pages ブランチへ公開
+```
+
+## 技術構成
+
+React 19 / TypeScript / Vite / CSS Modules / vite-plugin-pwa
+
+レイアウトは 390 x 844 のデザインを基準に、CSS 変数 `--u` で端末の幅と高さの
+小さいほうに合わせて比例拡大しています。どの iPhone でも同じ見た目になり、
+スクロールなしで1画面に収まります。

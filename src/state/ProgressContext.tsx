@@ -1,89 +1,101 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { LOCATIONS } from '../data/locations'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import type { ReactNode } from 'react'
+import { MISSIONS, MISSION_BY_ID } from '../data/missions'
+import type { LocationId, Mission } from '../types'
 
-const STORAGE_KEY = 'sendai-adventure-progress-v1'
+const STORAGE_KEY = 'future-fantasy:progress:v1'
 
-interface ProgressState {
-  arrived: Record<string, boolean>
-  photoSent: Record<string, boolean>
+interface ProgressValue {
+  /** 達成済みミッションの id 集合 */
+  cleared: ReadonlySet<string>
+  isCleared: (missionId: string) => boolean
+  /** 達成状態を反転。新たに達成した場合はそのミッションを返す */
+  toggleMission: (missionId: string) => Mission | null
+  /** 達成済みにする（解除はしない）。新たに達成した場合はそのミッションを返す */
+  completeMission: (missionId: string) => Mission | null
+  /** その場所の「〇〇に行く」ミッションを達成しているか */
+  isVisited: (locationId: LocationId) => boolean
+  /** その場所の「〇〇に行く」ミッション */
+  placeMissionAt: (locationId: LocationId) => Mission | null
+  clearedCount: number
+  totalCount: number
+  resetProgress: () => void
 }
 
-const EMPTY_STATE: ProgressState = { arrived: {}, photoSent: {} }
+const ProgressContext = createContext<ProgressValue | null>(null)
 
-function loadState(): ProgressState {
+function loadInitial(): Set<string> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return EMPTY_STATE
-    const parsed = JSON.parse(raw)
-    return { arrived: parsed.arrived ?? {}, photoSent: parsed.photoSent ?? {} }
+    if (!raw) return new Set()
+    const parsed: unknown = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return new Set()
+    // 現存するミッションだけを復元する
+    return new Set(parsed.filter((id): id is string => typeof id === 'string' && MISSION_BY_ID.has(id)))
   } catch {
-    return EMPTY_STATE
+    return new Set()
   }
 }
-
-interface ProgressContextValue {
-  isArrived: (id: string) => boolean
-  isPhotoSent: (id: string) => boolean
-  markArrived: (id: string) => void
-  markPhotoSent: (id: string) => void
-  resetAll: () => void
-  discoveredCount: number
-  totalCount: number
-  isComplete: boolean
-  justCompletedFinal: boolean
-  clearJustCompletedFinal: () => void
-}
-
-const ProgressContext = createContext<ProgressContextValue | null>(null)
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<ProgressState>(loadState)
-  const [justCompletedFinal, setJustCompletedFinal] = useState(false)
+  const [cleared, setCleared] = useState<Set<string>>(loadInitial)
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-  }, [state])
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...cleared]))
+    } catch {
+      // プライベートブラウズなどで保存できなくても動作は継続する
+    }
+  }, [cleared])
 
-  const finalLocationId = useMemo(() => LOCATIONS.find((l) => l.isFinal)?.id, [])
-
-  const markArrived = (id: string) => {
-    setState((prev) => {
-      if (prev.arrived[id]) return prev
-      if (id === finalLocationId) setJustCompletedFinal(true)
-      return { ...prev, arrived: { ...prev.arrived, [id]: true } }
+  const toggleMission = useCallback((missionId: string): Mission | null => {
+    const mission = MISSION_BY_ID.get(missionId)
+    if (!mission) return null
+    const wasCleared = cleared.has(missionId)
+    setCleared((prev) => {
+      const next = new Set(prev)
+      if (next.has(missionId)) next.delete(missionId)
+      else next.add(missionId)
+      return next
     })
-  }
+    // 新たに達成したときだけミッションを返す（達成演出の起動に使う）
+    return wasCleared ? null : mission
+  }, [cleared])
 
-  const markPhotoSent = (id: string) => {
-    setState((prev) => (prev.photoSent[id] ? prev : { ...prev, photoSent: { ...prev.photoSent, [id]: true } }))
-  }
+  const completeMission = useCallback((missionId: string): Mission | null => {
+    const mission = MISSION_BY_ID.get(missionId)
+    if (!mission || cleared.has(missionId)) return null
+    setCleared((prev) => new Set(prev).add(missionId))
+    return mission
+  }, [cleared])
 
-  const resetAll = () => {
-    setState(EMPTY_STATE)
-    setJustCompletedFinal(false)
-  }
-
-  const nonFinalLocations = useMemo(() => LOCATIONS.filter((l) => !l.isFinal), [])
-  const discoveredCount = nonFinalLocations.filter((l) => state.arrived[l.id]).length
-
-  const value: ProgressContextValue = {
-    isArrived: (id) => !!state.arrived[id],
-    isPhotoSent: (id) => !!state.photoSent[id],
-    markArrived,
-    markPhotoSent,
-    resetAll,
-    discoveredCount,
-    totalCount: nonFinalLocations.length,
-    isComplete: finalLocationId ? !!state.arrived[finalLocationId] : false,
-    justCompletedFinal,
-    clearJustCompletedFinal: () => setJustCompletedFinal(false),
-  }
+  const value = useMemo<ProgressValue>(() => {
+    // 場所ごとの「〇〇に行く」ミッション。訪問したかどうかはこれだけで決まる
+    const placeByLocation = new Map<LocationId, Mission>()
+    MISSIONS.forEach((m) => {
+      if (m.category === 'place' && m.locationId) placeByLocation.set(m.locationId, m)
+    })
+    return {
+      cleared,
+      isCleared: (id) => cleared.has(id),
+      toggleMission,
+      completeMission,
+      isVisited: (locationId) => {
+        const m = placeByLocation.get(locationId)
+        return m ? cleared.has(m.id) : false
+      },
+      placeMissionAt: (locationId) => placeByLocation.get(locationId) ?? null,
+      clearedCount: cleared.size,
+      totalCount: MISSIONS.length,
+      resetProgress: () => setCleared(new Set()),
+    }
+  }, [cleared, toggleMission, completeMission])
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>
 }
 
-export function useProgress() {
+export function useProgress(): ProgressValue {
   const ctx = useContext(ProgressContext)
-  if (!ctx) throw new Error('useProgress must be used within ProgressProvider')
+  if (!ctx) throw new Error('useProgress must be used inside <ProgressProvider>')
   return ctx
 }

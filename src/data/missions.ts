@@ -59,12 +59,6 @@ export const MISSIONS: Mission[] = [
     reward: '地元の人だけが知る場所を教わった！',
   },
   {
-    id: 'enjoy-live',
-    category: 'experience',
-    title: 'ライブを楽しむ',
-    reward: '60年の軌跡に、新しい1ページ！',
-  },
-  {
     id: 'take-photo',
     category: 'experience',
     title: 'ふたりで記念写真を撮る',

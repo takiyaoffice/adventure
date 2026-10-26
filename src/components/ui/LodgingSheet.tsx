@@ -18,6 +18,12 @@ function Row({ label, value }: { label: string; value: string | null }) {
 
 /** 宿の記録。解放後はいつでもここから見られる */
 export function LodgingSheet({ onClose }: Props) {
+  // まだ決まっていない項目が残っているかどうか。残っていなければ断り書きも出さない
+  const hasUnset =
+    [LODGING.name, LODGING.address, LODGING.roomType, LODGING.checkIn, LODGING.checkOut].some(
+      (v) => !v,
+    ) || LODGING.reservation.some((item) => !item.value)
+
   return (
     <div className={s.overlay} role="dialog" aria-label="宿の記録" onClick={onClose}>
       <div className={s.window} onClick={(e) => e.stopPropagation()}>
@@ -80,7 +86,7 @@ export function LodgingSheet({ onClose }: Props) {
             </div>
           )}
 
-          <p className={s.note}>決まっていないところは、分かりしだい書き足されます。</p>
+          {hasUnset && <p className={s.note}>決まっていないところは、分かりしだい書き足されます。</p>}
         </div>
       </div>
     </div>

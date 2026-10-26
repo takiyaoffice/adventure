@@ -63,8 +63,7 @@ export const LODGING: LodgingInfo = {
   checkOut: '11:00',
 
   reservation: [
-    // 予約番号はまだ受け取っていないので未設定のまま
-    { label: '予約番号', value: null },
+    { label: '予約番号', value: '1790256920' },
     { label: '予約者名', value: 'Shun Shiobara' },
   ],
 

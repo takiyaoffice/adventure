@@ -137,6 +137,8 @@
   line-height: 1.6;
   color: #ffffff;
   word-break: break-word;
+  /* 住所のように、改行を入れた値をそのまま2行で出す */
+  white-space: pre-line;
 }
 
 /* 未設定はひと目で分かるように沈めておく */

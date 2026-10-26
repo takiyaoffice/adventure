@@ -9,6 +9,8 @@
  *   image: hotelPhoto,
  */
 
+import hotelPhoto from '../assets/photo/hotel-granterrace.jpg'
+
 export interface ReservationItem {
   label: string
   /** 未設定のあいだは null */
@@ -46,23 +48,28 @@ export interface LodgingInfo {
 }
 
 export const LODGING: LodgingInfo = {
-  name: null,
-  image: null,
-  address: null,
+  name: 'ホテルグランテラス仙台国分町',
+  // 公式サイトの外観写真を 900px 幅に縮めたもの
+  image: hotelPhoto,
+  imageIsPhoto: true,
+  // 住所は地図のリンク先と公式サイトの表記
+  address: '〒980-0803\n宮城県仙台市青葉区国分町2-2-2',
 
-  // 日程と泊数だけは決まっている
   stayDates: '2027.1.22（金） 〜 1.24（日）',
   nights: '2泊',
 
-  roomType: null,
-  checkIn: null,
-  checkOut: null,
+  roomType: 'デラックスツイン（禁煙）',
+  checkIn: '15:00 〜',
+  checkOut: '11:00',
 
   reservation: [
+    // 予約番号はまだ受け取っていないので未設定のまま
     { label: '予約番号', value: null },
-    { label: '予約者名', value: null },
-    { label: '連絡先', value: null },
+    { label: '予約者名', value: 'Shun Shiobara' },
   ],
 
-  links: [],
+  links: [
+    { label: '公式サイト', url: 'https://breezbay-group.com/hgt-s-kokubuncho/' },
+    { label: '地図を開く', url: 'https://maps.app.goo.gl/TGcjHe4uDnp1D45g8' },
+  ],
 }

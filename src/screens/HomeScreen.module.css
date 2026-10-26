@@ -145,3 +145,11 @@
   line-height: 1;
   white-space: nowrap;
 }
+
+/* アップデートで解放される「宿の記録」。横いっぱいに置き、青で少しだけ目立たせる */
+.menuLodging {
+  grid-column: 1 / -1;
+  height: calc(var(--u) * 56);
+  border-color: var(--blue-glow);
+  background: linear-gradient(180deg, #16255a 0%, var(--panel) 100%);
+}

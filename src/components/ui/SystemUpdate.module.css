@@ -1,0 +1,164 @@
+/* 起動時のアップデート確認と、その解放演出。
+   枠や影は ConfirmDialog / MissionComplete と同じ作りにそろえている。 */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--u) * 20);
+  background: rgba(3, 6, 15, 0.9);
+  animation: fade 140ms steps(3) both;
+}
+
+/* 解放の瞬間に一度だけ走る光 */
+.flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(154, 196, 255, 0.55), rgba(32, 96, 216, 0) 60%);
+  animation: flash 520ms steps(4) both;
+}
+
+.window {
+  position: relative;
+  width: 100%;
+  max-width: calc(var(--u) * 310);
+  text-align: center;
+  border: calc(var(--u) * 2) solid var(--blue-glow);
+  background: linear-gradient(180deg, #16255a 0%, #0a1330 100%);
+  padding: calc(var(--u) * 22) calc(var(--u) * 16) calc(var(--u) * 18);
+  box-shadow:
+    0 0 0 calc(var(--u) * 2) #0a1330,
+    0 0 0 calc(var(--u) * 4) #ffffff,
+    0 0 calc(var(--u) * 26) rgba(77, 142, 245, 0.45);
+  animation: pop 200ms steps(4) both;
+}
+
+.heading {
+  font-family: var(--font-pixel);
+  font-size: calc(var(--u) * 15);
+  line-height: 1.5;
+  letter-spacing: calc(var(--u) * 1.4);
+  color: var(--blue-glow);
+  text-shadow:
+    calc(var(--u) * 2) calc(var(--u) * 2) 0 #0b2256,
+    0 0 calc(var(--u) * 14) rgba(77, 142, 245, 0.6);
+}
+
+.headingDone {
+  color: var(--gold);
+  text-shadow:
+    calc(var(--u) * 2) calc(var(--u) * 2) 0 #6a3d00,
+    0 0 calc(var(--u) * 14) rgba(245, 200, 78, 0.7);
+  animation: blink 460ms steps(2) 3;
+}
+
+.body {
+  margin-top: calc(var(--u) * 16);
+  font-size: calc(var(--u) * 13);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.found {
+  margin-top: calc(var(--u) * 16);
+  font-size: calc(var(--u) * 14);
+  line-height: 1.6;
+  color: #ffffff;
+}
+
+.yes {
+  width: 100%;
+  height: calc(var(--u) * 44);
+  margin-top: calc(var(--u) * 20);
+  border: calc(var(--u) * 2) solid #ffffff;
+  background: var(--blue);
+  box-shadow: calc(var(--u) * 2) calc(var(--u) * 2) 0 var(--blue-deep);
+  font-size: calc(var(--u) * 15);
+  letter-spacing: calc(var(--u) * 1.2);
+  color: #ffffff;
+}
+
+.yes:active {
+  transform: translate(calc(var(--u) * 2), calc(var(--u) * 2));
+  box-shadow: none;
+}
+
+/* アップデート中のゲージ */
+.bar {
+  height: calc(var(--u) * 12);
+  margin-top: calc(var(--u) * 18);
+  border: calc(var(--u) * 2) solid var(--line-soft);
+  background: var(--panel-head);
+  overflow: hidden;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--blue-glow) 0,
+    var(--blue-glow) calc(var(--u) * 6),
+    var(--blue) calc(var(--u) * 6),
+    var(--blue) calc(var(--u) * 12)
+  );
+  animation: fill linear both;
+}
+
+.ribbon {
+  position: absolute;
+  top: calc(var(--u) * -12);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: calc(var(--u) * 6);
+  color: var(--gold);
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes flash {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* 動きを減らす設定では、光らせず・点滅させず、結果だけを見せる */
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .window,
+  .headingDone {
+    animation: none;
+  }
+  .flash {
+    display: none;
+  }
+  .barFill {
+    animation: none;
+    transform: scaleX(1);
+  }
+}

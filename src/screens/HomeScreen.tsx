@@ -9,6 +9,9 @@ import s from './HomeScreen.module.css'
 
 interface Props {
   onNavigate: (screen: ScreenId) => void
+  /** 宿の記録が解放済みか。解放されるまでは入口を出さない */
+  lodgingUnlocked: boolean
+  onOpenLodging: () => void
 }
 
 const MENU: { label: string; icon: 'calendar' | 'map' | 'mission' | 'book'; screen: ScreenId }[] = [
@@ -18,7 +21,7 @@ const MENU: { label: string; icon: 'calendar' | 'map' | 'mission' | 'book'; scre
   { label: '冒険ガイド', icon: 'book', screen: 'guide' },
 ]
 
-export function HomeScreen({ onNavigate }: Props) {
+export function HomeScreen({ onNavigate, lodgingUnlocked, onOpenLodging }: Props) {
   const { isCleared } = useProgress()
   // 隠しミッションを解くと、キービジュアルが本物の花束の写真に変わる
   const unlocked = isCleared(SECRET_MISSION_ID)
@@ -69,6 +72,14 @@ export function HomeScreen({ onNavigate }: Props) {
             <span className={s.menuLabel}>{item.label}</span>
           </button>
         ))}
+
+        {/* アップデートで解放されたあとは、ここからいつでも開ける */}
+        {lodgingUnlocked && (
+          <button type="button" className={`${s.menuButton} ${s.menuLodging}`} onClick={onOpenLodging}>
+            <PixelIcon name="place" size={24} />
+            <span className={s.menuLabel}>宿の記録</span>
+          </button>
+        )}
       </div>
     </>
   )

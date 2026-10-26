@@ -55,7 +55,7 @@ export const LODGING: LodgingInfo = {
   // 住所は地図のリンク先と公式サイトの表記
   address: '宮城県仙台市青葉区国分町2-2-2',
 
-  stayDates: '2027.1.22（金） 〜 1.24（日）',
+  stayDates: '2027.1.22 〜 1.24',
   nights: '2泊',
 
   roomType: 'デラックスツイン（禁煙）',

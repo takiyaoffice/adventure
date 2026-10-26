@@ -1,44 +1,68 @@
-import { useEffect, useState } from 'react'
-import { ProgressProvider, useProgress } from './state/ProgressContext'
-import { TabBar, type TabId } from './components/layout/TabBar'
-import { AdventureBook } from './screens/AdventureBook'
-import { WorldMap } from './screens/WorldMap'
-import { TodayAdventure } from './screens/TodayAdventure'
-import { Missions } from './screens/Missions'
-import { Complete } from './screens/Complete'
+import { useCallback, useState } from 'react'
+import { BottomNav, NAV_ITEMS } from './components/layout/BottomNav'
+import { Screen } from './components/layout/Screen'
+import { useBgm } from './components/ui/Bgm'
+import { LodgingSheet } from './components/ui/LodgingSheet'
+import { MissionComplete } from './components/ui/MissionComplete'
+import { SystemUpdate } from './components/ui/SystemUpdate'
+import { HomeScreen } from './screens/HomeScreen'
+import { ScheduleScreen } from './screens/ScheduleScreen'
+import { MapScreen } from './screens/MapScreen'
+import { MissionScreen } from './screens/MissionScreen'
+import { GuideScreen } from './screens/GuideScreen'
+import { SCHEDULE } from './data/schedule'
+import { ProgressProvider } from './state/ProgressContext'
+import { useLodgingUnlock } from './state/useLodgingUnlock'
+import type { Mission, ScreenId } from './types'
+import s from './App.module.css'
 
 function AppShell() {
-  const [tab, setTab] = useState<TabId>('book')
-  const [focusLocationId, setFocusLocationId] = useState<string | null>(null)
-  const [showComplete, setShowComplete] = useState(false)
-  const { justCompletedFinal, clearJustCompletedFinal } = useProgress()
+  const [screen, setScreen] = useState<ScreenId>('home')
+  const [selectedDayId, setSelectedDayId] = useState(SCHEDULE[0].id)
+  const [celebrating, setCelebrating] = useState<Mission | null>(null)
+  const bgm = useBgm()
 
-  useEffect(() => {
-    if (justCompletedFinal) {
-      setShowComplete(true)
-      clearJustCompletedFinal()
-    }
-  }, [justCompletedFinal, clearJustCompletedFinal])
+  // 宿の記録。起動した時点で未解放だったときだけアップデート確認を出す。
+  // 「はい」で解放されても演出は最後まで続けたいので、表示そのものは別に持つ。
+  const { unlocked: lodgingUnlocked, unlock: unlockLodging } = useLodgingUnlock()
+  const [showUpdate, setShowUpdate] = useState(() => !lodgingUnlocked)
+  const [showLodging, setShowLodging] = useState(false)
 
-  const goToMissions = (locationId: string) => {
-    setFocusLocationId(locationId)
-    setTab('missions')
-  }
+  const finishUpdate = useCallback(() => {
+    setShowUpdate(false)
+    setScreen('home')
+    setShowLodging(true)
+  }, [])
+
+  const handleComplete = useCallback((mission: Mission) => setCelebrating(mission), [])
+  const nav = NAV_ITEMS.find((item) => item.id === screen) ?? NAV_ITEMS[0]
 
   return (
-    <div className="h-full flex flex-col bg-wood-950">
-      <div className="flex-1 min-h-0 flex flex-col max-w-md w-full mx-auto sm:my-0">
-        {tab === 'book' && <AdventureBook onStart={() => setTab('map')} onShowComplete={() => setShowComplete(true)} />}
-        {tab === 'map' && <WorldMap onOpenMissions={goToMissions} />}
-        {tab === 'today' && <TodayAdventure onOpenMissions={goToMissions} />}
-        {tab === 'missions' && (
-          <Missions focusLocationId={focusLocationId} onConsumeFocus={() => setFocusLocationId(null)} />
+    <div className={s.app}>
+      {bgm.element}
+      <Screen label={nav.label} fixed={screen === 'map'}>
+        {screen === 'home' && (
+          <HomeScreen
+            onNavigate={setScreen}
+            lodgingUnlocked={lodgingUnlocked}
+            onOpenLodging={() => setShowLodging(true)}
+          />
         )}
-      </div>
+        {screen === 'schedule' && <ScheduleScreen selectedDayId={selectedDayId} onSelectDay={setSelectedDayId} />}
+        {screen === 'map' && <MapScreen onComplete={handleComplete} />}
+        {screen === 'mission' && <MissionScreen onComplete={handleComplete} />}
+        {screen === 'guide' && <GuideScreen />}
+      </Screen>
+      <BottomNav
+        current={screen}
+        onNavigate={setScreen}
+        bgmMuted={bgm.muted}
+        onToggleBgm={bgm.toggleMuted}
+      />
+      <MissionComplete mission={celebrating} onClose={() => setCelebrating(null)} />
 
-      <TabBar active={tab} onChange={setTab} />
-
-      {showComplete && <Complete onClose={() => setShowComplete(false)} />}
+      {showUpdate && <SystemUpdate onConfirm={unlockLodging} onFinish={finishUpdate} />}
+      {showLodging && <LodgingSheet onClose={() => setShowLodging(false)} />}
     </div>
   )
 }

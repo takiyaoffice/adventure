@@ -1,0 +1,89 @@
+/** アプリ全体で使う型定義 */
+
+export type ScreenId = 'home' | 'schedule' | 'map' | 'mission' | 'guide'
+
+/** スケジュール1行分 */
+export interface ScheduleEntry {
+  /** 左に置くドット絵 */
+  icon: string
+  /** その時間帯にやること。改行を入れると複数行で表示される */
+  title: string
+  /** 選び方の余地を書き添える一言（任意）。改行可 */
+  note?: string
+  /** 対応するマップ上の場所（任意） */
+  locationId?: LocationId
+}
+
+export interface ScheduleDay {
+  id: string
+  /** タブに出す表示名 */
+  dayLabel: string
+  /** タブ2行目・カード右上に出す日付 */
+  dateShort: string
+  dateFull: string
+  /** ISO 形式。今日の判定に使う */
+  isoDate: string
+  title: string
+  /** SPECIAL DAY などのラベル */
+  badge?: string
+  /** その日のイメージイラスト */
+  illustration: string
+  entries: ScheduleEntry[]
+}
+
+export type LocationId = 'sendai-station' | 'arena' | 'matsushima'
+
+export interface MapLocation {
+  id: LocationId
+  /** 改行を入れると2行で表示される */
+  name: string
+  /** マップ上の位置（地形画像に対する％） */
+  x: number
+  y: number
+  icon: string
+  /** アイコンの表示サイズ倍率 */
+  scale?: number
+  description: string
+}
+
+export type MissionCategory = 'place' | 'experience' | 'special'
+
+export interface Mission {
+  id: string
+  category: MissionCategory
+  title: string
+  /** 達成でマップ上の場所が明るくなる */
+  locationId?: LocationId
+  /** 達成時の演出に出す一言 */
+  reward?: string
+  /** 手動ではチェックできない隠しミッション。タップするとヒントが出る */
+  secret?: boolean
+  /** 隠しミッションのヒント本文（改行可） */
+  hint?: string
+  /** 隠しミッションを解いたあとに表示するタイトル */
+  revealedTitle?: string
+}
+
+/** 冒険ガイドの分類 */
+export type GuideCategory = 'spot' | 'food' | 'sweets'
+
+export interface GuideEntry {
+  id: string
+  name: string
+  category: GuideCategory
+  /** カード内の説明文。2〜3行を想定 */
+  description: string
+  /** 仙台駅を起点にしたアクセス。改行でそのまま2行に出せる */
+  access: string
+  /** カード左の画像 */
+  image: string
+  /** タップしたときに開くリンク */
+  url: string
+  /** リンク先がどこかを示す短いラベル（例: 公式サイト、食べログ） */
+  linkLabel: string
+  /**
+   * 実写を入れたときは true にする。
+   * ドット絵はそのまま拡大したいので、既定ではピクセル補間を切っている。
+   */
+  isPhoto?: boolean
+}

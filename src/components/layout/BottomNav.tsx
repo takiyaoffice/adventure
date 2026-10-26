@@ -1,0 +1,49 @@
+import { PixelIcon } from '../ui/PixelIcon'
+import type { GlyphName } from '../ui/pixel-glyphs'
+import type { ScreenId } from '../../types'
+import s from './BottomNav.module.css'
+
+export const NAV_ITEMS: { id: ScreenId; label: string; icon: GlyphName }[] = [
+  { id: 'home', label: 'ホーム', icon: 'home' },
+  { id: 'schedule', label: 'スケジュール', icon: 'calendar' },
+  { id: 'map', label: 'マップ', icon: 'map' },
+  { id: 'mission', label: 'ミッション', icon: 'mission' },
+  { id: 'guide', label: '冒険ガイド', icon: 'book' },
+]
+
+interface Props {
+  current: ScreenId
+  onNavigate: (id: ScreenId) => void
+  /** BGM が止まっているか */
+  bgmMuted: boolean
+  onToggleBgm: () => void
+}
+
+/** 全画面共通のフッターナビゲーション。右端に BGM の切り替えを置く */
+export function BottomNav({ current, onNavigate, bgmMuted, onToggleBgm }: Props) {
+  return (
+    <nav className={s.nav}>
+      {NAV_ITEMS.map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          className={`${s.item} ${current === item.id ? s.active : ''}`}
+          aria-current={current === item.id ? 'page' : undefined}
+          onClick={() => onNavigate(item.id)}
+        >
+          <PixelIcon name={item.icon} size={20} />
+          <span className={s.label}>{item.label}</span>
+        </button>
+      ))}
+      <button
+        type="button"
+        className={s.bgm}
+        aria-pressed={!bgmMuted}
+        aria-label={bgmMuted ? 'BGM をオンにする' : 'BGM をオフにする'}
+        onClick={onToggleBgm}
+      >
+        <PixelIcon name={bgmMuted ? 'soundOff' : 'soundOn'} size={16} />
+      </button>
+    </nav>
+  )
+}
